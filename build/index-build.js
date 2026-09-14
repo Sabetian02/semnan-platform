@@ -20,10 +20,20 @@ const esc = (s) =>
 const TELE_URL = (home.hero && home.hero.telegram_url) || "https://t.me/PlatformSem";
 const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L6.74 13.3 2.64 12c-.88-.25-.89-.86.2-1.3L20.03 4.7c.73-.33 1.43.18 1.15 1.3l-3.7 17.42c-.25 1.16-.95 1.44-1.92.9l-5.29-3.9-2.55 2.2c-.29.28-.53.46-1.1.46l.32-4.9z"/></svg>`;
 
-/* فقط URLهای مطلق (http/https/mailto/tel) اجازه ورود دارند؛
-   هر مقدار اشتباه در محتوای CMS نباید publish را بشکند — به تلگرام برمی‌گردد. */
+/* لینک ایمن: URLهای مطلق (http/https/mailto/tel) یا مسیرهای داخلیِ موجود قبول می‌شوند؛
+   هر مقدار زباله (اسپیس/فارسی/ناموجود) در محتوای CMS نباید publish را بشکند → به تلگرام برمی‌گردد. */
 const ABS_URI = /^(https?:|mailto:|tel:)/i;
-const linkOrDefault = (link) => (link && ABS_URI.test(link) ? link : TELE_URL);
+const safeLink = (link) => {
+  if (!link) return "";
+  const s = String(link).trim();
+  if (!s) return "";
+  if (ABS_URI.test(s)) return s;
+  if (/[\s\u0600-\u06FF]/.test(s)) return "";
+  const f = s.replace(/^\.\//, "").split(/[?#]/)[0];
+  if (!f || fs.existsSync(path.join(ROOT, f))) return s;
+  return "";
+};
+const linkOrDefault = (link) => safeLink(link) || TELE_URL;
 const imageOrNull = (img) =>
   img && (ABS_URI.test(img) || fs.existsSync(path.join(ROOT, img))) ? img : "";
 
@@ -261,20 +271,61 @@ function renderDiscounts(head, discountList) {
       </div>
     </section>`;
   }
-  const items = active.map((d) => {
-    const link = esc(linkOrDefault(d.link));
-    return `<div class="discount-item reveal">
-            <div class="d-txt">
-              <div class="d-top"><span class="eyebrow">${esc(head.eyebrow)}</span>${d.expires ? `<span class="d-expires">تا ${esc(d.expires)}</span>` : ""}</div>
-              <h3>${esc(d.title)}</h3>
-              <p>${esc(d.description || "")}</p>
-            </div>
-            <div class="d-actions">
-              ${d.code ? `<span class="discount-code">کد تخفیف: ${esc(d.code)}</span>` : ""}
-              <a class="btn btn-navy" href="${esc(link)}" target="_blank" rel="noopener">دریافت تخفیف</a>
-            </div>
-          </div>`;
+
+  const gradients = [
+    "linear-gradient(135deg, #102A71, #1b3a8b 50%, #244da0)",
+    "linear-gradient(135deg, #0a1f54, #102A71 60%, #162f7a)",
+    "linear-gradient(135deg, #001840, #0a2266 50%, #102A71)"
+  ];
+
+  const items = active.map((d, i) => {
+    const link = linkOrDefault(d.link);
+    const code = d.code || "";
+    const grad = gradients[i % gradients.length];
+
+    const expAttr = d.date_exp
+      ? `data-exp="${esc(d.date_exp)}"`
+      : d.expire_mode === "permanent" || !d.expires
+        ? `data-exp="permanent"`
+        : `data-exp-text="${esc(d.expires)}"`;
+
+    return `<div class="dc reveal" ${expAttr}>
+    <div class="dc-inner" style="background:${grad}">
+      <div class="dc-badge-row">
+        <span class="dc-badge">تخفیف دانشجویی</span>
+        <span class="dc-badge dc-status"></span>
+      </div>
+      <div class="dc-top">
+        <div class="dc-body">
+          <h3 class="dc-title">${esc(d.title)}</h3>
+          <p class="dc-desc">${esc(d.description || "")}</p>
+        </div>
+        <div class="dc-art" aria-hidden="true">
+          <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="#FFDC5F" stroke-width="2" stroke-dasharray="6 4" opacity=".45"/><circle cx="40" cy="40" r="26" fill="#FFDC5F" fill-opacity=".1"/><text x="40" y="48" text-anchor="middle" fill="#FFDC5F" font-size="26" font-weight="800" font-family="Vazirmatn,sans-serif">%</text></svg>
+        </div>
+      </div>
+      <div class="dc-code-row">
+        <div class="dc-code-box">
+          <span class="dc-code-lbl">کد تخفیف</span>
+          <span class="dc-code">${esc(code)}</span>
+        </div>
+        <button class="dc-copy" type="button" data-code="${esc(code)}" aria-label="کپی کد تخفیف" title="کپی کد">
+          <svg class="dc-ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span class="dc-copied" style="display:none">✓</span>
+        </button>
+      </div>
+      <div class="dc-exp">
+        <svg class="dc-exp-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 5v5l3 3"/></svg>
+        <span class="dc-exp-text"></span>
+      </div>
+      <div class="dc-foot">
+        <a class="dc-link" href="${esc(link)}" target="_blank" rel="noopener">اطلاعات بیشتر ←</a>
+        <div class="dc-bar"><div class="dc-bar-fill"></div></div>
+      </div>
+    </div>
+  </div>`;
   }).join("\n        ");
+
   return `<!-- DISCOUNTS -->
     <section class="section discounts" id="discounts">
       <div class="container">
@@ -283,9 +334,7 @@ function renderDiscounts(head, discountList) {
           <h2>${esc(head.title || "تخفیف‌های دانشجویی")}</h2>
           <p>${esc(head.subtitle || "کدهای تخفیف فعال دانشجویی را بگیر و کمتر هزینه کن.")}</p>
         </div>
-        <div class="discount-grid">
-          ${items}
-        </div>
+        <div class="dc-list">${items}</div>
       </div>
     </section>`;
 }

@@ -89,25 +89,33 @@ collections:
       - label: توضیح کوتاه
         name: description
         widget: text
-        required: false
+        required: true
       - label: کد تخفیف
         name: code
         widget: string
-        required: false
+        required: true
         hint: "مثلاً SEM10"
-      - label: لینک دریافت تخفیف
+      - label: اطلاعات بیشتر (اختیاری)
         name: link
         widget: string
         required: false
-      - label: اعتبار تا
-        name: expires
-        widget: string
+        hint: "لینک صفحه مقصد — اگر خالی باشد، کاربر به کانال تلگرام هدایت می‌شود"
+      - label: نوع اعتبار
+        name: expire_mode
+        widget: select
+        required: true
+        default: "permanent"
+        options:
+          - { label: "همیشگی", value: "permanent" }
+          - { label: "تاریخ مشخص", value: "date" }
+      - label: تاریخ انقضا (شمسی)
+        name: date_exp
+        widget: date
         required: false
-        hint: "مثلاً 30 آبان 1404"
-      - label: نمایش در سایت
-        name: active
-        widget: boolean
-        default: true
+        hint: "فقط وقتی نوع اعتبار «تاریخ مشخص» باشد این فیلد فعال می‌شود"
+        condition:
+          field: expire_mode
+          value: "date"
 
   # ================= کانون‌های فرهنگی =================
   - name: kanonha
