@@ -14,8 +14,9 @@ media_folder: assets/images/uploads
 public_folder: assets/images/uploads
 
 slug:
-  encoding: ascii
-  clean_accents: true
+  encoding: unicode
+  clean_accents: false
+  sanitize_replacement: "-"
 
 # رابط مدیریت کاملاً فارسی
 locale: fa
