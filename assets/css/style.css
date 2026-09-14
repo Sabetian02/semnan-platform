@@ -482,7 +482,7 @@ img { max-width: 100%; display: block; }
 .join-band p { color: rgba(255, 255, 255, .78); max-width: 560px; margin: 0 auto 26px; font-size: 1rem; }
 
 /* ================ Discount cards (new vault style) ================ */
-.dc-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; }
+.dc-list { display: grid; grid-template-columns: 1fr; gap: 26px; max-width: 980px; margin-inline: auto; }
 
 .dc {
   position: relative;
@@ -507,12 +507,17 @@ img { max-width: 100%; display: block; }
 
 .dc-inner {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 290px);
+  align-items: center;
+  gap: 22px;
   border-radius: 23px;
-  padding: 22px 24px 18px;
+  padding: 24px 26px 20px;
   color: #fff;
   overflow: hidden;
   isolation: isolate;
 }
+.dc-main { min-width: 0; }
 .dc-inner::after {
   content: "";
   position: absolute; top: -60px; right: -60px;
@@ -543,9 +548,15 @@ img { max-width: 100%; display: block; }
 .dc-title { color: #fff; font-size: 1.12rem; font-weight: 800; margin: 0 0 6px; line-height: 1.45; }
 .dc-desc { color: rgba(255, 255, 255, .8); font-size: .88rem; margin: 0; line-height: 1.7; }
 .dc-art { flex-shrink: 0; opacity: .9; }
-.dc-art svg { width: 62px; height: 62px; }
+.dc-art svg { width: 74px; height: 74px; }
 
-.dc-code-row { display: flex; align-items: stretch; gap: 10px; margin-top: 18px; }
+.dc-side {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  border-right: 2px dashed rgba(255, 220, 95, .4);
+  padding-right: 22px;
+  padding-left: 4px;
+}
+.dc-code-row { display: flex; align-items: stretch; gap: 10px; margin-top: 0; width: 100%; }
 .dc-code-box {
   flex: 1;
   display: flex; flex-direction: column; gap: 2px;
@@ -814,7 +825,8 @@ img { max-width: 100%; display: block; }
   .ad-slots { grid-template-columns: 1fr; }
   .dc-list { grid-template-columns: 1fr; gap: 18px; }
   .dc { border-radius: 20px; }
-  .dc-inner { border-radius: 19px; padding: 18px 16px 15px; }
+  .dc-inner { border-radius: 19px; padding: 20px 17px 16px; grid-template-columns: 1fr; gap: 16px; }
+  .dc-side { border-right: none; border-top: 2px dashed rgba(255, 220, 95, .4); padding-right: 0; padding-top: 16px; }
   .dc-art { display: none; }
   .n-banner .n-img { height: 120px; }
 }

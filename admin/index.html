@@ -186,6 +186,7 @@
         JalaliDate.prototype = Object.create(Component.prototype);
         JalaliDate.prototype.constructor = JalaliDate;
         JalaliDate.prototype.render = function () {
+          var self = this;
           var st = this.state;
           var out = h("div", { className: "jd-wrap" });
           var forever = h("label", { className: "jd-forever" },
@@ -199,13 +200,13 @@
               if (d === st.d) cls += " sel";
               var now = jalaali.toJalaali(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
               if (d === now.jd && st.y === now.jy && st.m === now.jm) cls += " today";
-              return h("span", { className: cls, onClick: (function (day) { return function () { this.pick(day); }; }).call(this, d) }, fa(d));
+              return h("span", { className: cls, onClick: function () { self.pick(d); } }, fa(d));
             }, this);
             var dows = DOWS.map(function (w) { return h("span", { className: "jd-dow" }, w); });
             var head = h("div", { className: "jd-head" },
-              h("button", { onClick: (function () { this.nav(-1); }).bind(this) }, "›"),
+              h("button", { onClick: function () { self.nav(-1); } }, "›"),
               h("b", null, MONTHS[st.m - 1] + " " + fa(st.y)),
-              h("button", { onClick: (function () { this.nav(1); }).bind(this) }, "‹"));
+              h("button", { onClick: function () { self.nav(1); } }, "‹"));
             var monthLen = jalaali.jalaaliMonthLength(st.y, st.m);
             var fmt = (st.d && st.d <= monthLen)
               ? fa(st.d) + " " + MONTHS[st.m - 1] + " " + fa(st.y)
@@ -216,7 +217,7 @@
             out.children.push(
               h("div", { className: "jd-cal" },
                 head, grid, h("div", { style: { marginTop: "8px", textAlign: "center" } },
-                  h("button", { className: "jd-head-btn", onClick: (function () { this.today(); }).bind(this) }, "امروز")),
+                  h("button", { className: "jd-btn", onClick: function () { self.today(); } }, "امروز")),
                 readout, hint));
           }
           return out;

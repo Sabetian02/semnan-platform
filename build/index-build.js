@@ -23,6 +23,7 @@ const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.
 /* لینک ایمن: URLهای مطلق (http/https/mailto/tel) یا مسیرهای داخلیِ موجود قبول می‌شوند؛
    هر مقدار زباله (اسپیس/فارسی/ناموجود) در محتوای CMS نباید publish را بشکند → به تلگرام برمی‌گردد. */
 const ABS_URI = /^(https?:|mailto:|tel:)/i;
+const LOCAL_LINK = /^(#|\/?[\w.-]+\.html(?:#[A-Za-z0-9_-]*)?)/i;
 const safeLink = (link) => {
   if (!link) return "";
   const s = String(link).trim();
@@ -279,7 +280,7 @@ function renderDiscounts(head, discountList) {
   ];
 
   const items = active.map((d, i) => {
-    const hasLink = !!(d.link && ABS_URI.test(d.link));
+    const hasLink = !!(d.link && (ABS_URI.test(d.link) || LOCAL_LINK.test(d.link)));
     const link = esc(d.link);
     const code = d.code || "";
     const grad = gradients[i % gradients.length];
@@ -292,36 +293,38 @@ function renderDiscounts(head, discountList) {
 
     return `<div class="dc reveal${dimmed}" ${expAttr}>
     <div class="dc-inner" style="background:${grad}">
-      <div class="dc-badge-row">
-        <span class="dc-badge">تخفیف دانشجویی</span>
-        <span class="dc-badge dc-status"></span>
-      </div>
-      <div class="dc-top">
+      <div class="dc-main">
+        <div class="dc-badge-row">
+          <span class="dc-badge">تخفیف دانشجویی</span>
+          <span class="dc-badge dc-status"></span>
+        </div>
         <div class="dc-body">
           <h3 class="dc-title">${esc(d.title)}</h3>
           <p class="dc-desc">${esc(d.description || "")}</p>
         </div>
+        <div class="dc-exp">
+          <svg class="dc-exp-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 5v5l3 3"/></svg>
+          <span class="dc-exp-text"></span>
+        </div>
+        <div class="dc-foot">
+          ${more}
+          <div class="dc-bar"><div class="dc-bar-fill"></div></div>
+        </div>
+      </div>
+      <div class="dc-side">
         <div class="dc-art" aria-hidden="true">
           <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="#FFDC5F" stroke-width="2" stroke-dasharray="6 4" opacity=".45"/><circle cx="40" cy="40" r="26" fill="#FFDC5F" fill-opacity=".1"/><text x="40" y="48" text-anchor="middle" fill="#FFDC5F" font-size="26" font-weight="800" font-family="Vazirmatn,sans-serif">%</text></svg>
         </div>
-      </div>
-      <div class="dc-code-row">
-        <div class="dc-code-box">
-          <span class="dc-code-lbl">کد تخفیف</span>
-          <span class="dc-code">${esc(code)}</span>
+        <div class="dc-code-row">
+          <div class="dc-code-box">
+            <span class="dc-code-lbl">کد تخفیف</span>
+            <span class="dc-code">${esc(code)}</span>
+          </div>
+          <button class="dc-copy" type="button" data-code="${esc(code)}" aria-label="کپی کد تخفیف" title="کپی کد">
+            <svg class="dc-ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            <span class="dc-copied" style="display:none">✓</span>
+          </button>
         </div>
-        <button class="dc-copy" type="button" data-code="${esc(code)}" aria-label="کپی کد تخفیف" title="کپی کد">
-          <svg class="dc-ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          <span class="dc-copied" style="display:none">✓</span>
-        </button>
-      </div>
-      <div class="dc-exp">
-        <svg class="dc-exp-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 5v5l3 3"/></svg>
-        <span class="dc-exp-text"></span>
-      </div>
-      <div class="dc-foot">
-        ${more}
-        <div class="dc-bar"><div class="dc-bar-fill"></div></div>
       </div>
     </div>
   </div>`;

@@ -115,7 +115,7 @@
       if (permanent) {
         if (statusEl) { statusEl.textContent = "همیشگی"; statusEl.style.background = "linear-gradient(90deg,#3776e2,#102A71)"; statusEl.style.border = "none"; }
         if (expText) {
-          expText.innerHTML = "اعتبار <b>همیشگی</b> — هر زمان می‌توانی استفاده کنی";
+          expText.innerHTML = "انقضا ندارد — اعتبار این تخفیف <b>همیشگی</b> است";
         }
         if (card.getAttribute("data-exp-text")) {
           expText.textContent = card.getAttribute("data-exp-text");
@@ -141,7 +141,7 @@
           if (expText) expText.innerHTML = "فقط <b>امروز</b> فرصت داری — عجله کن!";
         } else {
           if (statusEl) { statusEl.textContent = "فعال"; statusEl.style.background = "linear-gradient(90deg,#4cc878,#2f9e5a)"; statusEl.style.border = "none"; }
-          if (expText) expText.innerHTML = "تا انقضا <b>" + faDigits(diff) + "</b> روز مانده · تا " + jalaliLabel(j);
+          if (expText) expText.innerHTML = "<b>" + faDigits(diff) + "</b> روز تا انقضا باقی مانده · تا " + jalaliLabel(j);
           if (barFill) {
             var pct = Math.min(diff, 14) / 14 * 100;
             barFill.style.width = pct + "%";
@@ -157,10 +157,10 @@
     // کپی کد تخفیف
     document.querySelectorAll(".dc-copy").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var code = btn.getAttribute("data-code");
+        var code = btn.getAttribute("data-code") || "";
         var copiedEl = btn.querySelector(".dc-copied");
         var iconEl = btn.querySelector(".dc-ci");
-        var done = function () {
+        var flash = function () {
           btn.classList.add("done");
           if (iconEl) iconEl.style.display = "none";
           if (copiedEl) copiedEl.style.display = "inline";
@@ -170,17 +170,29 @@
             if (copiedEl) copiedEl.style.display = "none";
           }, 1600);
         };
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(code).then(done).catch(done);
-        } else {
+        var legacyCopy = function () {
           var ta = document.createElement("textarea");
           ta.value = code;
-          ta.style.position = "fixed"; ta.style.opacity = "0";
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.top = "0";
+          ta.style.left = "0";
+          ta.style.opacity = "0";
           document.body.appendChild(ta);
+          ta.focus();
           ta.select();
-          try { document.execCommand("copy"); } catch (e) {}
+          ta.setSelectionRange(0, 999999);
+          var ok = false;
+          try { ok = document.execCommand("copy"); } catch (e) {}
           document.body.removeChild(ta);
-          done();
+          return ok;
+        };
+        if (!code) return;
+        if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+          navigator.clipboard.writeText(code).then(flash, function () { legacyCopy(); flash(); });
+        } else {
+          legacyCopy();
+          flash();
         }
       });
     });
