@@ -8,7 +8,7 @@ backend:
   branch: main
   base_url: https://auth.semnanplatform.ir
   auth_endpoint: auth
-  client_id: GITHUB_CLIENT_ID_GOES_HERE
+  client_id: Ov23lieTbxroaVOg1N4l
 
 # آپلود عکس‌ها و فایل‌ها
 media_folder: assets/images/uploads
