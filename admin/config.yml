@@ -1,6 +1,5 @@
 # ==========================================================
 # داشبورد مدیریت سایت — پلتفرم دانشگاه سمنان
-# پس از ساخت GitHub OAuth App، مقدار CLIENT_ID را جایگزین کنید.
 # ==========================================================
 backend:
   name: github
@@ -14,7 +13,6 @@ backend:
 media_folder: assets/images/uploads
 public_folder: assets/images/uploads
 
-# برای کاربری ساده‌تر، ورودی‌ها بعد از ثبت مستقیم منتشر می‌شوند.
 slug:
   encoding: ascii
   clean_accents: true
@@ -233,262 +231,235 @@ collections:
   # ================= صفحه اصلی =================
   - name: home
     label: صفحه اصلی (هیرو، تیکر، تبلیغات)
-    file: content/home.json
-    format: json
-    fields:
-      - label: نوار بالای هیرو (قهرمان)
-        name: hero
-        widget: object
+    files:
+      - name: home
+        label: صفحه اصلی
+        file: content/home.json
+        format: json
         fields:
-          - label: متن بج
-            name: badge
-            widget: string
-          - label: بخش اول تیتر
-            name: title_before
-            widget: string
-          - label: بخش زرد تیتر
-            name: title_highlight
-            widget: string
-          - label: توضیح زیر تیتر
-            name: lead
-            widget: text
-          - label: آدرس کانال تلگرام
-            name: telegram_url
-            widget: string
-          - label: متن دکمه تلگرام
-            name: cta_tele_text
-            widget: string
-          - label: آمارها
-            name: stats
+          - label: نوار بالای هیرو (قهرمان)
+            name: hero
+            widget: object
+            fields:
+              - label: متن بج
+                name: badge
+                widget: string
+              - label: بخش اول تیتر
+                name: title_before
+                widget: string
+              - label: بخش زرد تیتر
+                name: title_highlight
+                widget: string
+              - label: توضیح زیر تیتر
+                name: lead
+                widget: text
+              - label: آدرس کانال تلگرام
+                name: telegram_url
+                widget: string
+              - label: متن دکمه تلگرام
+                name: cta_tele_text
+                widget: string
+              - label: آمارها
+                name: stats
+                widget: list
+                fields:
+                  - label: عدد
+                    name: number
+                    widget: string
+                    hint: "مثلاً +۴۰"
+                  - label: توضیح
+                    name: label
+                    widget: string
+              - label: کارت‌های «از کجا شروع کنم»
+                name: card_items
+                widget: list
+                fields:
+                  - label: ایموجی
+                    name: icon
+                    widget: string
+                  - label: رنگی بودن آیکن
+                    name: tone
+                    widget: select
+                    options: [ "", "navy" ]
+                  - label: عنوان
+                    name: title
+                    widget: string
+                  - label: زیرعنوان
+                    name: subtitle
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+                    hint: "#news یا kanonha.html"
+              - label: دکمه شناور ۱
+                name: float1
+                widget: object
+                fields:
+                  - label: ایموجی
+                    name: icon
+                    widget: string
+                  - label: متن
+                    name: text
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+              - label: دکمه شناور ۲
+                name: float2
+                widget: object
+                fields:
+                  - label: ایموجی
+                    name: icon
+                    widget: string
+                  - label: متن
+                    name: text
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+          - label: تیکر متحرک بالای صفحه
+            name: ticker
             widget: list
             fields:
-              - label: عدد
-                name: number
-                widget: string
-                hint: "مثلاً +۴۰"
-              - label: توضیح
-                name: label
-                widget: string
-          - label: کارت‌های «از کجا شروع کنم»
-            name: card_items
-            widget: list
-            fields:
-              - label: ایموجی
+              - label: آیکن
                 name: icon
                 widget: string
-              - label: رنگی بودن آیکن
-                name: tone
-                widget: select
-                options: [ "", "navy" ]
-              - label: عنوان
+              - label: برچسب (اختیاری)
+                name: label
+                widget: string
+                required: false
+              - label: متن
+                name: text
+                widget: text
+          - label: بنرهای تبلیغاتی
+            name: ads
+            widget: object
+            fields:
+              - label: بنر شماره ۱
+                name: slot1
+                widget: object
+                fields:
+                  - label: تصویر بنر
+                    name: image
+                    widget: image
+                  - label: لینک
+                    name: link
+                    widget: string
+                  - label: نمایش داده شود
+                    name: active
+                    widget: boolean
+                    default: true
+              - label: بنر شماره ۲
+                name: slot2
+                widget: object
+                fields:
+                  - label: تصویر بنر
+                    name: image
+                    widget: image
+                  - label: لینک
+                    name: link
+                    widget: string
+                  - label: نمایش داده شود
+                    name: active
+                    widget: boolean
+                    default: true
+              - label: دکمه «رزرو تبلیغات»
+                name: reserve
+                widget: object
+                fields:
+                  - label: متن دکمه
+                    name: label
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+          - label: عنوان‌های بخش اخبار
+            name: news_head
+            widget: object
+            fields:
+              - label: برچسب کوچک
+                name: eyebrow
+                widget: string
+              - label: تیتر
                 name: title
                 widget: string
-              - label: زیرعنوان
+              - label: توضیح
                 name: subtitle
-                widget: string
-              - label: لینک
-                name: link
-                widget: string
-                hint: "#news یا kanonha.html"
-          - label: دکمه شناور ۱
-            name: float1
+                widget: text
+          - label: بخش تخفیف‌ها (حالت خالی)
+            name: discounts_head
             widget: object
             fields:
-              - label: ایموجی
-                name: icon
+              - label: برچسب کوچک
+                name: eyebrow
                 widget: string
-              - label: متن
+              - label: تیتر حالت خالی
+                name: empty_title
+                widget: string
+              - label: توضیح حالت خالی
+                name: empty_text
+                widget: text
+              - label: دکمه
+                name: cta
+                widget: object
+                fields:
+                  - label: متن
+                    name: label
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+          - label: بخش «به کانال بپیوند»
+            name: join
+            widget: object
+            fields:
+              - label: تیتر
+                name: title
+                widget: string
+              - label: توضیح
                 name: text
-                widget: string
-              - label: لینک
-                name: link
-                widget: string
-          - label: دکمه شناور ۲
-            name: float2
+                widget: text
+              - label: دکمه
+                name: cta
+                widget: object
+                fields:
+                  - label: متن
+                    name: label
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+          - label: سئو
+            name: seo
             widget: object
             fields:
-              - label: ایموجی
-                name: icon
+              - label: تیتر صفحه (تب مرورگر)
+                name: title
                 widget: string
-              - label: متن
-                name: text
-                widget: string
-              - label: لینک
-                name: link
-                widget: string
-      - label: تیکر متحرک بالای صفحه
-        name: ticker
-        widget: list
-        fields:
-          - label: آیکن
-            name: icon
-            widget: string
-          - label: برچسب (اختیاری)
-            name: label
-            widget: string
-            required: false
-          - label: متن
-            name: text
-            widget: text
-      - label: بنرهای تبلیغاتی
-        name: ads
-        widget: object
-        fields:
-          - label: بنر شماره ۱
-            name: slot1
-            widget: object
-            fields:
-              - label: تصویر بنر
-                name: image
-                widget: image
-              - label: لینک
-                name: link
-                widget: string
-              - label: نمایش داده شود
-                name: active
-                widget: boolean
-                default: true
-          - label: بنر شماره ۲
-            name: slot2
-            widget: object
-            fields:
-              - label: تصویر بنر
-                name: image
-                widget: image
-              - label: لینک
-                name: link
-                widget: string
-              - label: نمایش داده شود
-                name: active
-                widget: boolean
-                default: true
-          - label: دکمه «رزرو تبلیغات»
-            name: reserve
-            widget: object
-            fields:
-              - label: متن دکمه
-                name: label
-                widget: string
-              - label: لینک
-                name: link
-                widget: string
-      - label: عنوان‌های بخش اخبار
-        name: news_head
-        widget: object
-        fields:
-          - label: برچسب کوچک
-            name: eyebrow
-            widget: string
-          - label: تیتر
-            name: title
-            widget: string
-          - label: توضیح
-            name: subtitle
-            widget: text
-      - label: بخش تخفیف‌ها (حالت خالی)
-        name: discounts_head
-        widget: object
-        fields:
-          - label: برچسب کوچک
-            name: eyebrow
-            widget: string
-          - label: تیتر حالت خالی
-            name: empty_title
-            widget: string
-          - label: توضیح حالت خالی
-            name: empty_text
-            widget: text
-          - label: دکمه
-            name: cta
-            widget: object
-            fields:
-              - label: متن
-                name: label
-                widget: string
-              - label: لینک
-                name: link
-                widget: string
-      - label: بخش «به کانال بپیوند»
-        name: join
-        widget: object
-        fields:
-          - label: تیتر
-            name: title
-            widget: string
-          - label: توضیح
-            name: text
-            widget: text
-          - label: دکمه
-            name: cta
-            widget: object
-            fields:
-              - label: متن
-                name: label
-                widget: string
-              - label: لینک
-                name: link
-                widget: string
-      - label: سئو
-        name: seo
-        widget: object
-        fields:
-          - label: تیتر صفحه (تب مرورگر)
-            name: title
-            widget: string
-          - label: توضیح متا
-            name: description
-            widget: text
+              - label: توضیح متا
+                name: description
+                widget: text
 
   # ================= تنظیمات سایت =================
   - name: site
     label: تنظیمات سایت (منو، فوتر)
-    file: content/site.json
-    format: json
-    fields:
-      - label: نام برند
-        name: brand_name
-        widget: string
-      - label: شعار
-        name: brand_tagline
-        widget: string
-      - label: آدرس کانال تلگرام
-        name: telegram_url
-        widget: string
-      - label: منوی اصلی
-        name: nav
-        widget: list
+    files:
+      - name: site
+        label: تنظیمات سایت
+        file: content/site.json
+        format: json
         fields:
-          - label: عنوان
-            name: label
+          - label: نام برند
+            name: brand_name
             widget: string
-          - label: لینک
-            name: link
+          - label: شعار
+            name: brand_tagline
             widget: string
-      - label: دکمه بالای منو
-        name: cta
-        widget: object
-        fields:
-          - label: متن
-            name: label
+          - label: آدرس کانال تلگرام
+            name: telegram_url
             widget: string
-          - label: لینک
-            name: link
-            widget: string
-      - label: فوتر
-        name: footer
-        widget: object
-        fields:
-          - label: شعار فوتر
-            name: slogan
-            widget: string
-          - label: توضیح فوتر
-            name: about
-            widget: text
-          - label: عنوان بخش اول
-            name: quick_title
-            widget: string
-          - label: لینک‌های بخش اول
-            name: quick
+          - label: منوی اصلی
+            name: nav
             widget: list
             fields:
               - label: عنوان
@@ -497,19 +468,52 @@ collections:
               - label: لینک
                 name: link
                 widget: string
-          - label: عنوان بخش دوم
-            name: services_title
-            widget: string
-          - label: لینک‌های بخش دوم
-            name: services
-            widget: list
+          - label: دکمه بالای منو
+            name: cta
+            widget: object
             fields:
-              - label: عنوان
+              - label: متن
                 name: label
                 widget: string
               - label: لینک
                 name: link
                 widget: string
-          - label: متن انتهایی راست
-            name: right_text
-            widget: string
+          - label: فوتر
+            name: footer
+            widget: object
+            fields:
+              - label: شعار فوتر
+                name: slogan
+                widget: string
+              - label: توضیح فوتر
+                name: about
+                widget: text
+              - label: عنوان بخش اول
+                name: quick_title
+                widget: string
+              - label: لینک‌های بخش اول
+                name: quick
+                widget: list
+                fields:
+                  - label: عنوان
+                    name: label
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+              - label: عنوان بخش دوم
+                name: services_title
+                widget: string
+              - label: لینک‌های بخش دوم
+                name: services
+                widget: list
+                fields:
+                  - label: عنوان
+                    name: label
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
+              - label: متن انتهایی راست
+                name: right_text
+                widget: string
