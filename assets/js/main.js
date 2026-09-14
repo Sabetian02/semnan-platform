@@ -102,6 +102,15 @@
       var statusEl = card.querySelector(".dc-status");
       var barFill = card.querySelector(".dc-bar-fill");
       var permanent = card.getAttribute("data-exp") === "permanent";
+      var dimmed = card.classList.contains("dc-off");
+
+      if (dimmed) {
+        if (statusEl) { statusEl.textContent = "منقضی"; statusEl.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; statusEl.style.border = "none"; }
+        if (expText) expText.innerHTML = "<b>منقضی شده</b> — این تخفیف دیگر معتبر نیست";
+        if (barFill) { barFill.style.width = "100%"; barFill.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; }
+        card.classList.add("dc-expired");
+        return;
+      }
 
       if (permanent) {
         if (statusEl) { statusEl.textContent = "همیشگی"; statusEl.style.background = "linear-gradient(90deg,#3776e2,#102A71)"; statusEl.style.border = "none"; }
@@ -126,6 +135,7 @@
           if (statusEl) { statusEl.textContent = "منقضی"; statusEl.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; statusEl.style.border = "none"; }
           if (expText) expText.innerHTML = "<b>منقضی شده</b> — این تخفیف دیگر معتبر نیست";
           if (barFill) { barFill.style.width = "100%"; barFill.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; }
+          card.classList.add("dc-expired");
         } else if (diff === 0) {
           if (statusEl) { statusEl.textContent = "امروز آخرین روز"; statusEl.style.background = "linear-gradient(90deg,#f5c400,#d4a100)"; statusEl.style.border = "none"; }
           if (expText) expText.innerHTML = "فقط <b>امروز</b> فرصت داری — عجله کن!";

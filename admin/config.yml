@@ -86,6 +86,7 @@ collections:
         name: title
         widget: string
         required: true
+        hint: "مثلاً «۱۰٪ تخفیف ویژه دانشجویان»"
       - label: توضیح کوتاه
         name: description
         widget: text
@@ -94,28 +95,26 @@ collections:
         name: code
         widget: string
         required: true
-        hint: "مثلاً SEM10"
+        hint: "مثلاً UNI10"
       - label: اطلاعات بیشتر (اختیاری)
         name: link
         widget: string
         required: false
-        hint: "لینک صفحه مقصد — اگر خالی باشد، کاربر به کانال تلگرام هدایت می‌شود"
-      - label: نوع اعتبار
-        name: expire_mode
+        hint: "لینک صفحه مقصد — اگر خالی باشد دکمه‌ای نمایش داده نمی‌شود"
+      - label: اعتبار تا (تقویم شمسی)
+        name: expires
+        widget: jalali-date
+        required: true
+        default: "همیشگی"
+        hint: "از تقویم شمسی انتخاب کن یا گزینه «همیشگی» را بگذار"
+      - label: وضعیت
+        name: active
         widget: select
         required: true
-        default: "permanent"
+        default: true
         options:
-          - { label: "همیشگی", value: "permanent" }
-          - { label: "تاریخ مشخص", value: "date" }
-      - label: تاریخ انقضا (شمسی)
-        name: date_exp
-        widget: date
-        required: false
-        hint: "فقط وقتی نوع اعتبار «تاریخ مشخص» باشد این فیلد فعال می‌شود"
-        condition:
-          field: expire_mode
-          value: "date"
+          - { label: "فعال", value: true }
+          - { label: "منقضی", value: false }
 
   # ================= کانون‌های فرهنگی =================
   - name: kanonha
@@ -405,13 +404,19 @@ collections:
               - label: توضیح
                 name: subtitle
                 widget: text
-          - label: بخش تخفیف‌ها (حالت خالی)
+          - label: بخش تخفیف‌ها
             name: discounts_head
             widget: object
             fields:
               - label: برچسب کوچک
                 name: eyebrow
                 widget: string
+              - label: تیتر (وقتی تخفیفی موجود باشد)
+                name: title
+                widget: string
+              - label: توضیح (وقتی تخفیفی موجود باشد)
+                name: subtitle
+                widget: text
               - label: تیتر حالت خالی
                 name: empty_title
                 widget: string

@@ -279,17 +279,18 @@ function renderDiscounts(head, discountList) {
   ];
 
   const items = active.map((d, i) => {
-    const link = linkOrDefault(d.link);
+    const hasLink = !!(d.link && ABS_URI.test(d.link));
+    const link = esc(d.link);
     const code = d.code || "";
     const grad = gradients[i % gradients.length];
+    const forever = !d.expires || d.expires === "همیشگی" || d.expires === "permanent";
+    const dimmed = d.active === false ? " dc-off" : "";
+    const expAttr = forever ? `data-exp="permanent"` : `data-exp="${esc(d.expires)}"`;
+    const more = hasLink
+      ? `<a class="dc-link" href="${link}" target="_blank" rel="noopener">اطلاعات بیشتر ←</a>`
+      : `<span class="dc-link dc-link-none"></span>`;
 
-    const expAttr = d.date_exp
-      ? `data-exp="${esc(d.date_exp)}"`
-      : d.expire_mode === "permanent" || !d.expires
-        ? `data-exp="permanent"`
-        : `data-exp-text="${esc(d.expires)}"`;
-
-    return `<div class="dc reveal" ${expAttr}>
+    return `<div class="dc reveal${dimmed}" ${expAttr}>
     <div class="dc-inner" style="background:${grad}">
       <div class="dc-badge-row">
         <span class="dc-badge">تخفیف دانشجویی</span>
@@ -319,7 +320,7 @@ function renderDiscounts(head, discountList) {
         <span class="dc-exp-text"></span>
       </div>
       <div class="dc-foot">
-        <a class="dc-link" href="${esc(link)}" target="_blank" rel="noopener">اطلاعات بیشتر ←</a>
+        ${more}
         <div class="dc-bar"><div class="dc-bar-fill"></div></div>
       </div>
     </div>
