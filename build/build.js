@@ -1,19 +1,33 @@
 /*
- * Producer script — generates profile pages & list pages
+ * Producer script — generates profile pages, list pages, and shared parts.
+ * Reads CMS-managed content from ./content
  * Run: node build/build.js
  */
 const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
+const CONTENT = path.join(ROOT, "content");
 const KANON_DIR = path.join(ROOT, "kanonha");
 const ANJOMAN_DIR = path.join(ROOT, "anjomanha");
 
-const read = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, f), "utf8"));
-const kanonha = read("kanonha-data.json");
-const anjomanhaA = read("anjomanha-data-a.json");
-const anjomanhaB = read("anjomanha-data-b.json");
-const anjomanha = anjomanhaA.concat(anjomanhaB);
+const readJson = (p) => JSON.parse(fs.readFileSync(p, "utf8"));
+const site = readJson(path.join(CONTENT, "site.json"));
+const home = readJson(path.join(CONTENT, "home.json"));
+
+function loadFolder(folder) {
+  const dir = path.join(CONTENT, folder);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => readJson(path.join(dir, f)))
+    .filter((it) => it.active !== false)
+    .sort((a, b) => (a.sort || 0) - (b.sort || 0));
+}
+
+const kanonha = loadFolder("kanonha");
+const anjomanha = loadFolder("anjomanha");
 
 const esc = (s) =>
   String(s)
@@ -21,8 +35,34 @@ const esc = (s) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-const TELE_URL = "https://t.me/PlatformSem";
+const TELE_URL = site.telegram_url || "https://t.me/PlatformSem";
 const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L6.74 13.3 2.64 12c-.88-.25-.89-.86.2-1.3L20.03 4.7c.73-.33 1.43.18 1.15 1.3l-3.7 17.42c-.25 1.16-.95 1.44-1.92.9l-5.29-3.9-2.55 2.2c-.29.28-.53.46-1.1.46l.32-4.9z"/></svg>`;
+
+const navLinks = (prefix) =>
+  site.nav
+    .map(
+      (n) =>
+        `<li><a href="${href(n.link, prefix)}">${esc(n.label)}</a></li>`
+    )
+    .join("\n          ");
+
+const mmLinks = (prefix) =>
+  site.nav
+    .map((n) => `<a href="${href(n.link, prefix)}">${esc(n.label)}</a>`)
+    .join("\n        ");
+
+const href = (link, prefix) => {
+  const l = esc(link);
+  if (/^(https?:|mailto:|tel:)/.test(link)) return l;
+  return prefix + l;
+};
+
+const footLinks = (list, prefix) =>
+  list
+    .map(
+      (n) => `<li><a href="${href(n.link, prefix)}">${esc(n.label)}</a></li>`
+    )
+    .join("\n            ");
 
 function renderHeader(prefix) {
   return `
@@ -31,15 +71,12 @@ function renderHeader(prefix) {
       <nav class="nav">
         <a class="brand" href="${prefix}index.html">
           <img class="brand-logo" src="${prefix}assets/images/SVG/logo.svg" alt="لوگوی پلتفرم دانشگاه سمنان">
-          <span class="brand-name"><strong>پلتفرم دانشگاه سمنان</strong><span>دانشگاه رو فقط نگذرون؛ تجربه‌اش کن</span></span>
+          <span class="brand-name"><strong>${esc(site.brand_name)}</strong><span>${esc(site.brand_tagline)}</span></span>
         </a>
         <ul class="nav-links">
-          <li><a href="${prefix}index.html">خانه</a></li>
-          <li><a href="${prefix}kanonha.html">کانون‌های فرهنگی</a></li>
-          <li><a href="${prefix}anjomanha.html">انجمن‌های علمی</a></li>
-          <li><a href="${prefix}amoozesh.html">آموزش مجازی</a></li>
+          ${navLinks(prefix)}
         </ul>
-        <a class="btn btn-navy btn-sm nav-cta" href="https://t.me/PlatformSem" target="_blank" rel="noopener">ورود به کانال پلتفرم</a>
+        <a class="btn btn-navy btn-sm nav-cta" href="${esc(site.cta.link)}" target="_blank" rel="noopener">${esc(site.cta.label)}</a>
         <button class="burger" aria-label="باز کردن منو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       </nav>
     </div>
@@ -49,20 +86,18 @@ function renderHeader(prefix) {
     <div class="mm-backdrop"></div>
     <aside class="mm-panel">
       <div class="mm-head">
-        <div class="brand"><img class="brand-logo" src="${prefix}assets/images/SVG/logo.svg" alt="لوگوی پلتفرم دانشگاه سمنان"><span class="brand-name"><strong>پلتفرم دانشگاه سمنان</strong></span></div>
+        <div class="brand"><img class="brand-logo" src="${prefix}assets/images/SVG/logo.svg" alt="لوگوی پلتفرم دانشگاه سمنان"><span class="brand-name"><strong>${esc(site.brand_name)}</strong></span></div>
         <button class="mm-close" aria-label="بستن">✕</button>
       </div>
       <div class="mm-links">
-        <a href="${prefix}index.html">خانه</a>
-        <a href="${prefix}kanonha.html">کانون‌های فرهنگی</a>
-        <a href="${prefix}anjomanha.html">انجمن‌های علمی</a>
-        <a href="${prefix}amoozesh.html">آموزش مجازی</a>
+        ${mmLinks(prefix)}
       </div>
     </aside>
   </div>`;
 }
 
 function renderFooter(prefix) {
+  const f = site.footer;
   return `
   <footer class="site-footer">
     <div class="container">
@@ -70,33 +105,27 @@ function renderFooter(prefix) {
         <div class="foot-col foot-brand-col">
           <div class="foot-brand">
             <img class="brand-logo foot-logo" src="${prefix}assets/images/SVG/logo.svg" alt="لوگوی پلتفرم دانشگاه سمنان">
-            <div><strong>پلتفرم دانشگاه سمنان</strong><span>تجربهٔ دانشگاه؛ نه فقط گذراندنش</span></div>
+            <div><strong>${esc(site.brand_name)}</strong><span>${esc(f.slogan)}</span></div>
           </div>
-          <p>مرجع جامع اطلاع‌رسانی فعالیت‌های فرهنگی، علمی و آموزشی دانشگاه سمنان؛ همه تشکل‌ها، رویدادها و دوره‌های مهارتی را یک‌جا بشناس.</p>
-          <a class="foot-tele" href="https://t.me/PlatformSem" target="_blank" rel="noopener">${teleSvg} کانال تلگرام پلتفرم</a>
+          <p>${esc(f.about)}</p>
+          <a class="foot-tele" href="${esc(TELE_URL)}" target="_blank" rel="noopener">${teleSvg} کانال تلگرام پلتفرم</a>
         </div>
         <div class="foot-col">
-          <h4>دسترسی سریع</h4>
+          <h4>${esc(f.quick_title)}</h4>
           <ul>
-            <li><a href="${prefix}index.html">خانه</a></li>
-            <li><a href="${prefix}kanonha.html">کانون‌های فرهنگی</a></li>
-            <li><a href="${prefix}anjomanha.html">انجمن‌های علمی</a></li>
-            <li><a href="${prefix}amoozesh.html">آموزش‌های مجازی</a></li>
+            ${footLinks(f.quick, prefix)}
           </ul>
         </div>
         <div class="foot-col">
-          <h4>خدمات پلتفرم</h4>
+          <h4>${esc(f.services_title)}</h4>
           <ul>
-            <li><a href="${prefix}amoozesh.html">دوره‌های مهارتی</a></li>
-            <li><a href="${prefix}kanonha.html">راهنمای کانون‌ها</a></li>
-            <li><a href="${prefix}anjomanha.html">راهنمای انجمن‌های علمی</a></li>
-            <li><a href="https://t.me/PlatformSem" target="_blank" rel="noopener">اطلاع‌رسانی و تبلیغات</a></li>
+            ${footLinks(f.services, prefix)}
           </ul>
         </div>
       </div>
       <div class="foot-bottom">
-        <div>© ${new Date().getFullYear()} <b>پلتفرم دانشگاه سمنان</b> — تمامی حقوق محفوظ است.</div>
-        <div>دانشگاه سمنان</div>
+        <div>© ${new Date().getFullYear()} <b>${esc(site.brand_name)}</b> — تمامی حقوق محفوظ است.</div>
+        <div>${esc(f.right_text)}</div>
       </div>
     </div>
   </footer>`;
@@ -108,8 +137,8 @@ function pageSkeleton(prefix, title, bodyExtra) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${esc(title)} | پلتفرم دانشگاه سمنان</title>
-  <meta name="description" content="${esc(title)} — پلتفرم دانشگاه سمنان">
+  <title>${esc(title)} | ${esc(site.brand_name)}</title>
+  <meta name="description" content="${esc(title)} — ${esc(site.brand_name)}">
   <link rel="stylesheet" href="${prefix}assets/css/style.css">
 </head>
 <body>
@@ -121,16 +150,10 @@ ${bodyExtra}
 
 /* ---------- Moving announcement ticker (below hero) ---------- */
 function renderMarquee() {
-  const items = [
-    ["✦", "اطلاعیه", "ثبت‌نام کانون‌های فرهنگی و انجمن‌های علمی آغاز شد"],
-    ["📣", null, "برای عضویت در کانال پلتفرم، همین حالا به t.me/PlatformSem بپیوند"],
-    ["🎁", null, "تخفیف‌های دانشجویی پلتفرم فعال شد؛ بیشتر استفاده کن، کمتر هزینه کن"],
-    ["🎓", null, "جشن استقبال از دانشجویان جدید به‌زودی برگزار می‌شود"],
-    ["💻", null, "دوره‌های آموزش مجازی با گواهی معتبر در حال برگزاری است"]
-  ];
-  const item = (ico, label, text) =>
-    `<div class="ticker-item"><span class="tt-ico">${ico}</span>${label ? `<b>${label}:</b>` : ""} ${esc(text)}</div>`;
-  const half = items.map((i) => item(i[0], i[1], i[2])).join("");
+  const items = home.ticker && home.ticker.length ? home.ticker : [];
+  const item = (it) =>
+    `<div class="ticker-item"><span class="tt-ico">${esc(it.icon || "✦")}</span>${it.label ? `<b>${esc(it.label)}:</b>` : ""} ${esc(it.text)}</div>`;
+  const half = items.map(item).join("");
   const full = half + half;
   return `
   <div class="ticker" dir="ltr" aria-label="اطلاعیه‌های متحرک">
@@ -204,7 +227,7 @@ function renderProfile(prefix, item, kindTitle, backHref, backLabel) {
 /* ---------- List page (no filter, no telegram) ---------- */
 function renderListPage(prefix, items, title, subtitle, catLabel) {
   const cards = items
-    .map((it) => `<a class="list-card reveal" href="${prefix}${catLabel}/${it.id}.html">
+    .map((it) => `<a class="list-card reveal" href="${prefix}${catLabel}/${it.slug}.html">
         <span class="lc-ico">${it.icon}</span>
         <span class="lc-body"><h3>${esc(it.short)}</h3><span class="lc-cat">${esc(it.cat)}</span></span>
         <span class="lc-arrow">←</span>
@@ -236,7 +259,7 @@ function renderListPage(prefix, items, title, subtitle, catLabel) {
 /* ---------- Write all ---------- */
 function writeProfile(folder, it, kindTitle, backHref) {
   const prefix = "../";
-  const file = path.join(folder, it.id + ".html");
+  const file = path.join(folder, it.slug + ".html");
   fs.writeFileSync(file, renderProfile(prefix, it, kindTitle, backHref), "utf8");
   console.log("✔", path.relative(ROOT, file));
 }

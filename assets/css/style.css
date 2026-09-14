@@ -421,6 +421,7 @@ img { max-width: 100%; display: block; }
   overflow: hidden;
 }
 .n-banner svg { width: 100%; height: 100%; }
+.n-banner .n-img { width: 100%; height: 130px; object-fit: cover; display: block; }
 .n-chip-svg {
   position: absolute; top: 10px; inset-inline-start: 10px;
   background: rgba(255, 253, 240, .92);
@@ -480,6 +481,35 @@ img { max-width: 100%; display: block; }
 .join-band h2 { font-size: clamp(1.5rem, 3.4vw, 2.2rem); margin-bottom: 12px; font-weight: 800; }
 .join-band p { color: rgba(255, 255, 255, .78); max-width: 560px; margin: 0 auto 26px; font-size: 1rem; }
 
+/* Discounts — list mode */
+.discount-grid { display: flex; flex-direction: column; gap: 18px; }
+.discount-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+  background: rgba(255, 255, 255, .75);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 28px 30px;
+  transition: transform .22s, box-shadow .22s, border-color .22s;
+}
+.discount-item:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -18px rgba(0, 24, 64, .4); border-color: rgba(245, 196, 0, .7); }
+.discount-item .d-top { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.discount-item .d-top .eyebrow { margin-bottom: 0; }
+.d-expires { font-size: .78rem; font-weight: 700; color: var(--muted); }
+.discount-item h3 { color: var(--navy-dark); font-size: 1.08rem; margin-bottom: 4px; font-weight: 800; }
+.discount-item p { color: var(--muted); font-size: .92rem; }
+.discount-item .d-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; flex-shrink: 0; }
+.discount-code {
+  display: inline-block;
+  font-size: .82rem; font-weight: 800;
+  background: rgba(245, 196, 0, .18);
+  border: 1px dashed rgba(245, 196, 0, .75);
+  color: var(--navy);
+  border-radius: 999px; padding: 5px 18px;
+  font-family: 'Vazirmatn', monospace;
+}
 /* Discounts (empty state) */
 .discounts {
   background:
@@ -666,4 +696,7 @@ img { max-width: 100%; display: block; }
   .ad-banner-art svg { width: 120px; height: 120px; }
   .discount-art svg { width: 150px; height: 150px; }
   .ad-slots { grid-template-columns: 1fr; }
+  .discount-item { flex-direction: column; align-items: stretch; text-align: center; padding: 24px 22px; }
+  .discount-item .d-actions { align-items: center; }
+  .n-banner .n-img { height: 120px; }
 }

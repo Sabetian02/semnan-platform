@@ -1,0 +1,11 @@
+name = "decap-cms-oauth"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# دامنه‌ای که این Worker روی آن خواهد بود (از DNS کلادفلر، حالت Proxied)
+workers_dev = false
+
+[vars]
+# این متغیرها هنگام دیپلوی با --secret مقداردهی می‌شوند:
+#   npx wrangler secret put GITHUB_CLIENT_ID
+#   npx wrangler secret put GITHUB_CLIENT_SECRET

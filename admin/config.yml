@@ -1,0 +1,288 @@
+# ==========================================================
+# داشبورد مدیریت سایت — پلتفرم دانشگاه سمنان
+# پس از ساخت GitHub OAuth App، مقدار CLIENT_ID را جایگزین کنید.
+# ==========================================================
+backend:
+  name: github
+  repo: Sabetian02/semnan-platform
+  branch: main
+  base_url: https://auth.semnanplatform.ir
+  auth_endpoint: auth
+  client_id: GITHUB_CLIENT_ID_GOES_HERE
+
+# آپلود عکس‌ها و فایل‌ها
+media_folder: assets/images/uploads
+public_folder: assets/images/uploads
+
+# برای کاربری ساده‌تر، ورودی‌ها بعد از ثبت مستقیم منتشر می‌شوند.
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  # ================= اطلاعیه‌ها و اخبار =================
+  - name: news
+    label: اطلاعیه‌ها و اخبار
+    label_singular: اطلاعیه
+    folder: content/news
+    format: json
+    create: true
+    delete: true
+    extension: json
+    summary: "{{title}} — {{category}}"
+    fields:
+      - { label: عنوان, name: title, widget: string, required: true }
+      - { label: خلاصه خبر, name: summary, widget: text, required: true }
+      - label: دسته‌بندی
+        name: category
+        widget: select
+        options: [ "جدید", "رویداد", "فراخوان", "اطلاع‌رسانی", "دوره", "خبر" ]
+        default: "خبر"
+      - { label: لینک «اطلاعات بیشتر», name: link, widget: string, required: false, hint: "مثلاً amoozesh.html یا یک آدرس کامل https://" }
+      - { label: تصویر شاخص (اختیاری), name: image, widget: image, required: false }
+      - { label: تاریخ انتشار, name: date, widget: datetime, required: true }
+      - { label: نمایش در سایت, name: active, widget: boolean, default: true }
+
+  # ================= تخفیف‌های دانشجویی =================
+  - name: discounts
+    label: تخفیف‌های دانشجویی
+    label_singular: تخفیف
+    folder: content/discounts
+    format: json
+    create: true
+    delete: true
+    extension: json
+    summary: "{{title}} — کد: {{code}}"
+    fields:
+      - { label: عنوان تخفیف, name: title, widget: string, required: true }
+      - { label: توضیح کوتاه, name: description, widget: text, required: false }
+      - { label: کد تخفیف, name: code, widget: string, required: false, hint: "مثلاً SEM10" }
+      - { label: لینک دریافت تخفیف, name: link, widget: string, required: false }
+      - { label: اعتبار تا, name: expires, widget: string, required: false, hint: "مثلاً 30 آبان 1404" }
+      - { label: نمایش در سایت, name: active, widget: boolean, default: true }
+
+  # ================= کانون‌های فرهنگی =================
+  - name: kanonha
+    label: کانون‌های فرهنگی
+    label_singular: کانون
+    folder: content/kanonha
+    format: json
+    create: true
+    delete: true
+    extension: json
+    summary: "{{short}} | {{cat}}"
+    fields:
+      - { label: شناسه صفحه (فقط حروف کوچک لاتین و خط تیره), name: slug, widget: string, required: true, hint: "بعد از انتشار نباید تغییر کند — مثال: teater" }
+      - { label: نام کامل, name: name, widget: string, required: true }
+      - { label: نام کوتاه, name: short, widget: string, required: true }
+      - { label: دسته, name: cat, widget: string, required: true }
+      - { label: ایموجی نماد, name: icon, widget: string, required: true }
+      - { label: لینک کانال تلگرام, name: telegram, widget: string, required: false }
+      - { label: درباره کانون, name: desc, widget: text, required: true }
+      - label: فعالیت‌ها
+        name: activities
+        widget: list
+        required: false
+        field: { label: مورد, name: item, widget: string }
+      - label: رویدادها
+        name: events
+        widget: list
+        required: false
+        field: { label: مورد, name: item, widget: string }
+      - label: دوره‌ها و کلاس‌ها
+        name: classes
+        widget: list
+        required: false
+        field: { label: مورد, name: item, widget: string }
+
+  # ================= انجمن‌های علمی =================
+  - name: anjomanha
+    label: انجمن‌های علمی
+    label_singular: انجمن
+    folder: content/anjomanha
+    format: json
+    create: true
+    delete: true
+    extension: json
+    summary: "{{short}} | {{cat}}"
+    fields:
+      - { label: شناسه صفحه (فقط حروف کوچک لاتین و خط تیره), name: slug, widget: string, required: true, hint: "بعد از انتشار نباید تغییر کند" }
+      - { label: نام کامل, name: name, widget: string, required: true }
+      - { label: نام کوتاه, name: short, widget: string, required: true }
+      - { label: دسته, name: cat, widget: string, required: true }
+      - { label: ایموجی نماد, name: icon, widget: string, required: true }
+      - { label: لینک کانال تلگرام, name: telegram, widget: string, required: false }
+      - { label: درباره انجمن, name: desc, widget: text, required: true }
+      - label: فعالیت‌ها
+        name: activities
+        widget: list
+        required: false
+        field: { label: مورد, name: item, widget: string }
+      - label: رویدادها
+        name: events
+        widget: list
+        required: false
+        field: { label: مورد, name: item, widget: string }
+      - label: دوره‌ها و کلاس‌ها
+        name: classes
+        widget: list
+        required: false
+        field: { label: مورد, name: item, widget: string }
+
+  # ================= صفحه اصلی =================
+  - name: home
+    label: صفحه اصلی (هیرو، تیکر، تبلیغات)
+    file: content/home.json
+    format: json
+    fields:
+      - label: نوار بالای هیرو (قهرمان)
+        name: hero
+        widget: object
+        fields:
+          - { label: متن بج، name: badge, widget: string }
+          - { label: بخش اول تیتر, name: title_before, widget: string }
+          - { label: بخش زرد تیتر, name: title_highlight, widget: string }
+          - { label: توضیح زیر تیتر, name: lead, widget: text }
+          - { label: آدرس کانال تلگرام, name: telegram_url, widget: string }
+          - { label: متن دکمه تلگرام, name: cta_tele_text, widget: string }
+          - label: آمارها
+            name: stats
+            widget: list
+            fields:
+              - { label: عدد, name: number, widget: string, hint: "مثلاً +۴۰" }
+              - { label: توضیح, name: label, widget: string }
+          - label: کارت‌های «از کجا شروع کنم»
+            name: card_items
+            widget: list
+            fields:
+              - { label: ایموجی, name: icon, widget: string }
+              - { label: رنگی بودن آیکن, name: tone, widget: select, options: [ "", "navy" ] }
+              - { label: عنوان, name: title, widget: string }
+              - { label: زیرعنوان, name: subtitle, widget: string }
+              - { label: لینک, name: link, widget: string, hint: "#news یا kanonha.html" }
+          - label: دکمه شناور ۱
+            name: float1
+            widget: object
+            fields:
+              - { label: ایموجی, name: icon, widget: string }
+              - { label: متن, name: text, widget: string }
+              - { label: لینک, name: link, widget: string }
+          - label: دکمه شناور ۲
+            name: float2
+            widget: object
+            fields:
+              - { label: ایموجی, name: icon, widget: string }
+              - { label: متن, name: text, widget: string }
+              - { label: لینک, name: link, widget: string }
+      - label: تیکر متحرک بالای صفحه
+        name: ticker
+        widget: list
+        fields:
+          - { label: آیکن, name: icon, widget: string }
+          - { label: برچسب (اختیاری), name: label, widget: string, required: false }
+          - { label: متن, name: text, widget: text }
+      - label: بنرهای تبلیغاتی
+        name: ads
+        widget: object
+        fields:
+          - label: بنر شماره ۱
+            name: slot1
+            widget: object
+            fields:
+              - { label: تصویر بنر, name: image, widget: image }
+              - { label: لینک, name: link, widget: string }
+              - { label: نمایش داده شود, name: active, widget: boolean, default: true }
+          - label: بنر شماره ۲
+            name: slot2
+            widget: object
+            fields:
+              - { label: تصویر بنر, name: image, widget: image }
+              - { label: لینک, name: link, widget: string }
+              - { label: نمایش داده شود, name: active, widget: boolean, default: true }
+          - label: دکمه «رزرو تبلیغات»
+            name: reserve
+            widget: object
+            fields:
+              - { label: متن دکمه, name: label, widget: string }
+              - { label: لینک, name: link, widget: string }
+      - label: عنوان‌های بخش اخبار
+        name: news_head
+        widget: object
+        fields:
+          - { label: برچسب کوچک, name: eyebrow, widget: string }
+          - { label: تیتر, name: title, widget: string }
+          - { label: توضیح, name: subtitle, widget: text }
+      - label: بخش تخفیف‌ها (حالت خالی)
+        name: discounts_head
+        widget: object
+        fields:
+          - { label: برچسب کوچک, name: eyebrow, widget: string }
+          - { label: تیتر حالت خالی, name: empty_title, widget: string }
+          - { label: توضیح حالت خالی, name: empty_text, widget: text }
+          - label: دکمه
+            name: cta
+            widget: object
+            fields:
+              - { label: متن, name: label, widget: string }
+              - { label: لینک, name: link, widget: string }
+      - label: بخش «به کانال بپیوند»
+        name: join
+        widget: object
+        fields:
+          - { label: تیتر, name: title, widget: string }
+          - { label: توضیح, name: text, widget: text }
+          - label: دکمه
+            name: cta
+            widget: object
+            fields:
+              - { label: متن, name: label, widget: string }
+              - { label: لینک, name: link, widget: string }
+      - label: سئو
+        name: seo
+        widget: object
+        fields:
+          - { label: تیتر صفحه (تب مرورگر), name: title, widget: string }
+          - { label: توضیح متا, name: description, widget: text }
+
+  # ================= تنظیمات سایت =================
+  - name: site
+    label: تنظیمات سایت (منو، فوتر)
+    file: content/site.json
+    format: json
+    fields:
+      - { label: نام برند, name: brand_name, widget: string }
+      - { label: شعار, name: brand_tagline, widget: string }
+      - { label: آدرس کانال تلگرام, name: telegram_url, widget: string }
+      - label: منوی اصلی
+        name: nav
+        widget: list
+        fields:
+          - { label: عنوان, name: label, widget: string }
+          - { label: لینک, name: link, widget: string }
+      - label: دکمه بالای منو
+        name: cta
+        widget: object
+        fields:
+          - { label: متن, name: label, widget: string }
+          - { label: لینک, name: link, widget: string }
+      - label: فوتر
+        name: footer
+        widget: object
+        fields:
+          - { label: شعار فوتر, name: slogan, widget: string }
+          - { label: توضیح فوتر, name: about, widget: text }
+          - { label: عنوان بخش اول, name: quick_title, widget: string }
+          - label: لینک‌های بخش اول
+            name: quick
+            widget: list
+            fields:
+              - { label: عنوان, name: label, widget: string }
+              - { label: لینک, name: link, widget: string }
+          - { label: عنوان بخش دوم, name: services_title, widget: string }
+          - label: لینک‌های بخش دوم
+            name: services
+            widget: list
+            fields:
+              - { label: عنوان, name: label, widget: string }
+              - { label: لینک, name: link, widget: string }
+          - { label: متن انتهایی راست, name: right_text, widget: string }

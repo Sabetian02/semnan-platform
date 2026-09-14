@@ -1,0 +1,70 @@
+{
+  "brand_name": "پلتفرم دانشگاه سمنان",
+  "brand_tagline": "دانشگاه رو فقط نگذرون؛ تجربه‌اش کن",
+  "telegram_url": "https://t.me/PlatformSem",
+  "nav": [
+    {
+      "label": "خانه",
+      "link": "index.html"
+    },
+    {
+      "label": "کانون‌های فرهنگی",
+      "link": "kanonha.html"
+    },
+    {
+      "label": "انجمن‌های علمی",
+      "link": "anjomanha.html"
+    },
+    {
+      "label": "آموزش مجازی",
+      "link": "amoozesh.html"
+    }
+  ],
+  "cta": {
+    "label": "ورود به کانال پلتفرم",
+    "link": "https://t.me/PlatformSem"
+  },
+  "footer": {
+    "slogan": "تجربهٔ دانشگاه؛ نه فقط گذراندنش",
+    "about": "مرجع جامع اطلاع‌رسانی فعالیت‌های فرهنگی، علمی و آموزشی دانشگاه سمنان؛ همه تشکل‌ها، رویدادها و دوره‌های مهارتی را یک‌جا بشناس.",
+    "quick_title": "دسترسی سریع",
+    "quick": [
+      {
+        "label": "خانه",
+        "link": "index.html"
+      },
+      {
+        "label": "کانون‌های فرهنگی",
+        "link": "kanonha.html"
+      },
+      {
+        "label": "انجمن‌های علمی",
+        "link": "anjomanha.html"
+      },
+      {
+        "label": "آموزش‌های مجازی",
+        "link": "amoozesh.html"
+      }
+    ],
+    "services_title": "خدمات پلتفرم",
+    "services": [
+      {
+        "label": "دوره‌های مهارتی",
+        "link": "amoozesh.html"
+      },
+      {
+        "label": "راهنمای کانون‌ها",
+        "link": "kanonha.html"
+      },
+      {
+        "label": "راهنمای انجمن‌های علمی",
+        "link": "anjomanha.html"
+      },
+      {
+        "label": "اطلاع‌رسانی و تبلیغات",
+        "link": "https://t.me/PlatformSem"
+      }
+    ],
+    "right_text": "دانشگاه سمنان"
+  }
+}
