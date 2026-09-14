@@ -36,6 +36,8 @@ const esc = (s) =>
     .replace(/>/g, "&gt;");
 
 const TELE_URL = site.telegram_url || "https://t.me/PlatformSem";
+const ABS_URI = /^(https?:|mailto:|tel:)/i;
+const teleSafe = (t) => (t && ABS_URI.test(t) ? t : "");
 const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L6.74 13.3 2.64 12c-.88-.25-.89-.86.2-1.3L20.03 4.7c.73-.33 1.43.18 1.15 1.3l-3.7 17.42c-.25 1.16-.95 1.44-1.92.9l-5.29-3.9-2.55 2.2c-.29.28-.53.46-1.1.46l.32-4.9z"/></svg>`;
 
 const navLinks = (prefix) =>
@@ -167,8 +169,10 @@ function renderProfile(prefix, item, kindTitle, backHref, backLabel) {
   const events = (item.events || []).map((e) => `<li>${esc(e)}</li>`).join("");
   const classes = (item.classes || []).map((c) => `<li>${esc(c)}</li>`).join("");
 
-  const teleHtml = item.telegram
-    ? `<a class="ph-tele" href="${esc(item.telegram)}" target="_blank" rel="noopener">${teleSvg} عضویت در کانال تلگرام ${item.telegram.startsWith("https://t.me/+") ? "(دعوت)" : ""}</a>`
+  const tele = teleSafe(item.telegram);
+
+  const teleHtml = tele
+    ? `<a class="ph-tele" href="${esc(tele)}" target="_blank" rel="noopener">${teleSvg} عضویت در کانال تلگرام ${tele.startsWith("https://t.me/+") ? "(دعوت)" : ""}</a>`
     : `<a class="ph-tele" href="${TELE_URL}" target="_blank" rel="noopener">${teleSvg} پیگیری از کانال پلتفرم</a>`;
 
   const cards = [];
@@ -203,8 +207,8 @@ function renderProfile(prefix, item, kindTitle, backHref, backLabel) {
           <div class="side-card">
             <h3>کانال تلگرام ${esc(item.short)}</h3>
             <p>اخبار، فراخوان‌ها و رویدادهای ${esc(item.short)} را در کانال تلگرامش دنبال کن.</p>
-            ${item.telegram
-              ? `<a class="btn btn-navy" href="${esc(item.telegram)}" target="_blank" rel="noopener">${teleSvg} عضویت در کانال تلگرام</a>`
+            ${tele
+              ? `<a class="btn btn-navy" href="${esc(tele)}" target="_blank" rel="noopener">${teleSvg} عضویت در کانال تلگرام</a>`
               : `<a class="btn btn-navy" href="${TELE_URL}" target="_blank" rel="noopener">${teleSvg} پیگیری از کانال پلتفرم</a>`}
           </div>
           <div class="side-card">

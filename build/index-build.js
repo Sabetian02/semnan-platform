@@ -20,6 +20,13 @@ const esc = (s) =>
 const TELE_URL = (home.hero && home.hero.telegram_url) || "https://t.me/PlatformSem";
 const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L6.74 13.3 2.64 12c-.88-.25-.89-.86.2-1.3L20.03 4.7c.73-.33 1.43.18 1.15 1.3l-3.7 17.42c-.25 1.16-.95 1.44-1.92.9l-5.29-3.9-2.55 2.2c-.29.28-.53.46-1.1.46l.32-4.9z"/></svg>`;
 
+/* فقط URLهای مطلق (http/https/mailto/tel) اجازه ورود دارند؛
+   هر مقدار اشتباه در محتوای CMS نباید publish را بشکند — به تلگرام برمی‌گردد. */
+const ABS_URI = /^(https?:|mailto:|tel:)/i;
+const linkOrDefault = (link) => (link && ABS_URI.test(link) ? link : TELE_URL);
+const imageOrNull = (img) =>
+  img && (ABS_URI.test(img) || fs.existsSync(path.join(ROOT, img))) ? img : "";
+
 function loadFolder(folder) {
   const dir = path.join(CONTENT, folder);
   if (!fs.existsSync(dir)) return [];
@@ -180,9 +187,10 @@ function renderNews(head, newsList) {
   let svgId = 1;
   const cards = newsList.slice(0, 6).map((n) => {
     const ban = NEWS_BANNERS[n.category] || NEWS_BANNER_DEFAULT;
-    const banner = n.image
+    const img = imageOrNull(n.image);
+    const banner = img
       ? `<div class="n-banner" style="--ban:${ban.color}">
-              <img class="n-img" src="${esc(n.image)}" alt="${esc(n.title)}" loading="lazy">
+              <img class="n-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">
             </div>`
       : `<div class="n-banner" style="--ban:${ban.color}">
               <svg viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -191,7 +199,7 @@ function renderNews(head, newsList) {
               </svg>
             </div>`;
     const chip = `<span class="n-chip-svg"><span class="n-chip">${esc(n.category || "خبر")}</span></span>`;
-    const link = n.link ? esc(n.link) : TELE_URL;
+    const link = esc(linkOrDefault(n.link));
     return `<article class="n-card reveal">
             ${banner.replace("</div>", chip + "</div>")}
             <div class="n-body">
@@ -254,7 +262,7 @@ function renderDiscounts(head, discountList) {
     </section>`;
   }
   const items = active.map((d) => {
-    const link = d.link ? d.link : TELE_URL;
+    const link = esc(linkOrDefault(d.link));
     return `<div class="discount-item reveal">
             <div class="d-txt">
               <div class="d-top"><span class="eyebrow">${esc(head.eyebrow)}</span>${d.expires ? `<span class="d-expires">تا ${esc(d.expires)}</span>` : ""}</div>
