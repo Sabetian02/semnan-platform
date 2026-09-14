@@ -17,6 +17,17 @@ slug:
   encoding: ascii
   clean_accents: true
 
+# رابط مدیریت کاملاً فارسی
+locale: fa
+
+# برند (لوگو) در صفحه ورود و هدر
+logo:
+  src: ../assets/images/SVG/logo.svg
+  show_in_header: true
+
+# لینک «مشاهده سایت» در بالای دشبورد
+display_url: https://semnanplatform.ir
+
 collections:
   # ================= اطلاعیه‌ها و اخبار =================
   - name: news
