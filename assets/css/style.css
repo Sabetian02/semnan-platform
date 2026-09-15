@@ -976,6 +976,7 @@ img { max-width: 100%; display: block; }
   border-radius: 20px;
   flex-direction: row-reverse;
   width: 600px;
+  height: 196px;
   margin-bottom: 24px;
   padding: 4px;
   display: flex;
@@ -1086,31 +1087,31 @@ img { max-width: 100%; display: block; }
   border-radius: 100%;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  box-shadow: 0 5px 12px 0 rgba(20, 83, 155, .12);
-  border: 1px solid #f1f3f9;
-  color: var(--navy);
+  background: var(--gold);
+  box-shadow: 0 5px 14px 0 rgba(245, 196, 0, .38);
+  border: 1px solid rgba(0, 24, 64, .08);
+  color: var(--navy-dark);
   font-size: 16px;
   transition: all .25s;
-  transform: translateY(-15px);
+  transform: translateY(-50%);
   position: absolute;
-  top: 45%;
+  top: 50%;
   z-index: 3;
   cursor: pointer;
 }
 .swiper-button-prev:hover,
-.swiper-button-next:hover { color: var(--gold); border-color: rgba(245, 196, 0, .7); transform: translateY(-15px) scale(1.06); }
+.swiper-button-next:hover { background: var(--gold-soft); border-color: var(--gold); box-shadow: 0 6px 16px 0 rgba(245, 196, 0, .6); transform: translateY(-50%) scale(1.06); }
 .swiper-button-prev:disabled,
 .swiper-button-next:disabled,
 .swiper-button-disabled { opacity: .35; cursor: default; }
 .swiper-button-prev::after,
 .swiper-button-next::after { content: none !important; }
-/* قاب اسلایدر: فلش‌ها بیرون از کادر کارت‌ها (سامی‌بلینگ قاب، تا overflow قاب را نبرّد) */
+/* قاب اسلایدر: فلش‌ها داخل گاترِ کنار کارت‌ها (داخل قاب، بیرون از کادر کارت‌ها، بدون بیرون‌زدگی از صفحه) */
 .es-slider-frame { position: relative; }
-.courses-frame .swiper-button-prev { left: -14px; }
-.courses-frame .swiper-button-next { right: -14px; }
-.es-news-frame .swiper-button-prev { left: -18px; }
-.es-news-frame .swiper-button-next { right: -18px; }
+.courses-frame .swiper-button-prev { left: 10px; }
+.courses-frame .swiper-button-next { right: 10px; }
+.es-news-frame .swiper-button-prev { left: 10px; }
+.es-news-frame .swiper-button-next { right: 10px; }
 @media (min-width: 1200px) {
   .swiper-button-prev,
   .swiper-button-next { display: flex; }
@@ -1192,7 +1193,7 @@ img { max-width: 100%; display: block; }
 .es-main-page-slider-section .es__sectionTitle-actions a { margin: 0; }
 
 .es-main-page-slider-swiper-contianer {
-  padding-bottom: 20px;
+  padding: 0 50px 20px;
   position: relative;
   overflow-x: clip;
   overflow-y: visible;
@@ -1290,6 +1291,7 @@ img { max-width: 100%; display: block; }
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
   margin: 0; padding: 0;
+  min-height: 44px;
   font-size: 12px;
   font-weight: 700;
   line-height: 22px;
@@ -1342,6 +1344,7 @@ img { max-width: 100%; display: block; }
   .es-main-page-slider-section { padding: 32px 12px 40px; }
   .es-main-page-slider-section .es-main-page-section-title { padding-bottom: 18px; }
   .double-color-slider-title-container h2 { font-size: 20px; line-height: 32px; }
+  .es-main-page-slider-swiper-contianer { padding: 0 34px 20px; }
   .es-webinar-card-footer-items-inner { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
   .es-webinar-card-footer-items-inner .eseminar-button { width: 100%; justify-content: center; }
 }
