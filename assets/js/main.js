@@ -148,8 +148,8 @@
             if (diff <= 3) { barFill.classList.add("dc-pulse"); }
           }
         }
-      } else if (card.getAttribute("data-exp-text")) {
-        expText.textContent = "تا " + card.getAttribute("data-exp-text");
+      } else if (raw) {
+        if (expText) expText.textContent = "اعتبار تا " + raw;
         if (statusEl) { statusEl.textContent = "فعال"; statusEl.style.background = "linear-gradient(90deg,#4cc878,#2f9e5a)"; statusEl.style.border = "none"; }
       }
     });

@@ -102,12 +102,12 @@ collections:
         widget: string
         required: false
         hint: "لینک صفحه مقصد — اگر خالی باشد دکمه‌ای نمایش داده نمی‌شود"
-      - label: اعتبار تا (تقویم شمسی)
+      - label: اعتبار تا
         name: expires
-        widget: jalali-date
+        widget: string
         required: true
         default: "همیشگی"
-        hint: "از تقویم شمسی انتخاب کن یا گزینه «همیشگی» را بگذار"
+        hint: "«همیشگی» بنویس، یا تاریخ اعتبار را خودت تایپ کن، مثلاً: ۱۵ آبان"
       - label: وضعیت تخفیف
         name: active
         widget: boolean
