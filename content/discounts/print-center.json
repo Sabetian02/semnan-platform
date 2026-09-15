@@ -4,6 +4,6 @@
   "code": "PRINT10",
   "link": "https://semnanplatform.ir/kanonha/film-va-aks.html",
   "expires": "همیشگی",
-  "active": false,
+  "active": true,
   "expire_mode": "permanent"
 }
