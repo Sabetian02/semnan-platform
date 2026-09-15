@@ -468,15 +468,15 @@ collections:
             name: news_head
             widget: object
             fields:
-- label: برچسب کوچک
-            name: eyebrow
-            widget: string
-          - label: تیتر
-            name: title
-            widget: string
-          - label: توضیح
-            name: subtitle
-            widget: text
+              - label: برچسب کوچک
+                name: eyebrow
+                widget: string
+              - label: تیتر
+                name: title
+                widget: string
+              - label: توضیح
+                name: subtitle
+                widget: text
           - label: آموزش‌های مجازی (عنوان اسلایدر دوره‌ها)
             name: courses_head
             widget: object
