@@ -113,7 +113,7 @@
       }
 
       if (permanent) {
-        if (statusEl) { statusEl.textContent = "همیشگی"; statusEl.style.background = "linear-gradient(90deg,#3776e2,#102A71)"; statusEl.style.border = "none"; }
+        if (statusEl) { statusEl.textContent = "همیشگی"; statusEl.style.background = "linear-gradient(90deg,#4cc878,#2f9e5a)"; statusEl.style.border = "none"; }
         if (expText) {
           expText.innerHTML = "انقضا ندارد — اعتبار این تخفیف <b>همیشگی</b> است";
         }

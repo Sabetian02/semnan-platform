@@ -38,14 +38,14 @@ const linkOrDefault = (link) => safeLink(link) || TELE_URL;
 const imageOrNull = (img) =>
   img && (ABS_URI.test(img) || fs.existsSync(path.join(ROOT, img))) ? img : "";
 
-function loadFolder(folder) {
+function loadFolder(folder, includeInactive) {
   const dir = path.join(CONTENT, folder);
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .map((f) => readJson(path.join(dir, f)))
-    .filter((it) => it.active !== false)
+    .filter((it) => includeInactive || it.active !== false)
     .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 }
 
@@ -368,7 +368,7 @@ const footer = P("_footer.html");
 const close = P("index-99-close.html");
 
 const newsList = loadFolder("news");
-const discountList = loadFolder("discounts");
+const discountList = loadFolder("discounts", true);
 
 const index = assemble(
   open,
