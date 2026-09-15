@@ -518,7 +518,7 @@ function renderAnnPage(n) {
 
   const img = imageOrNull(n.image);
   const bannerImg = img
-    ? `<div class="ann-img"><img src="${prefix}${esc(img)}" alt="${esc(n.title)}" loading="lazy"></div>`
+    ? `<div class="ann-img"><img src="${ABS_URI.test(img) ? img : prefix + img}" alt="${esc(n.title)}" loading="lazy"></div>`
     : "";
   const content = mdToHtml(n.body || "") || `<p>${esc(n.summary || "")}</p>`;
 
