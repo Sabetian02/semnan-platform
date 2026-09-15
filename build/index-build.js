@@ -237,8 +237,12 @@ function renderNews(head, newsList) {
 
 /* ---------- DISCOUNTS ---------- */
 function renderDiscounts(head, discountList) {
-  const active = discountList.filter((d) => d.active !== false);
-  if (!active.length) {
+  const items0 = discountList.slice().sort((a, b) => {
+    const aOff = a && a.active === false ? 1 : 0;
+    const bOff = b && b.active === false ? 1 : 0;
+    return aOff - bOff;
+  });
+  if (!items0.length) {
     return `<!-- DISCOUNTS -->
     <section class="section discounts" id="discounts">
       <div class="container">
@@ -279,7 +283,7 @@ function renderDiscounts(head, discountList) {
     "linear-gradient(135deg, #001840, #0a2266 50%, #102A71)"
   ];
 
-  const items = active.map((d, i) => {
+  const items = items0.map((d, i) => {
     const hasLink = !!(d.link && (ABS_URI.test(d.link) || LOCAL_LINK.test(d.link)));
     const link = esc(d.link);
     const code = d.code || "";

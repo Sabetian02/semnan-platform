@@ -106,7 +106,7 @@
 
       if (dimmed) {
         if (statusEl) { statusEl.textContent = "منقضی"; statusEl.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; statusEl.style.border = "none"; }
-        if (expText) expText.innerHTML = "<b>منقضی شده</b> — این تخفیف دیگر معتبر نیست";
+        if (expText) expText.innerHTML = "<b>منقضی شد</b> — این تخفیف دیگر معتبر نیست";
         if (barFill) { barFill.style.width = "100%"; barFill.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; }
         card.classList.add("dc-expired");
         return;
@@ -133,7 +133,7 @@
         if (diff < 0) {
           // منقضی
           if (statusEl) { statusEl.textContent = "منقضی"; statusEl.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; statusEl.style.border = "none"; }
-          if (expText) expText.innerHTML = "<b>منقضی شده</b> — این تخفیف دیگر معتبر نیست";
+          if (expText) expText.innerHTML = "<b>منقضی شد</b> — این تخفیف دیگر معتبر نیست";
           if (barFill) { barFill.style.width = "100%"; barFill.style.background = "linear-gradient(90deg,#e0392e,#c2291f)"; }
           card.classList.add("dc-expired");
         } else if (diff === 0) {
@@ -157,7 +157,12 @@
     // کپی کد تخفیف
     document.querySelectorAll(".dc-copy").forEach(function (btn) {
       btn.addEventListener("click", function () {
+        var cardEl = btn.closest(".dc");
         var code = btn.getAttribute("data-code") || "";
+        if (!code && cardEl) {
+          var codeEl = cardEl.querySelector(".dc-code");
+          if (codeEl) { code = codeEl.textContent.trim(); }
+        }
         var copiedEl = btn.querySelector(".dc-copied");
         var iconEl = btn.querySelector(".dc-ci");
         var flash = function () {
@@ -188,10 +193,13 @@
           return ok;
         };
         if (!code) return;
-        if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
-          navigator.clipboard.writeText(code).then(flash, function () { legacyCopy(); flash(); });
+        if (!legacyCopy()) {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(flash).catch(flash);
+          } else {
+            flash();
+          }
         } else {
-          legacyCopy();
           flash();
         }
       });

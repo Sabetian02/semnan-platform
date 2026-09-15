@@ -508,9 +508,9 @@ img { max-width: 100%; display: block; }
 .dc-inner {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(230px, 290px);
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 330px);
   align-items: center;
-  gap: 22px;
+  gap: 24px;
   border-radius: 23px;
   padding: 24px 26px 20px;
   color: #fff;
@@ -559,27 +559,28 @@ img { max-width: 100%; display: block; }
 .dc-code-row { display: flex; align-items: stretch; gap: 10px; margin-top: 0; width: 100%; }
 .dc-code-box {
   flex: 1;
-  display: flex; flex-direction: column; gap: 2px;
+  display: flex; flex-direction: column; gap: 3px;
   background: rgba(0, 24, 64, .35);
-  border: 1px solid rgba(255, 220, 95, .35);
-  border-radius: 12px;
-  padding: 8px 14px;
+  border: 1px solid rgba(255, 220, 95, .4);
+  border-radius: 14px;
+  padding: 13px 18px;
+  box-shadow: inset 0 0 24px rgba(0, 24, 64, .35);
 }
-.dc-code-lbl { font-size: .66rem; color: rgba(255, 255, 255, .6); font-weight: 600; }
-.dc-code { font-size: 1.18rem; font-weight: 800; letter-spacing: .08em; color: #FFDC5F; font-family: 'Courier New', monospace; direction: ltr; }
+.dc-code-lbl { font-size: .72rem; color: rgba(255, 255, 255, .6); font-weight: 600; }
+.dc-code { font-size: 1.55rem; font-weight: 900; letter-spacing: .14em; color: #FFDC5F; font-family: 'Courier New', monospace; direction: ltr; }
 .dc-copy {
   display: flex; align-items: center; justify-content: center;
-  width: 48px;
+  width: 56px;
   border: 1px solid rgba(255, 255, 255, .3);
   background: rgba(255, 255, 255, .12);
   color: #fff;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   transition: background .18s, transform .18s;
 }
 .dc-copy:hover { background: rgba(255, 220, 95, .3); transform: translateY(-1px); }
 .dc-copy.done { background: rgba(76, 200, 120, .35); border-color: rgba(76, 200, 120, .6); }
-.dc-copy .dc-ci { width: 20px; height: 20px; }
+.dc-copy .dc-ci { width: 22px; height: 22px; }
 .dc-copied { font-size: 1rem; font-weight: 800; color: #fff; }
 
 .dc-exp { display: flex; align-items: center; gap: 8px; margin-top: 14px; min-height: 22px; }
@@ -620,15 +621,41 @@ img { max-width: 100%; display: block; }
   50% { opacity: .55; box-shadow: 0 0 16px rgba(255, 220, 95, .9); }
 }
 
-/* کارت‌های منقضی یا غیرفعال */
+/* کارت‌های منقضی یا غیرفعال — تم قرمز با مهر «منقضی شد» */
+.dc.dc-off,
+.dc.dc-expired {
+  background: linear-gradient(135deg, rgba(224, 57, 46, .9), rgba(16, 42, 113, .25) 55%, rgba(224, 57, 46, .55));
+  box-shadow: 0 18px 44px -22px rgba(224, 57, 46, .5);
+}
 .dc.dc-off .dc-inner,
 .dc.dc-expired .dc-inner {
-  filter: grayscale(.9) saturate(.4);
-  opacity: .55;
-  box-shadow: none;
+  background: linear-gradient(135deg, #4c1018, #6b1522 55%, #7e1f2e) !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+.dc.dc-off .dc-side,
+.dc.dc-expired .dc-side {
+  border-right-color: rgba(255, 170, 170, .4);
 }
 .dc.dc-off .dc-code,
-.dc.dc-expired .dc-code { color: #aab3c8; }
+.dc.dc-expired .dc-code { color: #ffb8b8; }
+.dc.dc-off .dc-code-box,
+.dc.dc-expired .dc-code-box { border-color: rgba(255, 170, 170, .4); }
+.dc.dc-off .dc-badge,
+.dc.dc-expired .dc-badge { color: #7e1f2e; }
+.dc.dc-off .dc-inner::before,
+.dc.dc-expired .dc-inner::before {
+  content: "منقضی شد";
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.4rem; font-weight: 900;
+  letter-spacing: .05em;
+  color: rgba(255, 255, 255, .15);
+  transform: rotate(-12deg);
+  pointer-events: none;
+  z-index: 2;
+  white-space: nowrap;
+}
 .dc-link-none { pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
   .dc-bar-fill.dc-pulse { animation: none; }
