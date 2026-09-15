@@ -915,3 +915,242 @@ img { max-width: 100%; display: block; }
   .ann-head { flex-direction: column; align-items: flex-start; }
   .news-morebar { gap: 10px; }
 }
+
+/* ================ هدر مشترک بخش‌های اسلایدر ================ */
+.section-head-actions { margin-top: 18px; display: flex; justify-content: center; }
+
+/* ================ اسلایدر آموزش‌های مجازی (الگوی es-home-page-slide-show) ================ */
+.courses { background: linear-gradient(180deg, #f6f3e3 0%, var(--cream) 100%); }
+.courses .section-head { margin-bottom: 36px; }
+.course-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.course-track {
+  flex: 1;
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 10px 4px 22px;
+  -webkit-overflow-scrolling: touch;
+}
+.course-track::-webkit-scrollbar { display: none; }
+.cslide { flex: 0 0 auto; scroll-snap-align: center; }
+.cs-card {
+  width: min(660px, 88vw);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 18px 44px -26px rgba(16, 42, 113, 0.35);
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: stretch;
+  overflow: hidden;
+  transition: transform .25s, box-shadow .25s;
+}
+.cslide:last-child { scroll-snap-align: start; }
+.cs-card:hover { transform: translateY(-6px); box-shadow: 0 26px 56px -30px rgba(16, 42, 113, 0.5); }
+
+.cs-media {
+  flex: 0 0 210px;
+  width: 210px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(155deg, var(--c1), var(--c2));
+  overflow: hidden;
+}
+.cs-media::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120px 90px at 20% 15%, rgba(255, 220, 95, .35), transparent 65%);
+}
+.cs-emoji {
+  font-size: 4.2rem;
+  filter: drop-shadow(0 10px 18px rgba(0, 24, 64, .35));
+}
+.cs-chip {
+  position: absolute;
+  top: 12px; inset-inline-start: 12px;
+  background: rgba(255, 253, 240, .94);
+  color: var(--navy);
+  font-size: .72rem; font-weight: 800;
+  border-radius: 999px; padding: 4px 12px;
+}
+.cs-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 22px;
+}
+.cs-top h3 { color: var(--navy-dark); font-size: 1.28rem; font-weight: 800; line-height: 1.6; }
+.cs-top h3 a:hover { color: var(--navy); }
+.cs-teacher { display: flex; align-items: center; gap: 10px; margin: 8px 0 6px; }
+.cs-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  color: var(--navy-dark);
+  display: grid; place-items: center;
+  font-weight: 800; font-size: .95rem;
+}
+.cs-teacher-name { font-size: .88rem; font-weight: 700; color: var(--muted); }
+.cs-sum {
+  color: var(--muted);
+  font-size: .92rem; line-height: 1.85;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cs-bottom { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.cs-meta { display: flex; flex-direction: column; gap: 6px; }
+.cs-lessons { font-size: .78rem; font-weight: 700; color: rgba(16, 42, 113, .6); }
+.cs-price {
+  display: inline-flex; width: fit-content;
+  font-size: .8rem; font-weight: 800;
+  color: var(--navy-dark);
+  background: rgba(245, 196, 0, .22);
+  border-radius: 999px; padding: 4px 12px;
+}
+.cs-cta { flex: 0 0 auto; }
+.cs-arw {
+  flex: 0 0 auto;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--navy);
+  font-size: 1.25rem;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 20px -12px rgba(16, 42, 113, .5);
+  display: grid; place-items: center;
+  transition: background .2s, color .2s, transform .2s, opacity .2s;
+}
+.cs-arw:hover { background: var(--navy); color: #fff; }
+.cs-arw:disabled { opacity: .35; cursor: default; transform: none; }
+
+@media (max-width: 767.98px) {
+  .cs-card {
+    flex-direction: column;
+    width: min(300px, 74vw);
+  }
+  .cs-media {
+    flex: 0 0 200px;
+    width: 100%;
+  }
+  .cs-emoji { font-size: 3.4rem; }
+  .cs-content { padding: 16px 16px 18px; }
+  .cs-top h3 { font-size: 1.02rem; }
+  .cs-sum { display: none; }
+  .cs-bottom { flex-direction: column-reverse; align-items: stretch; }
+  .cs-meta { flex-direction: row; justify-content: space-between; align-items: center; }
+  .cs-cta { width: 100%; justify-content: center; }
+}
+@media (max-width: 480px) {
+  .cs-card { width: min(280px, 84vw); }
+  .cs-arw { display: none; }
+}
+
+/* ================ اسلایدر اطلاعیه‌ها (الگوی es-main-page-slider-swiper-contianer) ================ */
+.section.news { padding-top: 0; }
+.news-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-inline: auto;
+  width: min(1120px, 94%);
+}
+.news-scroller {
+  flex: 1;
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 10px 4px 24px;
+  -webkit-overflow-scrolling: touch;
+}
+.news-scroller::-webkit-scrollbar { display: none; }
+.wcard {
+  flex: 0 0 auto;
+  width: min(340px, 40vw);
+  min-width: 260px;
+  scroll-snap-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 26px -22px rgba(16, 42, 113, .4);
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+.wcard:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -26px rgba(16, 42, 113, .5); border-color: rgba(245, 196, 0, .7); }
+.wc-cover {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--c1), var(--c2));
+}
+.wc-cover::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(220px 90px at 15% 0%, rgba(255, 220, 95, .28), transparent 60%);
+}
+.wc-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.wc-chip {
+  position: absolute;
+  top: 12px; inset-inline-start: 12px;
+  background: rgba(255, 253, 240, .94);
+  color: var(--navy);
+  font-size: .68rem; font-weight: 800;
+  border-radius: 999px; padding: 4px 11px;
+  z-index: 2;
+}
+.wc-body { padding: 16px 18px 4px; flex: 1; }
+.wc-body h3 { color: var(--navy-dark); font-size: 1rem; font-weight: 800; line-height: 1.65; }
+.wc-body h3 a:hover { color: var(--navy); }
+.wc-sum {
+  color: var(--muted);
+  font-size: .84rem; line-height: 1.85; margin-top: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.wc-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 18px 16px;
+  border-top: 1px dashed var(--line);
+  margin-top: 10px;
+}
+.wc-date { font-size: .72rem; font-weight: 700; color: rgba(16, 42, 113, .6); }
+.wc-more { font-size: .82rem; font-weight: 800; color: var(--navy); }
+.wc-more:hover { color: var(--gold); }
+.ns-arw {
+  flex: 0 0 auto;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--navy);
+  font-size: 1.2rem;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 20px -12px rgba(16, 42, 113, .5);
+  display: grid; place-items: center;
+  transition: background .2s, color .2s, opacity .2s;
+}
+.ns-arw:hover { background: var(--navy); color: #fff; }
+.ns-arw:disabled { opacity: .35; cursor: default; }
+
+@media (max-width: 767.98px) {
+  .wcard { width: min(300px, 74vw); min-width: 0; }
+  .news-stage { width: 94%; }
+  .ns-arw { display: none; }
+}

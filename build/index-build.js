@@ -361,40 +361,117 @@ const newsCard = (n) => {
           </article>`;
 };
 
+/* ---------- کارت اطلاعیهٔ کوچک اسلایدر (به سبک webinarCard سایت eseminar) ---------- */
+const NEWS_PAIRS = {
+  "دوره": ["#102A71", "#1b3a8b"],
+  "رویداد": ["#001840", "#0a2266"],
+  "فراخوان": ["#1b3a8b", "#0a1f54"],
+  "اطلاع‌رسانی": ["#17328f", "#102A71"],
+  "جدید": ["#244da0", "#102A71"]
+};
+const newsSlide = (n) => {
+  const pair = NEWS_PAIRS[n.category] || ["#102A71", "#17328f"];
+  const img = imageOrNull(n.image);
+  const coverInner = img
+    ? `<img class="wc-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">`
+    : "";
+  const depth = "ettelaieh/" + n._slug + ".html";
+  return `<article class="wcard reveal">
+            <a class="wc-cover" href="${depth}" style="--c1:${pair[0]};--c2:${pair[1]}">
+              ${coverInner}
+              <span class="wc-chip">${esc(n.category || "خبر")}</span>
+            </a>
+            <div class="wc-body">
+              <h3><a href="${depth}">${esc(n.title)}</a></h3>
+              <p class="wc-sum">${esc(n.summary)}</p>
+            </div>
+            <div class="wc-foot">
+              <span class="wc-date" data-date="${esc(n.date || "")}"></span>
+              <a class="wc-more" href="${depth}">جزئیات ←</a>
+            </div>
+          </article>`;
+};
+
 function renderNews(head, newsList) {
   if (!newsList.length) return "";
-  const cards = newsList.map((n, i) => {
-    if (i >= 8) {
-      return newsCard(n).replace(
-        '<article class="n-card reveal">',
-        '<article class="n-card reveal n-more-hidden" hidden>'
-      );
-    }
-    return newsCard(n);
-  }).join("\n          ");
-
-  const moreBar = newsList.length > 7
-    ? `<button class="btn btn-gold news-more" type="button">نمایش بیشتر</button>`
-    : "";
-  const controls = moreBar || true
-    ? `<div class="news-morebar reveal">
-        ${moreBar}
-        <a class="btn btn-navy news-all" href="ettelaieh.html">نمایش همه اطلاعیه‌ها</a>
-      </div>`
-    : "";
-
+  const slides = newsList.map((n) => newsSlide(n)).join("\n          ");
   return `<!-- NEWS -->
-    <section class="section" id="news">
+    <section class="section news" id="news">
       <div class="container">
         <div class="section-head">
           <span class="eyebrow">${esc(head.eyebrow)}</span>
           <h2>${esc(head.title)}</h2>
           <p>${esc(head.subtitle)}</p>
+          <div class="section-head-actions">
+            <a class="btn btn-navy btn-sm news-all" href="ettelaieh.html">مشاهده همه اطلاعیه‌ها ←</a>
+          </div>
         </div>
-        <div class="news-grid">
-          ${cards}
+      </div>
+      <div class="news-stage" data-stage>
+        <button class="ns-arw prev" type="button" aria-label="اسلاید قبلی">→</button>
+        <div class="news-scroller" data-scroller>
+          ${slides}
         </div>
-        ${controls}
+        <button class="ns-arw next" type="button" aria-label="اسلاید بعدی">←</button>
+      </div>
+    </section>`;
+}
+
+/* ---------- اسلایدر آموزش‌های مجازی (به سبک es-home-page-slide-show سایت eseminar) ---------- */
+const courseSlide = (c) => {
+  const link = linkOrDefault(c.link);
+  const name = c.teacher || "مدرس دوره";
+  const initial = esc(name.trim().charAt(0));
+  return `<article class="cslide reveal">
+            <div class="cs-card">
+              <a class="cs-media" href="${link}" style="--c1:${esc(c.cover_a || "#102A71")};--c2:${esc(c.cover_b || "#1b3a8b")}" aria-label="${esc(c.title)}">
+                <span class="cs-chip">${esc(c.category || "دوره")}</span>
+                <span class="cs-emoji" aria-hidden="true">${esc(c.icon || "🎓")}</span>
+              </a>
+              <div class="cs-content">
+                <div class="cs-top">
+                  <h3><a href="${link}">${esc(c.title)}</a></h3>
+                  <div class="cs-teacher">
+                    <span class="cs-avatar" aria-hidden="true">${initial}</span>
+                    <span class="cs-teacher-name">${name}</span>
+                  </div>
+                  <p class="cs-sum">${esc(c.summary || "")}</p>
+                </div>
+                <div class="cs-bottom">
+                  <div class="cs-meta">
+                    <span class="cs-lessons">▸ ${esc(c.lessons || "")}</span>
+                    <span class="cs-price">${esc(c.price || "رایگان")}</span>
+                  </div>
+                  <a class="btn btn-gold btn-sm cs-cta" href="${link}">ثبت‌نام دوره ←</a>
+                </div>
+              </div>
+            </div>
+          </article>`;
+};
+
+function renderCourses(head, courseList) {
+  if (!courseList.length) return "";
+  const slides = courseList.map((c) => courseSlide(c)).join("\n        ");
+  const allLink = linkOrDefault(head.cta && head.cta.link);
+  const allLabel = (head.cta && head.cta.label) || "همه دوره‌ها";
+  return `<!-- COURSES -->
+    <section class="section courses" id="courses">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">${esc(head.eyebrow)}</span>
+          <h2>${esc(head.title)}</h2>
+          <p>${esc(head.subtitle)}</p>
+          <div class="section-head-actions">
+            <a class="btn btn-navy btn-sm" href="${allLink}">${esc(allLabel)} ←</a>
+          </div>
+        </div>
+        <div class="course-stage" data-stage>
+          <button class="cs-arw prev" type="button" aria-label="دورهٔ قبلی">→</button>
+          <div class="course-track" data-scroller>
+            ${slides}
+          </div>
+          <button class="cs-arw next" type="button" aria-label="دورهٔ بعدی">←</button>
+        </div>
       </div>
     </section>`;
 }
@@ -623,6 +700,7 @@ const footer = P("_footer.html");
 const close = P("index-99-close.html");
 
 const newsList = loadFolder("news");
+const courseList = loadFolder("courses");
 const discountList = loadFolder("discounts", true);
 
 const index = assemble(
@@ -633,6 +711,7 @@ const index = assemble(
   [
     renderHero(home.hero),
     P("_marquee.html"),
+    renderCourses(home.courses_head, courseList),
     renderAds(home.ads),
     renderNews(home.news_head, newsList),
     renderDiscounts(home.discounts_head, discountList),

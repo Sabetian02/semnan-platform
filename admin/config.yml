@@ -120,6 +120,75 @@ collections:
         default: true
         hint: "روشن = فعال در سایت | خاموش = منقضی و مخفی"
 
+  # ================= آموزش‌های مجازی =================
+  - name: courses
+    label: آموزش‌های مجازی
+    label_singular: دوره
+    folder: content/courses
+    format: json
+    create: true
+    delete: true
+    extension: json
+    summary: "{{title}} — {{teacher}}"
+    fields:
+      - label: عنوان دوره
+        name: title
+        widget: string
+        required: true
+      - label: دسته‌بندی
+        name: category
+        widget: select
+        options: [ "مهارت نرم", "نرم‌افزار", "هوش مصنوعی", "برنامه‌نویسی", "زبان", "طراحی", "هنر و رسانه", "کارآفرینی" ]
+        default: "مهارت نرم"
+      - label: توضیح کوتاه
+        name: summary
+        widget: text
+        required: true
+      - label: مدرس
+        name: teacher
+        widget: string
+        required: true
+      - label: تعداد جلسات
+        name: lessons
+        widget: string
+        required: true
+        hint: "مثلاً «۸ جلسه آنلاین»"
+      - label: قیمت / برچسب قیمت
+        name: price
+        widget: string
+        required: true
+        default: "رایگان"
+        hint: "مثلاً «رایگان» یا «ویژهٔ دانشجویان»"
+      - label: ایموجی نماد دوره
+        name: icon
+        widget: string
+        required: true
+        default: "🎓"
+      - label: رنگ اول جلد (هگز)
+        name: cover_a
+        widget: string
+        required: false
+        default: "#102A71"
+      - label: رنگ دوم جلد (هگز)
+        name: cover_b
+        widget: string
+        required: false
+        default: "#1b3a8b"
+      - label: لینک ثبت‌نام / جزئیات
+        name: link
+        widget: string
+        required: false
+        hint: "مثلاً amoozesh.html یا یک آدرس https://"
+      - label: ترتیب نمایش
+        name: sort
+        widget: number
+        required: false
+        default: 1
+      - label: نمایش در سایت
+        name: active
+        widget: boolean
+        default: true
+
   # ================= کانون‌های فرهنگی =================
   - name: kanonha
     label: کانون‌های فرهنگی
@@ -399,6 +468,19 @@ collections:
             name: news_head
             widget: object
             fields:
+- label: برچسب کوچک
+            name: eyebrow
+            widget: string
+          - label: تیتر
+            name: title
+            widget: string
+          - label: توضیح
+            name: subtitle
+            widget: text
+          - label: آموزش‌های مجازی (عنوان اسلایدر دوره‌ها)
+            name: courses_head
+            widget: object
+            fields:
               - label: برچسب کوچک
                 name: eyebrow
                 widget: string
@@ -408,6 +490,16 @@ collections:
               - label: توضیح
                 name: subtitle
                 widget: text
+              - label: دکمه «همه دوره‌ها»
+                name: cta
+                widget: object
+                fields:
+                  - label: متن
+                    name: label
+                    widget: string
+                  - label: لینک
+                    name: link
+                    widget: string
           - label: بخش تخفیف‌ها
             name: discounts_head
             widget: object

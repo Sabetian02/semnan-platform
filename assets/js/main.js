@@ -219,21 +219,34 @@
     if (s) el.textContent = s;
   });
 
-  var moreBtn = document.querySelector(".news-more");
-  if (moreBtn) {
-    var ncards = Array.prototype.slice.call(document.querySelectorAll(".news-grid .n-card"));
-    var moreIdx = 8;
-    moreBtn.addEventListener("click", function () {
-      var end = Math.min(moreIdx + 4, 12);
-      while (moreIdx < end && moreIdx < ncards.length) {
-        ncards[moreIdx].removeAttribute("hidden");
-        moreIdx++;
-      }
-      if (moreIdx >= 12 || moreIdx >= ncards.length) {
-        moreBtn.parentNode.removeChild(moreBtn);
-      }
+  // ===== اسلایدرهای افقی (آموزش مجازی و اطلاعیه‌ها) — دکمه‌های قبلی/بعدی =====
+  document.querySelectorAll("[data-stage]").forEach(function (stage) {
+    var scroller = stage.querySelector("[data-scroller]");
+    var prev = stage.querySelector(".prev");
+    var next = stage.querySelector(".next");
+    if (!scroller) return;
+    var step = function () {
+      var el = scroller.firstElementChild;
+      if (!el) return scroller.clientWidth * 0.8;
+      var fs = getComputedStyle(scroller);
+      var gap = parseFloat(fs.columnGap) || parseFloat(fs.rowGap) || 0;
+      return el.getBoundingClientRect().width + gap;
+    };
+    var update = function () {
+      var max = scroller.scrollWidth - scroller.clientWidth;
+      if (prev) prev.disabled = scroller.scrollLeft <= 1;
+      if (next) next.disabled = scroller.scrollLeft >= max - 1;
+    };
+    if (prev) prev.addEventListener("click", function () {
+      scroller.scrollBy({ left: -step(), behavior: "smooth" });
     });
-  }
+    if (next) next.addEventListener("click", function () {
+      scroller.scrollBy({ left: step(), behavior: "smooth" });
+    });
+    scroller.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  });
 
   initDiscounts();
 })();
