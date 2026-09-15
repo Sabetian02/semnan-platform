@@ -15,6 +15,17 @@ const readJson = (p) => JSON.parse(fs.readFileSync(p, "utf8"));
 const site = readJson(path.join(CONTENT, "site.json"));
 const home = readJson(path.join(CONTENT, "home.json"));
 
+/* نسخهٔ دارایی‌ها: با هر دیپلوی، URL سیاس/جی‌اس عوض می‌شود تا کش مرورگر باطل شود */
+let ASSET_VER;
+try {
+  ASSET_VER = require("child_process")
+    .execSync("git rev-parse --short HEAD")
+    .toString()
+    .trim();
+} catch (_) {
+  ASSET_VER = Date.now().toString(36);
+}
+
 function loadFolder(folder) {
   const dir = path.join(CONTENT, folder);
   if (!fs.existsSync(dir)) return [];
@@ -149,11 +160,11 @@ function pageSkeleton(prefix, title, bodyExtra) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${esc(title)} | ${esc(site.brand_name)}</title>
   <meta name="description" content="${esc(title)} — ${esc(site.brand_name)}">
-  <link rel="stylesheet" href="${prefix}assets/css/style.css">
+  <link rel="stylesheet" href="${prefix}assets/css/style.css?v=${ASSET_VER}">
 </head>
 <body>
 ${bodyExtra}
-<script src="${prefix}assets/js/main.js"></script>
+<script src="${prefix}assets/js/main.js?v=${ASSET_VER}"></script>
 </body>
 </html>`;
 }

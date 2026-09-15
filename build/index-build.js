@@ -19,6 +19,16 @@ const esc = (s) =>
     .replace(/>/g, "&gt;");
 
 const TELE_URL = (home.hero && home.hero.telegram_url) || "https://t.me/PlatformSem";
+/* نسخهٔ دارایی‌ها: با هر دیپلوی، URL سیاس/جی‌اس عوض می‌شود تا کش مرورگر باطل شود */
+let ASSET_VER;
+try {
+  ASSET_VER = require("child_process")
+    .execSync("git rev-parse --short HEAD")
+    .toString()
+    .trim();
+} catch (_) {
+  ASSET_VER = Date.now().toString(36);
+}
 const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L6.74 13.3 2.64 12c-.88-.25-.89-.86.2-1.3L20.03 4.7c.73-.33 1.43.18 1.15 1.3l-3.7 17.42c-.25 1.16-.95 1.44-1.92.9l-5.29-3.9-2.55 2.2c-.29.28-.53.46-1.1.46l.32-4.9z"/></svg>`;
 
 /* لینک ایمن: URLهای مطلق (http/https/mailto/tel) یا مسیرهای داخلیِ موجود قبول می‌شوند؛
@@ -198,7 +208,9 @@ function assemble(open, title, desc, header, bodyParts, footer, close) {
     footer +
     "\n" +
     close
-  );
+  )
+    .replace(/(<link rel="stylesheet" href=")([^"]*style\.css)(")/g, "$1$2?v=" + ASSET_VER + "$3")
+    .replace(/(<script src=")([^"]*main\.js)(")/g, "$1$2?v=" + ASSET_VER + "$3");
 }
 
 /* ---------- HERO ---------- */
