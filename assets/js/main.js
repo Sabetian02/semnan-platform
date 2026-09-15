@@ -206,5 +206,34 @@
     });
   }
 
+  // ===== اطلاعیه‌ها: تاریخ شمسی و دکمهٔ «نمایش بیشتر» =====
+  function isoJalali(iso) {
+    if (!iso) return "";
+    var d = new Date(String(iso));
+    if (isNaN(d.getTime())) return "";
+    var j = g2j(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    return faDigits(j.d) + " " + MONTHS[j.m - 1] + " " + faDigits(j.y);
+  }
+  document.querySelectorAll("[data-date]").forEach(function (el) {
+    var s = isoJalali(el.getAttribute("data-date"));
+    if (s) el.textContent = s;
+  });
+
+  var moreBtn = document.querySelector(".news-more");
+  if (moreBtn) {
+    var ncards = Array.prototype.slice.call(document.querySelectorAll(".news-grid .n-card"));
+    var moreIdx = 7;
+    moreBtn.addEventListener("click", function () {
+      var end = Math.min(moreIdx + 3, 10);
+      while (moreIdx < end && moreIdx < ncards.length) {
+        ncards[moreIdx].removeAttribute("hidden");
+        moreIdx++;
+      }
+      if (moreIdx >= 10 || moreIdx >= ncards.length) {
+        moreBtn.parentNode.removeChild(moreBtn);
+      }
+    });
+  }
+
   initDiscounts();
 })();

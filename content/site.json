@@ -8,6 +8,10 @@
       "link": "index.html"
     },
     {
+      "label": "اطلاعیه‌ها",
+      "link": "ettelaieh.html"
+    },
+    {
       "label": "کانون‌های فرهنگی",
       "link": "kanonha.html"
     },
@@ -32,6 +36,10 @@
       {
         "label": "خانه",
         "link": "index.html"
+      },
+      {
+        "label": "اطلاعیه‌ها",
+        "link": "ettelaieh.html"
       },
       {
         "label": "کانون‌های فرهنگی",

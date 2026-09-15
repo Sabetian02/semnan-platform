@@ -49,6 +49,11 @@ collections:
         name: summary
         widget: text
         required: true
+      - label: متن کامل اطلاعیه
+        name: body
+        widget: markdown
+        required: false
+        hint: "متن بلند و کامل اطلاعیه. میتوانی با # تیتر بزنی، با - لیست بسازی و با خطِ خالی پاراگراف عوض کنی. صفحهٔ جداگانهٔ همین اطلاعیه از این متن ساخته میشود."
       - label: دسته‌بندی
         name: category
         widget: select

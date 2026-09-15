@@ -857,3 +857,61 @@ img { max-width: 100%; display: block; }
   .dc-art { display: none; }
   .n-banner .n-img { height: 120px; }
 }
+/* ================ اطلاعیه‌ها ================ */
+.n-card[hidden] { display: none !important; }
+.n-meta { margin: 0 0 8px; }
+.n-date {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .72rem; font-weight: 700;
+  color: rgba(16, 42, 113, .6);
+}
+
+.news-morebar {
+  display: flex; justify-content: center; align-items: center;
+  gap: 12px; flex-wrap: wrap; margin-top: 30px;
+}
+
+/* فهرست اطلاعیه‌ها */
+.ann-list { display: grid; grid-template-columns: 1fr; gap: 18px; max-width: 920px; margin-inline: auto; }
+.ann-row {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px 26px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: transform .2s, box-shadow .2s;
+}
+.ann-row:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -22px rgba(0, 24, 64, .45); }
+.ann-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ann-date { font-size: .74rem; font-weight: 700; color: var(--muted); }
+.ann-row h3 { color: var(--navy-dark); font-size: 1.12rem; font-weight: 800; line-height: 1.5; }
+.ann-row p { color: var(--muted); font-size: .9rem; line-height: 1.7; margin: 0; }
+.ann-more { align-self: flex-start; margin-top: 6px; }
+
+/* صفحهٔ یک اطلاعیه */
+.ann-single { padding: 44px 0 76px; }
+.ann-open { max-width: 860px; }
+.ann-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 4px 0 14px;
+}
+.ann-title { color: var(--navy-dark); font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 900; line-height: 1.5; margin: 0 0 14px; }
+.ann-img { margin: 0 0 20px; border-radius: var(--radius); overflow: hidden; }
+.ann-img img { width: 100%; display: block; height: auto; max-height: 420px; object-fit: cover; }
+.ann-body { color: #26324a; font-size: 1rem; line-height: 2.1; }
+.ann-body p { margin: 0 0 16px; }
+.ann-body h2, .ann-body h3, .ann-body h4 { color: var(--navy-dark); margin: 22px 0 10px; line-height: 1.6; }
+.ann-body h2 { font-size: 1.35rem; }
+.ann-body h3 { font-size: 1.18rem; }
+.ann-body h4 { font-size: 1.02rem; }
+.ann-body ul { margin: 4px 0 18px; padding-inline-start: 24px; display: grid; gap: 6px; }
+.ann-body li { line-height: 1.9; }
+.ann-cta {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-top: 30px; padding-top: 24px;
+  border-top: 1px dashed var(--line);
+}
+
+@media (max-width: 600px) {
+  .ann-row { padding: 18px 16px; }
+  .ann-head { flex-direction: column; align-items: flex-start; }
+  .news-morebar { gap: 10px; }
+}
