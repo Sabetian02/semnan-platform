@@ -364,7 +364,7 @@ const newsCard = (n) => {
 function renderNews(head, newsList) {
   if (!newsList.length) return "";
   const cards = newsList.map((n, i) => {
-    if (i >= 7) {
+    if (i >= 8) {
       return newsCard(n).replace(
         '<article class="n-card reveal">',
         '<article class="n-card reveal n-more-hidden" hidden>'

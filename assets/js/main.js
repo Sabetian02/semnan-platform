@@ -222,14 +222,14 @@
   var moreBtn = document.querySelector(".news-more");
   if (moreBtn) {
     var ncards = Array.prototype.slice.call(document.querySelectorAll(".news-grid .n-card"));
-    var moreIdx = 7;
+    var moreIdx = 8;
     moreBtn.addEventListener("click", function () {
-      var end = Math.min(moreIdx + 3, 10);
+      var end = Math.min(moreIdx + 3, 11);
       while (moreIdx < end && moreIdx < ncards.length) {
         ncards[moreIdx].removeAttribute("hidden");
         moreIdx++;
       }
-      if (moreIdx >= 10 || moreIdx >= ncards.length) {
+      if (moreIdx >= 11 || moreIdx >= ncards.length) {
         moreBtn.parentNode.removeChild(moreBtn);
       }
     });
