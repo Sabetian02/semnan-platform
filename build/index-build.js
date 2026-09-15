@@ -332,27 +332,25 @@ const NEWS_BANNER_DEFAULT = {
                 </g>`
 };
 
-function renderNews(head, newsList) {
-  if (!newsList.length) return "";
-  const cards = newsList.map((n, i) => {
-    const ban = NEWS_BANNERS[n.category] || NEWS_BANNER_DEFAULT;
-    const img = imageOrNull(n.image);
-    const banner = img
-      ? `<div class="n-banner" style="--ban:${ban.color}">
+/* ---------- کارت اطلاعیه (مشترک بین صفحهٔ اصلی و صفحهٔ همهٔ اطلاعیه‌ها) ---------- */
+const newsCard = (n) => {
+  const ban = NEWS_BANNERS[n.category] || NEWS_BANNER_DEFAULT;
+  const img = imageOrNull(n.image);
+  const banner = img
+    ? `<div class="n-banner" style="--ban:${ban.color}">
               <img class="n-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">
             </div>`
-      : `<div class="n-banner" style="--ban:${ban.color}">
+    : `<div class="n-banner" style="--ban:${ban.color}">
               <svg viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 ${ban.svg}
               </svg>
             </div>`;
-    const chip = `<span class="n-chip-svg"><span class="n-chip">${esc(n.category || "خبر")}</span></span>`;
-    const depth = "ettelaieh/" + encodeURIComponent(n._slug) + ".html";
-    const hidden = i >= 7;
-    const dateHtml = n.date
-      ? `<div class="n-meta"><span class="n-date" data-date="${esc(n.date)}"></span></div>`
-      : "";
-    return `<article class="n-card reveal${hidden ? " n-more-hidden" : ""}"${hidden ? " hidden" : ""}>
+  const chip = `<span class="n-chip-svg"><span class="n-chip">${esc(n.category || "خبر")}</span></span>`;
+  const depth = "ettelaieh/" + encodeURIComponent(n._slug) + ".html";
+  const dateHtml = n.date
+    ? `<div class="n-meta"><span class="n-date" data-date="${esc(n.date)}"></span></div>`
+    : "";
+  return `<article class="n-card reveal">
             ${banner.replace("</div>", chip + "</div>")}
             <div class="n-body">
               <h3>${esc(n.title)}</h3>
@@ -361,6 +359,18 @@ function renderNews(head, newsList) {
               <a class="btn btn-navy btn-sm n-more" href="${depth}">اطلاعات بیشتر ←</a>
             </div>
           </article>`;
+};
+
+function renderNews(head, newsList) {
+  if (!newsList.length) return "";
+  const cards = newsList.map((n, i) => {
+    if (i >= 7) {
+      return newsCard(n).replace(
+        '<article class="n-card reveal">',
+        '<article class="n-card reveal n-more-hidden" hidden>'
+      );
+    }
+    return newsCard(n);
   }).join("\n          ");
 
   const moreBar = newsList.length > 7
@@ -389,18 +399,9 @@ function renderNews(head, newsList) {
     </section>`;
 }
 
-/* ---------- صفحهٔ فهرست اطلاعیه‌ها ---------- */
+/* ---------- صفحهٔ فهرست اطلاعیه‌ها (همهٔ اطلاعیه‌ها با چیدمان کارت مثل صفحهٔ اصلی) ---------- */
 function renderAnnListPage(newsList) {
-  const rows = newsList.map((n) => `
-        <article class="ann-row reveal">
-          <div class="ann-meta">
-            <span class="n-chip">${esc(n.category || "خبر")}</span>
-            <span class="ann-date" data-date="${esc(n.date || "")}"></span>
-          </div>
-          <h3>${esc(n.title)}</h3>
-          <p>${esc(n.summary || "")}</p>
-          <a class="btn btn-navy btn-sm ann-more" href="ettelaieh/${encodeURIComponent(n._slug)}.html">مشاهده اطلاعیه ←</a>
-        </article>`).join("\n      ");
+  const cards = newsList.map((n) => newsCard(n)).join("\n        ");
   const body = [
     `<main>
       <section class="page-hero">
@@ -412,8 +413,8 @@ function renderAnnListPage(newsList) {
       </section>
       <section class="section" style="padding-top:0">
         <div class="container">
-          <div class="ann-list">
-            ${rows}
+          <div class="news-grid">
+            ${cards}
           </div>
         </div>
       </section>
