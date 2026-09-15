@@ -216,7 +216,7 @@ function renderProfile(prefix, item, kindTitle, backHref, backLabel) {
             <ul class="plist">
               <li><a href="${backHref}">فهرست ${esc(kindTitle)}</a></li>
               <li><a href="${prefix}index.html">صفحه اصلی پلتفرم</a></li>
-              <li><a href="${prefix}amoozesh.html">آموزش‌های مجازی</a></li>
+              <li><a href="${prefix}amoozesh.html">دوره های آموزشی</a></li>
             </ul>
           </div>
         </aside>

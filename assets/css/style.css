@@ -440,7 +440,7 @@ img { max-width: 100%; display: block; }
 
 /* Ads (two billboard banners, below ticker) */
 .ads {
-  padding: 84px 0;
+  padding: 25px 0;
   background: var(--cream);
 }
 .ad-slots {
@@ -1108,10 +1108,10 @@ img { max-width: 100%; display: block; }
 .swiper-button-next::after { content: none !important; }
 /* قاب اسلایدر: فلش‌ها داخل گاترِ کنار کارت‌ها (داخل قاب، بیرون از کادر کارت‌ها، بدون بیرون‌زدگی از صفحه) */
 .es-slider-frame { position: relative; }
-.courses-frame .swiper-button-prev { left: 10px; }
-.courses-frame .swiper-button-next { right: 10px; }
-.es-news-frame .swiper-button-prev { left: 10px; }
-.es-news-frame .swiper-button-next { right: 10px; }
+.courses-frame .swiper-button-prev { left: 120px; }
+.courses-frame .swiper-button-next { right: 120px; }
+.es-news-frame .swiper-button-prev { left: -70px; }
+.es-news-frame .swiper-button-next { right: -70px; }
 @media (min-width: 1200px) {
   .swiper-button-prev,
   .swiper-button-next { display: flex; }
@@ -1267,8 +1267,8 @@ img { max-width: 100%; display: block; }
 .wc-badge {
   z-index: 99;
   position: absolute;
-  top: -20px;
-  right: 12px;
+  top: 15px;
+  right: 10px;
   border-radius: 99px;
   align-items: center;
   padding: 2px 10px;

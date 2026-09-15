@@ -125,7 +125,7 @@ const home = {
     card_items: [
       { icon: "🎤", tone: "", title: "ایونت و رویداد", subtitle: "مسابقات، کارگاه‌ها و جشن‌ها", link: "#news" },
       { icon: "🎓", tone: "navy", title: "کانون‌ها و انجمن‌ها", subtitle: "۴۶ تشکل فعال دانشجویی", link: "kanonha.html" },
-      { icon: "📚", tone: "", title: "آموزش و مهارت", subtitle: "دوره‌های کاربردی و مجازی", link: "amoozesh.html" }
+      { icon: "📚", tone: "", title: "آموزش و مهارت", subtitle: "دوره‌های کاربردی ", link: "amoozesh.html" }
     ],
     float1: { icon: "🔔", text: "اطلاعیه‌های دانشجویی", link: "#news" },
     float2: { icon: "🎁", text: "تخفیف‌های دانشجویی", link: "#discounts" }
@@ -175,7 +175,7 @@ const site = {
     { label: "خانه", link: "index.html" },
     { label: "کانون‌های فرهنگی", link: "kanonha.html" },
     { label: "انجمن‌های علمی", link: "anjomanha.html" },
-    { label: "آموزش مجازی", link: "amoozesh.html" }
+    { label: "دوره های آموزشی", link: "amoozesh.html" }
   ],
   cta: { label: "ورود به کانال پلتفرم", link: "https://t.me/PlatformSem" },
   footer: {
@@ -186,7 +186,7 @@ const site = {
       { label: "خانه", link: "index.html" },
       { label: "کانون‌های فرهنگی", link: "kanonha.html" },
       { label: "انجمن‌های علمی", link: "anjomanha.html" },
-      { label: "آموزش‌های مجازی", link: "amoozesh.html" }
+      { label: "دوره های آموزشی", link: "amoozesh.html" }
     ],
     services_title: "خدمات پلتفرم",
     services: [
