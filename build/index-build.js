@@ -226,6 +226,10 @@ function renderHero(h) {
             <p class="lead">${esc(h.lead)}</p>
             <div class="hero-cta">
               <a class="btn btn-tele" href="${esc(TELE_URL)}" target="_blank" rel="noopener">${teleSvg} ${esc(h.cta_tele_text)}</a>
+              <button class="btn btn-notif notif-bell" type="button">
+                <span class="notif-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+                <span class="notif-label">فعال کردن اعلان</span>
+              </button>
             </div>
             <div class="hero-stats">
               ${stats}
@@ -772,3 +776,34 @@ if (!newsList.length) {
   fs.writeFileSync(path.join(ETT_DIR, ".gitkeep"), "", "utf8");
 }
 console.log("✔ صفحات اطلاعیه:", newsList.length, "فایل");
+
+/* ---------- latest.json: فهرست آخرین اطلاعیه‌ها و دوره‌ها (برای اعلان مرورگر) ---------- */
+(function writeLatest() {
+  const items = [];
+  newsList.forEach((n) => {
+    items.push({
+      id: "news:" + n._slug,
+      type: "news",
+      title: n.title || "",
+      summary: n.summary || "",
+      link: "ettelaieh/" + n._slug + ".html",
+      date: n.date || ""
+    });
+  });
+  courseList.slice().forEach((c) => {
+    items.push({
+      id: "course:" + (c.slug || c.title || "item"),
+      type: "course",
+      title: c.title || "",
+      summary: c.summary || "",
+      link: safeLink(c.link) || "amoozesh.html",
+      date: "",
+      teacher: c.teacher || "",
+      price: c.price || ""
+    });
+  });
+  items.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const payload = { updated: new Date().toISOString(), items };
+  fs.writeFileSync(path.join(ROOT, "latest.json"), JSON.stringify(payload), "utf8");
+  console.log("✔ latest.json (" + items.length + " مورد)");
+})();

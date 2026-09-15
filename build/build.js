@@ -78,6 +78,10 @@ function renderHeader(prefix) {
         <ul class="nav-links">
           ${navLinks(prefix)}
         </ul>
+        <button class="nav-bell notif-bell" type="button" aria-label="اعلان‌ها" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="nav-bell-dot" hidden></span>
+        </button>
         <a class="btn btn-navy btn-sm nav-cta" href="${esc(site.cta.link)}" target="_blank" rel="noopener">${esc(site.cta.label)}</a>
         <button class="burger" aria-label="باز کردن منو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       </nav>
@@ -92,6 +96,10 @@ function renderHeader(prefix) {
         <button class="mm-close" aria-label="بستن">✕</button>
       </div>
       <div class="mm-links">
+        <button class="mm-notif notif-bell" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-label">فعال کردن اعلان</span>
+        </button>
         ${mmLinks(prefix)}
       </div>
     </aside>
