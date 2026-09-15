@@ -27,7 +27,9 @@ for (const file of htmls) {
   while ((m = re.exec(src))) {
     const raw = m[1];
     if (/^(https?:|mailto:|tel:|data:)/.test(raw)) continue;
-    const clean = raw.split("?")[0].replace(/\/+$/, "");
+    let decoded = raw;
+    try { decoded = decodeURIComponent(raw); } catch (e) {}
+    const clean = decoded.split("?")[0].replace(/\/+$/, "");
     if (!clean) continue;
     const target = path.resolve(path.dirname(file), clean);
     if (!fs.existsSync(target)) {

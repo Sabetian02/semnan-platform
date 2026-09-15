@@ -346,7 +346,7 @@ const newsCard = (n) => {
               </svg>
             </div>`;
   const chip = `<span class="n-chip-svg"><span class="n-chip">${esc(n.category || "خبر")}</span></span>`;
-  const depth = "ettelaieh/" + encodeURIComponent(n._slug) + ".html";
+  const depth = "ettelaieh/" + n._slug + ".html";
   const dateHtml = n.date
     ? `<div class="n-meta"><span class="n-date" data-date="${esc(n.date)}"></span></div>`
     : "";
