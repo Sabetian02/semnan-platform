@@ -108,14 +108,12 @@ collections:
         required: true
         default: "همیشگی"
         hint: "از تقویم شمسی انتخاب کن یا گزینه «همیشگی» را بگذار"
-      - label: وضعیت
+      - label: وضعیت تخفیف
         name: active
-        widget: select
+        widget: boolean
         required: true
         default: true
-        options:
-          - { label: "فعال", value: true }
-          - { label: "منقضی", value: false }
+        hint: "روشن = فعال در سایت | خاموش = منقضی و مخفی"
 
   # ================= کانون‌های فرهنگی =================
   - name: kanonha
