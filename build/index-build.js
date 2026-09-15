@@ -368,7 +368,7 @@ const newsSlide = (n) => {
   const emoji = CAT_EMOJI[n.category] || "📰";
   const visual = img
     ? `<img class="wc-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">`
-    : `<span class="wc-img wc-fallback" style="--c1:#247b48;--c2:#38a063">${emoji}</span>`;
+    : `<span class="wc-img wc-fallback" style="--c1:#102A71;--c2:#001840">${emoji}</span>`;
   const depth = "ettelaieh/" + n._slug + ".html";
   const initial = esc(String(n.title || "خ").trim().charAt(0));
   return `
@@ -390,7 +390,7 @@ const newsSlide = (n) => {
                 <div class="webinarCard-detail stickToBottom">
                   <div class="es__webinarCard-footer">
                     <div class="es__webinarCard-footerItem ft2 es-webinar-card-footer-items-inner">
-                      <a class="eseminar-button eseminar-button--esmBtn-fill-247B48 eseminar-button--medium" href="${depth}">جزئیات</a>
+                      <a class="eseminar-button eseminar-button--esmBtn-fill-navy eseminar-button--medium" href="${depth}">جزئیات</a>
                       <div class="price-wrapper"><span class="wc-cat-mini">${emoji} ${esc(n.category || "خبر")}</span></div>
                     </div>
                   </div>
@@ -439,7 +439,7 @@ const courseSlide = (c, idx) => {
           <div class="swiper-slide" dir="rtl">
             <article class="main-page-slide-show-container">
               <a class="main-page-slide-show-image-container" href="${link}" id="slideshow_course_img_${idx}" aria-label="${esc(c.title)}">
-                <span class="cs-cover" style="--c1:${esc(c.cover_a || "#247b48")};--c2:${esc(c.cover_b || "#38a063")}" aria-hidden="true">${esc(c.icon || "🎓")}</span>
+                <span class="cs-cover" style="--c1:${esc(c.cover_a || "#102A71")};--c2:${esc(c.cover_b || "#001840")}" aria-hidden="true">${esc(c.icon || "🎓")}</span>
               </a>
               <div class="main-page-slide-show-content-container">
                 <div class="main-page-slide-show-title-description-container">
@@ -461,7 +461,7 @@ const courseSlide = (c, idx) => {
                       <div class="price main-slide-show-free-price">${esc(c.price || "رایگان")}</div>
                     </div>
                     <div class="main-page-slide-show-btn-container">
-                      <a class="eseminar-button eseminar-button--esmBtn-fill-fire-gradient eseminar-button--medium" href="${link}">ثبت‌نام دوره</a>
+                      <a class="eseminar-button eseminar-button--esmBtn-fill-gold eseminar-button--medium" href="${link}">ثبت‌نام دوره</a>
                     </div>
                   </div>
                 </div>
@@ -473,8 +473,17 @@ const courseSlide = (c, idx) => {
 function renderCourses(head, courseList) {
   if (!courseList.length) return "";
   const slides = courseList.map((c, i) => courseSlide(c, i)).join("\n        ");
+  const allLink = (head.cta && safeLink(head.cta.link)) || "amoozesh.html";
+  const allLabel = (head.cta && head.cta.label) || "مشاهده همه دوره‌ها";
   return `<!-- COURSES (به سبک es-home-page-slide-show-container سایت eseminar) -->
     <section class="es-home-page-slide-show-container" id="courses">
+      <div class="featured-head">
+        <h2 class="featured-head-title">${esc(head.title)}</h2>
+        <a class="eseminar-button eseminar-button--medium es-featured-all" href="${allLink}">
+          <span>${esc(allLabel)}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        </a>
+      </div>
       <div class="featured-slider-stage" data-stage data-autoplay>
         <div class="featured-slider-scroller" data-scroller>
           ${slides}

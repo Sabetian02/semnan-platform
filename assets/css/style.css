@@ -917,31 +917,70 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================================
-   اسلایدرهای صفحه اصلی — الگوی دقیق سایت eseminar.tv
-   ۱) «آموزش مجازی» ≈ es-home-page-slide-show-container (هیرو-اسلایدشو سبز، خودکار)
-   ۲) «اطلاعیه‌ها» ≈ es-main-page-slider-swiper-contianer (کارت‌های 243px شبیه webinarCard)
+   اسلایدرهای صفحه اصلی — پالت رنگ کسب‌وکار (navy/gold) + موتور swiper
+   ۱) «آموزش مجازی» ≈ es-home-page-slide-show-container سایت eseminar
+   ۲) «اطلاعیه‌ها» ≈ es-main-page-slider-swiper-contianer سایت eseminar
    ============================================================ */
 
-/* ---------- اسلایدر آموزش‌های مجازی (es-home-page-slide-show) ---------- */
+/* ---------- بنر و موتور اسلایدر (translate به جای اسکرول، دقیق مثل swiper) ---------- */
+[data-scroller] {
+  transition: transform 320ms cubic-bezier(.1, .57, .1, 1);
+  will-change: transform;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+[data-scroller].es-tx-no { transition: none !important; }
+[data-scroller].es-dragging { cursor: grabbing; }
+[data-scroller] .swiper-slide { flex: 0 0 auto; }
+
+/* ---------- اسلایدر آموزش‌های مجازی (es-home-page-slide-show / بنر navy) ---------- */
 .es-home-page-slide-show-container {
-  background: #38a063;
+  background: linear-gradient(170deg, #102A71 0%, #001840 100%);
   min-height: 250px;
   padding-top: 24px;
   overflow: hidden;
+}
+.featured-head {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 50px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.featured-head-title {
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+.es-featured-all {
+  border: 1px solid rgba(255, 255, 255, .45) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, .08) !important;
+  color: #fff !important;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.es-featured-all:hover {
+  background: var(--gold) !important;
+  border-color: var(--gold) !important;
+  color: var(--navy-dark) !important;
 }
 .featured-slider-stage { position: relative; margin-inline: auto; max-width: 1440px; }
 .featured-slider-scroller {
   display: flex;
   align-items: flex-start;
   gap: 30px;
-  overflow-x: auto;
-  scrollbar-width: none;
+  overflow: hidden;
   padding: 0 50px 24px;
-  -webkit-overflow-scrolling: touch;
 }
-.featured-slider-scroller::-webkit-scrollbar { display: none; }
 .featured-slider-stage .swiper-slide {
-  flex: 0 0 auto;
   display: flex;
   justify-content: center;
 }
@@ -955,7 +994,7 @@ img { max-width: 100%; display: block; }
   margin-bottom: 24px;
   padding: 4px;
   display: flex;
-  box-shadow: 0 10px 30px -12px rgba(0, 40, 20, .45);
+  box-shadow: 0 12px 34px -14px rgba(0, 18, 90, .4);
 }
 .main-page-slide-show-image-container { position: relative; display: block; }
 .main-page-slide-show-image-container .cs-cover {
@@ -988,7 +1027,7 @@ img { max-width: 100%; display: block; }
   font-weight: 800;
   transition: color .2s;
 }
-.main-page-slide-show-title-container a:hover { color: #247b48; }
+.main-page-slide-show-title-container a:hover { color: var(--gold); }
 .main-page-slide-show-description-container {
   color: #889098;
   font-size: 11px;
@@ -1010,13 +1049,13 @@ img { max-width: 100%; display: block; }
   width: 32px; height: 32px;
   border: 2px solid #fff;
   border-radius: 50%;
-  background: #e8f6ee;
-  color: #247b48;
+  background: var(--gold-soft);
+  color: var(--navy);
   font-size: 14px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   flex: 0 0 auto;
 }
-.cs-teacher-name { font-size: 12px; font-weight: 700; color: #58636e; margin-inline-start: 8px; }
+.cs-teacher-name { font-size: 12px; font-weight: 700; color: var(--muted); margin-inline-start: 8px; }
 .main-page-slide-show-price-btn-container {
   flex-direction: row;
   align-items: center;
@@ -1033,7 +1072,7 @@ img { max-width: 100%; display: block; }
 .main-slide-show-free-price { color: #343448; font-size: 14px; font-weight: 700; }
 .cs-lessons-mini { color: #889098; font-size: 9px; font-weight: 600; }
 
-/* دکمه‌های eseminar */
+/* دکمه‌های eseminar + پالت navy/gold */
 .eseminar-button {
   display: inline-flex;
   align-items: center;
@@ -1047,17 +1086,12 @@ img { max-width: 100%; display: block; }
   transition: all .25s;
 }
 .eseminar-button--medium { height: 36px; padding: 0 16px; font-size: 13px; font-weight: 700; }
-.eseminar-button--esmBtn-fill-fire-gradient {
-  background: linear-gradient(90deg, #f88d3b 10%, #e6113d);
-  background-size: 200% 100%;
-  background-position: 50%;
-  color: #fff;
-}
-.eseminar-button--esmBtn-fill-fire-gradient:hover { background-position: -1px; color: #fff; }
-.eseminar-button--esmBtn-fill-247B48 { background-color: #247b48; color: #fff; }
-.eseminar-button--esmBtn-fill-247B48:hover { background-color: #38a063; color: #fff; }
-.eseminar-button--esmBtn-text-only { background-color: transparent; border: none; color: #293644; padding: 0 4px; height: auto; display: inline-flex; align-items: center; }
-.eseminar-button--esmBtn-text-only:hover { color: #247b48; }
+.eseminar-button--esmBtn-fill-gold { background: var(--gold); color: var(--navy-dark); }
+.eseminar-button--esmBtn-fill-gold:hover { background: var(--gold-soft); color: var(--navy-dark); }
+.eseminar-button--esmBtn-fill-navy { background: var(--navy); color: #fff; }
+.eseminar-button--esmBtn-fill-navy:hover { background: var(--navy-dark); color: var(--gold-soft); }
+.eseminar-button--esmBtn-text-only { background-color: transparent; border: none; color: var(--navy); padding: 0 4px; height: auto; display: inline-flex; align-items: center; }
+.eseminar-button--esmBtn-text-only:hover { color: var(--gold); }
 
 /* فلش‌های اسلایدر (معادل swiper-button-prev/next در eseminar) */
 .swiper-button-prev,
@@ -1068,9 +1102,9 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   background: #fff;
-  box-shadow: 0 5px 10px 0 rgba(20, 83, 155, .08);
+  box-shadow: 0 5px 12px 0 rgba(20, 83, 155, .12);
   border: 1px solid #f1f3f9;
-  color: #58636e;
+  color: var(--navy);
   font-size: 16px;
   transition: all .25s;
   transform: translateY(-15px);
@@ -1080,7 +1114,7 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
 }
 .swiper-button-prev:hover,
-.swiper-button-next:hover { color: #247b48; transform: translateY(-15px) scale(1.06); }
+.swiper-button-next:hover { color: var(--gold); border-color: rgba(245, 196, 0, .7); transform: translateY(-15px) scale(1.06); }
 .swiper-button-prev:disabled,
 .swiper-button-next:disabled { opacity: .35; cursor: default; }
 .featured-slider-stage .swiper-button-prev { left: 15px; }
@@ -1094,6 +1128,9 @@ img { max-width: 100%; display: block; }
 
 /* ریسپانسیو هیرو اسلایدشو (مثل eseminar: عکس 216 در بالا، کارت 224×334) */
 @media (max-width: 768px) {
+  .es-home-page-slide-show-container { min-height: 0; padding-top: 16px; }
+  .featured-head { padding: 0 14px 8px; }
+  .featured-head-title { font-size: 17px; }
   .main-page-slide-show-container {
     flex-direction: column;
     align-items: center;
@@ -1131,7 +1168,7 @@ img { max-width: 100%; display: block; }
   gap: 12px;
 }
 .double-color-slider-title-container h2 {
-  color: #11202f;
+  color: var(--navy-dark);
   border-radius: 6px;
   padding: 0 4px;
   font-size: 24px;
@@ -1144,8 +1181,8 @@ img { max-width: 100%; display: block; }
 .double-color-slider-title-container h2:before {
   content: "";
   z-index: 0;
-  background: rgba(82, 135, 233, .22);
-  border-bottom: 1px solid #1851bb;
+  background: rgba(245, 196, 0, .3);
+  border-bottom: 1.5px solid var(--gold);
   border-radius: 6px 6px 0 0;
   width: 100%;
   height: 50%;
@@ -1154,6 +1191,7 @@ img { max-width: 100%; display: block; }
   bottom: 0;
   left: 0;
 }
+.double-color-slider-title-container h2 span { position: relative; z-index: 1; }
 .small-text {
   font-weight: 400;
   font-size: 14px;
@@ -1170,17 +1208,14 @@ img { max-width: 100%; display: block; }
 .es-main-page-slider-section .swiper-slide {
   width: 243px !important;
   min-width: 243px !important;
+  flex: 0 0 auto;
 }
 .es-main-page-slider-section .news-scroller {
   display: flex;
   gap: 16px;
-  overflow-x: auto;
-  overflow-y: visible;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   padding: 4px 2px;
 }
-.es-main-page-slider-section .news-scroller::-webkit-scrollbar { display: none; }
 
 /* کارت خبر (معادل es-main-webinar-card .webinarCard در eseminar) */
 .es-main-webinar-card .webinarCard {
@@ -1194,7 +1229,7 @@ img { max-width: 100%; display: block; }
   overflow: visible;
   width: 243px;
   background-color: #fff;
-  box-shadow: 0 5px 10px 0 rgba(20, 83, 155, .05);
+  box-shadow: 0 5px 10px 0 rgba(20, 83, 155, .06);
   transition: all .25s;
 }
 .es-main-webinar-card .webinarCard:hover { transform: translateY(-8px); }
@@ -1203,7 +1238,7 @@ img { max-width: 100%; display: block; }
   position: relative;
   border-radius: 12px 12px 0 0;
   display: block;
-  background: linear-gradient(150deg, #247b48, #38a063);
+  background: linear-gradient(150deg, #102A71, #001840);
 }
 .webinarCard-cover:before { content: ""; display: block; padding-bottom: 79.1667%; }
 .wc-img {
@@ -1225,7 +1260,7 @@ img { max-width: 100%; display: block; }
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0, 0, 0, .82);
+  background: rgba(0, 24, 64, .85);
   padding: 1.3rem 1.1rem;
   color: #fff;
   font-size: 12px;
@@ -1248,12 +1283,12 @@ img { max-width: 100%; display: block; }
   right: 12px;
   border-radius: 99px;
   align-items: center;
-  padding: 1px 8px;
+  padding: 2px 10px;
   font-size: 9px;
   font-weight: 700;
   display: flex;
 }
-.special-badge { color: #fff; background-color: #d23838; justify-content: space-between; }
+.special-badge { color: var(--navy-dark); background: linear-gradient(90deg, var(--gold), var(--gold-soft)); box-shadow: 0 2px 8px rgba(245, 196, 0, .4); justify-content: space-between; }
 .webinarCard-content {
   grid-gap: 12px;
   gap: 12px;
@@ -1285,11 +1320,11 @@ img { max-width: 100%; display: block; }
   width: 30px; height: 30px;
   border: 2px solid #fff;
   border-radius: 50%;
-  background: #e8f6ee;
-  color: #247b48;
+  background: var(--gold-soft);
+  color: var(--navy);
   font-size: 12px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 6px rgba(20, 83, 155, .12);
+  box-shadow: 0 2px 6px rgba(245, 196, 0, .35);
 }
 .wc-when { font-size: 11px; font-weight: 600; color: #889098; }
 .stickToBottom { margin-top: auto; }
