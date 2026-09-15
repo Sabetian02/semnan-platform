@@ -219,45 +219,58 @@
     if (s) el.textContent = s;
   });
 
-  // ===== اسلایدرها — دقیقاً با کتابخانهٔ Swiper و همان تنظیمات real سایت eseminar.tv =====
-  // (swiperOption اصلی: slidesPerView auto + spaceBetween های 30و16، autoplay 5000،
-  //  معکوس‌سازی prevEl/nextEl، و برای بخش اطلاعیه‌ها شروع خودکار هنگام ورود به دید و
-  //  بازگشت به اسلاید اول slideTo(0,1000) وقتی از پایین صفحه خارج می‌شود)
-  var coursesStage = document.querySelector(".featured-slider-stage");
+  // ===== اسلایدرها — کتابخانهٔ Swiper با تنظیمات real سایت eseminar.tv =====
+  // فلش چپ ← : اسلاید بعدی (nextEl). فلش راست → : بازگشت به ابتدا (slideTo(0)).
+  function wireReset(sw, btn) {
+    if (!sw || !btn) return;
+    function upd() {
+      btn.classList.toggle("swiper-button-disabled", sw.activeIndex === 0);
+    }
+    sw.on("slideChange", upd);
+    sw.on("slideChangeTransitionEnd", upd);
+    sw.on("resize", upd);
+    upd();
+    btn.addEventListener("click", function () {
+      sw.slideTo(0, 500, false);
+      if (sw.autoplay && sw.autoplay.running) sw.autoplay.start();
+    });
+  }
+
+  var coursesFrame = document.querySelector(".courses-frame");
   var coursesSwiper = null;
-  if (coursesStage && typeof Swiper !== "undefined") {
-    coursesSwiper = new Swiper(coursesStage, {
+  if (coursesFrame && typeof Swiper !== "undefined") {
+    coursesSwiper = new Swiper(coursesFrame.querySelector(".featured-slider-stage"), {
       slidesPerView: "auto",
       spaceBetween: 30,
       centeredSlides: false,
       autoplay: { delay: 5e3, disableOnInteraction: false },
       navigation: {
-        prevEl: coursesStage.querySelector(".swiper-button-next"),
-        nextEl: coursesStage.querySelector(".swiper-button-prev")
+        nextEl: coursesFrame.querySelector(".swiper-button-prev")
       }
     });
+    wireReset(coursesSwiper, coursesFrame.querySelector(".swiper-button-next"));
   }
 
-  var newsStage = document.querySelector(".es-main-page-slider-swiper-contianer");
+  var newsFrame = document.querySelector(".es-news-frame");
   var newsSwiper = null;
-  if (newsStage && typeof Swiper !== "undefined") {
-    newsSwiper = new Swiper(newsStage, {
+  if (newsFrame && typeof Swiper !== "undefined") {
+    newsSwiper = new Swiper(newsFrame.querySelector(".es-main-page-slider-swiper-contianer"), {
       slidesPerView: "auto",
       spaceBetween: 16,
       autoplay: { delay: 5e3, disableOnInteraction: false },
       breakpoints: { 768: {}, 1024: {}, 1200: {} },
       navigation: {
-        prevEl: newsStage.querySelector(".swiper-button-next"),
-        nextEl: newsStage.querySelector(".swiper-button-prev")
+        nextEl: newsFrame.querySelector(".swiper-button-prev")
       }
     });
     if (newsSwiper.autoplay) newsSwiper.autoplay.stop();
+    wireReset(newsSwiper, newsFrame.querySelector(".swiper-button-next"));
   }
 
   // checkViewPortStatus — همان منطق سایت eseminar برای بخش اطلاعیه‌ها
   function newsCheckViewPort() {
-    if (!newsSwiper || !newsStage) return;
-    var rect = newsStage.getBoundingClientRect();
+    if (!newsSwiper || !newsFrame) return;
+    var rect = newsFrame.getBoundingClientRect();
     var inView = rect.top < window.innerHeight && rect.bottom > 0 &&
       (window.innerHeight - rect.top) > 0.5 * rect.height;
     if (inView) {

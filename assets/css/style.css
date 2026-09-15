@@ -1101,13 +1101,16 @@ img { max-width: 100%; display: block; }
 .swiper-button-prev:hover,
 .swiper-button-next:hover { color: var(--gold); border-color: rgba(245, 196, 0, .7); transform: translateY(-15px) scale(1.06); }
 .swiper-button-prev:disabled,
-.swiper-button-next:disabled { opacity: .35; cursor: default; }
+.swiper-button-next:disabled,
+.swiper-button-disabled { opacity: .35; cursor: default; }
 .swiper-button-prev::after,
 .swiper-button-next::after { content: none !important; }
-.featured-slider-stage .swiper-button-prev { left: 15px; }
-.featured-slider-stage .swiper-button-next { right: 15px; }
-.es-main-page-slider-swiper-contianer .swiper-button-prev { left: -8px; }
-.es-main-page-slider-swiper-contianer .swiper-button-next { right: -8px; }
+/* قاب اسلایدر: فلش‌ها بیرون از کادر کارت‌ها (سامی‌بلینگ قاب، تا overflow قاب را نبرّد) */
+.es-slider-frame { position: relative; }
+.courses-frame .swiper-button-prev { left: -14px; }
+.courses-frame .swiper-button-next { right: -14px; }
+.es-news-frame .swiper-button-prev { left: -18px; }
+.es-news-frame .swiper-button-next { right: -18px; }
 @media (min-width: 1200px) {
   .swiper-button-prev,
   .swiper-button-next { display: flex; }
