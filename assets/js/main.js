@@ -219,87 +219,64 @@
     if (s) el.textContent = s;
   });
 
-  // ===== اسلایدرهای افقی (شبیه swiper سایت eseminar): موتور translate + درگ + خودکار =====
-  document.querySelectorAll("[data-stage]").forEach(function (stage) {
-    var track = stage.querySelector("[data-scroller]");
-    var prevBtn = stage.querySelector(".swiper-button-prev");
-    var nextBtn = stage.querySelector(".swiper-button-next");
-    if (!track || !track.children.length) return;
-    var slides = Array.prototype.slice.call(track.children);
-    var i = 0;
-    var step = 0;
-    var timer = 0;
-    var autoplay = stage.hasAttribute("data-autoplay");
-    var DUR = 5000;
-
-    function measure() {
-      var el = slides[0];
-      if (!el) { step = track.clientWidth || 800; return; }
-      var fs = getComputedStyle(track);
-      var gap = parseFloat(fs.columnGap) || parseFloat(fs.rowGap) || 0;
-      step = el.getBoundingClientRect().width + gap;
-    }
-    function render(smooth) {
-      track.classList.toggle("es-tx-no", !smooth);
-      track.style.transform = "translate3d(" + (-i * step).toFixed(2) + "px, 0, 0)";
-      if (prevBtn) prevBtn.disabled = i <= 0;
-      if (nextBtn) nextBtn.disabled = i >= slides.length - 1;
-    }
-    function go(dir) {
-      i = Math.max(0, Math.min(slides.length - 1, i + dir));
-      render(true);
-    }
-    function autoStart() {
-      if (timer) { clearInterval(timer); timer = 0; }
-      if (!autoplay || slides.length <= 1) return;
-      timer = setInterval(function () {
-        if (i >= slides.length - 1) { clearInterval(timer); timer = 0; return; }
-        go(1);
-      }, DUR);
-    }
-    var drag = { on: false, x: 0, base: 0, moved: 0 };
-    track.addEventListener("pointerdown", function (e) {
-      drag.on = true;
-      drag.x = e.clientX;
-      drag.base = i * step;
-      drag.moved = 0;
-      track.classList.add("es-tx-no", "es-dragging");
-      if (timer) { clearInterval(timer); timer = 0; }
-      if (track.setPointerCapture) track.setPointerCapture(e.pointerId);
-    });
-    track.addEventListener("pointermove", function (e) {
-      if (!drag.on) return;
-      var delta = e.clientX - drag.x;
-      if (!drag.moved && Math.abs(delta) > 6) drag.moved = 1;
-      var tx = Math.max(-(slides.length - 1) * step, Math.min(0, -drag.base + delta));
-      track.style.transform = "translate3d(" + tx.toFixed(2) + "px, 0, 0)";
-    });
-    function dragEnd(e) {
-      if (!drag.on) return;
-      drag.on = false;
-      track.classList.remove("es-dragging");
-      var delta = e.clientX - drag.x;
-      var nextI = Math.round(i - delta / step);
-      i = Math.max(0, Math.min(slides.length - 1, nextI));
-      render(true);
-      autoStart();
-    }
-    track.addEventListener("pointerup", dragEnd);
-    track.addEventListener("pointercancel", dragEnd);
-    track.addEventListener("click", function (e) {
-      if (drag.moved) {
-        e.preventDefault();
-        e.stopPropagation();
-        drag.moved = 0;
+  // ===== اسلایدرها — دقیقاً با کتابخانهٔ Swiper و همان تنظیمات real سایت eseminar.tv =====
+  // (swiperOption اصلی: slidesPerView auto + spaceBetween های 30و16، autoplay 5000،
+  //  معکوس‌سازی prevEl/nextEl، و برای بخش اطلاعیه‌ها شروع خودکار هنگام ورود به دید و
+  //  بازگشت به اسلاید اول slideTo(0,1000) وقتی از پایین صفحه خارج می‌شود)
+  var coursesStage = document.querySelector(".featured-slider-stage");
+  var coursesSwiper = null;
+  if (coursesStage && typeof Swiper !== "undefined") {
+    coursesSwiper = new Swiper(coursesStage, {
+      slidesPerView: "auto",
+      spaceBetween: 30,
+      centeredSlides: false,
+      autoplay: { delay: 5e3, disableOnInteraction: false },
+      navigation: {
+        prevEl: coursesStage.querySelector(".swiper-button-next"),
+        nextEl: coursesStage.querySelector(".swiper-button-prev")
       }
-    }, true);
-    if (prevBtn) prevBtn.addEventListener("click", function () { go(-1); autoStart(); });
-    if (nextBtn) nextBtn.addEventListener("click", function () { go(1); autoStart(); });
-    window.addEventListener("resize", function () { measure(); render(false); });
-    measure();
-    render(false);
-    autoStart();
-  });
+    });
+  }
+
+  var newsStage = document.querySelector(".es-main-page-slider-swiper-contianer");
+  var newsSwiper = null;
+  if (newsStage && typeof Swiper !== "undefined") {
+    newsSwiper = new Swiper(newsStage, {
+      slidesPerView: "auto",
+      spaceBetween: 16,
+      autoplay: { delay: 5e3, disableOnInteraction: false },
+      breakpoints: { 768: {}, 1024: {}, 1200: {} },
+      navigation: {
+        prevEl: newsStage.querySelector(".swiper-button-next"),
+        nextEl: newsStage.querySelector(".swiper-button-prev")
+      }
+    });
+    if (newsSwiper.autoplay) newsSwiper.autoplay.stop();
+  }
+
+  // checkViewPortStatus — همان منطق سایت eseminar برای بخش اطلاعیه‌ها
+  function newsCheckViewPort() {
+    if (!newsSwiper || !newsStage) return;
+    var rect = newsStage.getBoundingClientRect();
+    var inView = rect.top < window.innerHeight && rect.bottom > 0 &&
+      (window.innerHeight - rect.top) > 0.5 * rect.height;
+    if (inView) {
+      if (newsSwiper.autoplay && !newsSwiper.autoplay.running) newsSwiper.autoplay.start();
+    } else if (window.scrollY > rect.bottom) {
+      newsSwiper.slideTo(0, 1000, false);
+    }
+  }
+  function newsDebounce(fn, wait) {
+    var t = 0;
+    return function () {
+      clearTimeout(t);
+      t = setTimeout(fn, wait);
+    };
+  }
+  if (newsSwiper) {
+    newsCheckViewPort();
+    window.addEventListener("scroll", newsDebounce(newsCheckViewPort, 150), { passive: true });
+  }
 
   initDiscounts();
 })();

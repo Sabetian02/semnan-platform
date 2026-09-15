@@ -922,18 +922,13 @@ img { max-width: 100%; display: block; }
    ۲) «اطلاعیه‌ها» ≈ es-main-page-slider-swiper-contianer سایت eseminar
    ============================================================ */
 
-/* ---------- بنر و موتور اسلایدر (translate به جای اسکرول، دقیق مثل swiper) ---------- */
-[data-scroller] {
-  transition: transform 320ms cubic-bezier(.1, .57, .1, 1);
-  will-change: transform;
-  touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: grab;
+/* ---------- بنر و اسلایدرها — کتابخانهٔ واقعی Swiper با تنظیمات سایت eseminar ---------- */
+.featured-slider-stage .swiper-slide {
+  width: auto;
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
 }
-[data-scroller].es-tx-no { transition: none !important; }
-[data-scroller].es-dragging { cursor: grabbing; }
-[data-scroller] .swiper-slide { flex: 0 0 auto; }
 
 /* ---------- اسلایدر آموزش‌های مجازی (es-home-page-slide-show / بنر navy) ---------- */
 .es-home-page-slide-show-container {
@@ -972,18 +967,8 @@ img { max-width: 100%; display: block; }
   border-color: var(--gold) !important;
   color: var(--navy-dark) !important;
 }
-.featured-slider-stage { position: relative; margin-inline: auto; max-width: 1440px; }
-.featured-slider-scroller {
-  display: flex;
-  align-items: flex-start;
-  gap: 30px;
-  overflow: hidden;
-  padding: 0 50px 24px;
-}
-.featured-slider-stage .swiper-slide {
-  display: flex;
-  justify-content: center;
-}
+.featured-slider-stage { position: relative; margin-inline: auto; max-width: 1440px; padding: 0 50px 24px; overflow-x: clip; overflow-y: visible; }
+.featured-slider-scroller { display: flex; align-items: flex-start; }
 
 /* کارت هیرو اسلایدشو */
 .main-page-slide-show-container {
@@ -1117,6 +1102,8 @@ img { max-width: 100%; display: block; }
 .swiper-button-next:hover { color: var(--gold); border-color: rgba(245, 196, 0, .7); transform: translateY(-15px) scale(1.06); }
 .swiper-button-prev:disabled,
 .swiper-button-next:disabled { opacity: .35; cursor: default; }
+.swiper-button-prev::after,
+.swiper-button-next::after { content: none !important; }
 .featured-slider-stage .swiper-button-prev { left: 15px; }
 .featured-slider-stage .swiper-button-next { right: 15px; }
 .es-main-page-slider-swiper-contianer .swiper-button-prev { left: -8px; }
@@ -1146,7 +1133,7 @@ img { max-width: 100%; display: block; }
   .main-page-slide-show-detials-container .avatarBox { display: none; }
   .main-page-slide-show-detials-container { justify-content: flex-end; }
   .main-page-slide-show-price-btn-container { gap: 4px; }
-  .featured-slider-scroller { padding: 0 34px 24px; }
+  .featured-slider-stage { padding: 0 34px 24px; }
 }
 
 /* ---------- اسلایدر اطلاعیه‌ها (es-main-page-slider-swiper-contianer) ---------- */
@@ -1204,18 +1191,15 @@ img { max-width: 100%; display: block; }
 .es-main-page-slider-swiper-contianer {
   padding-bottom: 20px;
   position: relative;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 .es-main-page-slider-section .swiper-slide {
   width: 243px !important;
   min-width: 243px !important;
   flex: 0 0 auto;
 }
-.es-main-page-slider-section .news-scroller {
-  display: flex;
-  gap: 16px;
-  overflow: hidden;
-  padding: 4px 2px;
-}
+.es-main-page-slider-section .news-scroller { display: flex; align-items: flex-start; }
 
 /* کارت خبر (معادل es-main-webinar-card .webinarCard در eseminar) */
 .es-main-webinar-card .webinarCard {

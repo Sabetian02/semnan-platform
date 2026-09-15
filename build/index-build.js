@@ -418,7 +418,7 @@ function renderNews(head, newsList) {
             </a>
           </div>
         </div>
-        <div class="es-main-page-slider-swiper-contianer" data-stage>
+        <div class="es-main-page-slider-swiper-contianer swiper" data-stage>
           <button class="swiper-button-prev" type="button" aria-label="قبلی"><span aria-hidden="true">←</span></button>
           <div class="news-scroller swiper-wrapper" data-scroller>
             ${slides}
@@ -484,8 +484,8 @@ function renderCourses(head, courseList) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
         </a>
       </div>
-      <div class="featured-slider-stage" data-stage data-autoplay>
-        <div class="featured-slider-scroller" data-scroller>
+      <div class="featured-slider-stage swiper" data-stage data-autoplay>
+        <div class="featured-slider-scroller swiper-wrapper" data-scroller>
           ${slides}
         </div>
         <button class="swiper-button-prev" type="button" aria-label="دورهٔ قبلی"><span aria-hidden="true">←</span></button>
