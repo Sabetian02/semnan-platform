@@ -219,12 +219,14 @@
     if (s) el.textContent = s;
   });
 
-  // ===== اسلایدرهای افقی (آموزش مجازی و اطلاعیه‌ها) — دکمه‌های قبلی/بعدی =====
+  // ===== اسلایدرهای افقی (به سبک swiper سایت eseminar): قبلی/بعدی + خودکار =====
   document.querySelectorAll("[data-stage]").forEach(function (stage) {
     var scroller = stage.querySelector("[data-scroller]");
-    var prev = stage.querySelector(".prev");
-    var next = stage.querySelector(".next");
+    var prev = stage.querySelector(".swiper-button-prev");
+    var next = stage.querySelector(".swiper-button-next");
     if (!scroller) return;
+    var speed = 0;
+    var autoplay = stage.hasAttribute("data-autoplay");
     var step = function () {
       var el = scroller.firstElementChild;
       if (!el) return scroller.clientWidth * 0.8;
@@ -232,19 +234,44 @@
       var gap = parseFloat(fs.columnGap) || parseFloat(fs.rowGap) || 0;
       return el.getBoundingClientRect().width + gap;
     };
+    var go = function (dx) {
+      var max = scroller.scrollWidth - scroller.clientWidth;
+      var target = Math.max(0, Math.min(max, scroller.scrollLeft + dx));
+      scroller.scrollTo({ left: target, behavior: "smooth" });
+    };
+    var tick = function () { go(step()); };
+    var restart = function () {
+      if (speed) clearInterval(speed);
+      if (autoplay) {
+        speed = setInterval(function () {
+          if (scroller.scrollLeft >= scroller.scrollWidth - scroller.clientWidth - 2) {
+            scroller.scrollTo({ left: 0, behavior: "smooth" });
+          } else {
+            tick();
+          }
+        }, 5000);
+      }
+    };
     var update = function () {
       var max = scroller.scrollWidth - scroller.clientWidth;
       if (prev) prev.disabled = scroller.scrollLeft <= 1;
       if (next) next.disabled = scroller.scrollLeft >= max - 1;
     };
-    if (prev) prev.addEventListener("click", function () {
-      scroller.scrollBy({ left: -step(), behavior: "smooth" });
-    });
-    if (next) next.addEventListener("click", function () {
-      scroller.scrollBy({ left: step(), behavior: "smooth" });
-    });
+    if (prev) prev.addEventListener("click", function () { go(-step()); restart(); });
+    if (next) next.addEventListener("click", function () { go(step()); restart(); });
+    scroller.addEventListener(
+      "mouseenter",
+      function () { if (speed) clearInterval(speed); },
+      { passive: true }
+    );
+    scroller.addEventListener(
+      "mouseleave",
+      function () { if (autoplay) restart(); },
+      { passive: true }
+    );
     scroller.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
+    restart();
     update();
   });
 

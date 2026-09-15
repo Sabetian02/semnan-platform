@@ -361,117 +361,126 @@ const newsCard = (n) => {
           </article>`;
 };
 
-/* ---------- کارت اطلاعیهٔ کوچک اسلایدر (به سبک webinarCard سایت eseminar) ---------- */
-const NEWS_PAIRS = {
-  "دوره": ["#102A71", "#1b3a8b"],
-  "رویداد": ["#001840", "#0a2266"],
-  "فراخوان": ["#1b3a8b", "#0a1f54"],
-  "اطلاع‌رسانی": ["#17328f", "#102A71"],
-  "جدید": ["#244da0", "#102A71"]
-};
+/* ---------- کارت اطلاعیه‌ٔ اسلایدر اصلی (به سبک webinarCard سایت eseminar) ---------- */
+const CAT_EMOJI = { "دوره": "🎓", "رویداد": "🗓", "فراخوان": "📣", "اطلاع‌رسانی": "✉", "جدید": "✨", "خبر": "📰" };
 const newsSlide = (n) => {
-  const pair = NEWS_PAIRS[n.category] || ["#102A71", "#17328f"];
   const img = imageOrNull(n.image);
-  const coverInner = img
+  const emoji = CAT_EMOJI[n.category] || "📰";
+  const visual = img
     ? `<img class="wc-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">`
-    : "";
+    : `<span class="wc-img wc-fallback" style="--c1:#247b48;--c2:#38a063">${emoji}</span>`;
   const depth = "ettelaieh/" + n._slug + ".html";
-  return `<article class="wcard reveal">
-            <a class="wc-cover" href="${depth}" style="--c1:${pair[0]};--c2:${pair[1]}">
-              ${coverInner}
-              <span class="wc-chip">${esc(n.category || "خبر")}</span>
-            </a>
-            <div class="wc-body">
-              <h3><a href="${depth}">${esc(n.title)}</a></h3>
-              <p class="wc-sum">${esc(n.summary)}</p>
+  const initial = esc(String(n.title || "خ").trim().charAt(0));
+  return `
+          <div class="swiper-slide" dir="rtl">
+            <div class="es-main-webinar-card">
+              <article class="webinarCard">
+                <a class="webinarCard-cover" href="${depth}">
+                  ${visual}
+                  <span class="webinarCard-cover-onCover">${esc(n.summary || "جزئیات اطلاعیه را مشاهده کنید")}</span>
+                </a>
+                <span class="wc-badge special-badge">${esc(n.category || "خبر")}</span>
+                <div class="webinarCard-content es__webinarCardMainContent">
+                  <div class="webinarCard-title"><a href="${depth}"><h3>${esc(n.title)}</h3></a></div>
+                  <div class="webinarCard-detail es-webinar-card-detail-avatar-container-wide">
+                    <div class="main-webinar-card-avatar-container"><span class="wc-avatar" aria-hidden="true">${initial}</span></div>
+                    <div class="d-st1 m-w-56px wc-when" data-date="${esc(n.date || "")}"></div>
+                  </div>
+                </div>
+                <div class="webinarCard-detail stickToBottom">
+                  <div class="es__webinarCard-footer">
+                    <div class="es__webinarCard-footerItem ft2 es-webinar-card-footer-items-inner">
+                      <a class="eseminar-button eseminar-button--esmBtn-fill-247B48 eseminar-button--medium" href="${depth}">جزئیات</a>
+                      <div class="price-wrapper"><span class="wc-cat-mini">${emoji} ${esc(n.category || "خبر")}</span></div>
+                    </div>
+                  </div>
+                </div>
+              </article>
             </div>
-            <div class="wc-foot">
-              <span class="wc-date" data-date="${esc(n.date || "")}"></span>
-              <a class="wc-more" href="${depth}">جزئیات ←</a>
-            </div>
-          </article>`;
+          </div>`;
 };
 
 function renderNews(head, newsList) {
   if (!newsList.length) return "";
-  const slides = newsList.map((n) => newsSlide(n)).join("\n          ");
-  return `<!-- NEWS -->
-    <section class="section news" id="news">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">${esc(head.eyebrow)}</span>
-          <h2>${esc(head.title)}</h2>
-          <p>${esc(head.subtitle)}</p>
-          <div class="section-head-actions">
-            <a class="btn btn-navy btn-sm news-all" href="ettelaieh.html">مشاهده همه اطلاعیه‌ها ←</a>
+  const slides = newsList.map((n) => newsSlide(n)).join("\n        ");
+  return `<!-- NEWS (اسلایدر به سبک es-main-page-slider-swiper-contianer سایت eseminar) -->
+    <section class="es-main-page-slider-section es-news-section" id="news">
+      <div class="es-page-inner">
+        <div class="es__sectionTitle justify-content-between es-main-page-section-title" dir="rtl">
+          <div class="double-color-slider-title-container">
+            <h2>${esc(head.title)}</h2>
+            ${head.subtitle ? `<p class="small-text">${esc(head.subtitle)}</p>` : ""}
+          </div>
+          <div class="es__sectionTitle-actions">
+            <a class="eseminar-button eseminar-button--esmBtn-text-only eseminar-button--medium news-all" href="ettelaieh.html">
+              <span>مشاهده همه</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+            </a>
           </div>
         </div>
-      </div>
-      <div class="news-stage" data-stage>
-        <button class="ns-arw prev" type="button" aria-label="اسلاید قبلی">→</button>
-        <div class="news-scroller" data-scroller>
-          ${slides}
+        <div class="es-main-page-slider-swiper-contianer" data-stage>
+          <button class="swiper-button-prev" type="button" aria-label="قبلی"><span aria-hidden="true">←</span></button>
+          <div class="news-scroller swiper-wrapper" data-scroller>
+            ${slides}
+          </div>
+          <button class="swiper-button-next" type="button" aria-label="بعدی"><span aria-hidden="true">→</span></button>
         </div>
-        <button class="ns-arw next" type="button" aria-label="اسلاید بعدی">←</button>
       </div>
     </section>`;
 }
 
 /* ---------- اسلایدر آموزش‌های مجازی (به سبک es-home-page-slide-show سایت eseminar) ---------- */
-const courseSlide = (c) => {
+const courseSlide = (c, idx) => {
   const link = linkOrDefault(c.link);
   const name = c.teacher || "مدرس دوره";
   const initial = esc(name.trim().charAt(0));
-  return `<article class="cslide reveal">
-            <div class="cs-card">
-              <a class="cs-media" href="${link}" style="--c1:${esc(c.cover_a || "#102A71")};--c2:${esc(c.cover_b || "#1b3a8b")}" aria-label="${esc(c.title)}">
-                <span class="cs-chip">${esc(c.category || "دوره")}</span>
-                <span class="cs-emoji" aria-hidden="true">${esc(c.icon || "🎓")}</span>
+  const lessons = c.lessons ? `<span class="cs-lessons-mini">▸ ${esc(c.lessons)}</span>` : "";
+  return `
+          <div class="swiper-slide" dir="rtl">
+            <article class="main-page-slide-show-container">
+              <a class="main-page-slide-show-image-container" href="${link}" id="slideshow_course_img_${idx}" aria-label="${esc(c.title)}">
+                <span class="cs-cover" style="--c1:${esc(c.cover_a || "#247b48")};--c2:${esc(c.cover_b || "#38a063")}" aria-hidden="true">${esc(c.icon || "🎓")}</span>
               </a>
-              <div class="cs-content">
-                <div class="cs-top">
-                  <h3><a href="${link}">${esc(c.title)}</a></h3>
-                  <div class="cs-teacher">
-                    <span class="cs-avatar" aria-hidden="true">${initial}</span>
-                    <span class="cs-teacher-name">${name}</span>
+              <div class="main-page-slide-show-content-container">
+                <div class="main-page-slide-show-title-description-container">
+                  <div class="main-page-slide-show-title-container">
+                    <a href="${link}" id="slideshow_course_title_${idx}">${esc(c.title)}</a>
                   </div>
-                  <p class="cs-sum">${esc(c.summary || "")}</p>
+                  <div class="main-page-slide-show-description-container">${esc(c.summary || "")}</div>
                 </div>
-                <div class="cs-bottom">
-                  <div class="cs-meta">
-                    <span class="cs-lessons">▸ ${esc(c.lessons || "")}</span>
-                    <span class="cs-price">${esc(c.price || "رایگان")}</span>
+                <div class="main-page-slide-show-detials-container">
+                  <div class="avatarBox avatarBox-lg">
+                    <div class="avatar-group is-webinar rtl">
+                      <span class="avatar" aria-hidden="true">${initial}</span>
+                      <span class="cs-teacher-name">${name}</span>
+                    </div>
                   </div>
-                  <a class="btn btn-gold btn-sm cs-cta" href="${link}">ثبت‌نام دوره ←</a>
+                  <div class="main-page-slide-show-price-btn-container">
+                    <div class="main-page-slide-show-price-container">
+                      ${lessons}
+                      <div class="price main-slide-show-free-price">${esc(c.price || "رایگان")}</div>
+                    </div>
+                    <div class="main-page-slide-show-btn-container">
+                      <a class="eseminar-button eseminar-button--esmBtn-fill-fire-gradient eseminar-button--medium" href="${link}">ثبت‌نام دوره</a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>`;
+            </article>
+          </div>`;
 };
 
 function renderCourses(head, courseList) {
   if (!courseList.length) return "";
-  const slides = courseList.map((c) => courseSlide(c)).join("\n        ");
-  const allLink = linkOrDefault(head.cta && head.cta.link);
-  const allLabel = (head.cta && head.cta.label) || "همه دوره‌ها";
-  return `<!-- COURSES -->
-    <section class="section courses" id="courses">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">${esc(head.eyebrow)}</span>
-          <h2>${esc(head.title)}</h2>
-          <p>${esc(head.subtitle)}</p>
-          <div class="section-head-actions">
-            <a class="btn btn-navy btn-sm" href="${allLink}">${esc(allLabel)} ←</a>
-          </div>
+  const slides = courseList.map((c, i) => courseSlide(c, i)).join("\n        ");
+  return `<!-- COURSES (به سبک es-home-page-slide-show-container سایت eseminar) -->
+    <section class="es-home-page-slide-show-container" id="courses">
+      <div class="featured-slider-stage" data-stage data-autoplay>
+        <div class="featured-slider-scroller" data-scroller>
+          ${slides}
         </div>
-        <div class="course-stage" data-stage>
-          <button class="cs-arw prev" type="button" aria-label="دورهٔ قبلی">→</button>
-          <div class="course-track" data-scroller>
-            ${slides}
-          </div>
-          <button class="cs-arw next" type="button" aria-label="دورهٔ بعدی">←</button>
-        </div>
+        <button class="swiper-button-prev" type="button" aria-label="دورهٔ قبلی"><span aria-hidden="true">←</span></button>
+        <button class="swiper-button-next" type="button" aria-label="دورهٔ بعدی"><span aria-hidden="true">→</span></button>
       </div>
     </section>`;
 }
