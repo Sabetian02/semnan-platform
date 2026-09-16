@@ -236,23 +236,6 @@
     });
   }
 
-  // وقتی به انتهای لیست نزدیک می‌شویم، فلش‌ها گلوِ نئونی پررنگ‌تر می‌شوند.
-  function wireEndGlow(sw, frame) {
-    if (!sw || !frame) return;
-    function upd() {
-      var n = sw.slides ? sw.slides.length : 0;
-      var remain = Math.max(0, n - 1 - sw.activeIndex);
-      var nearEnd = n >= 2 && remain <= 2;
-      var atEnd = n >= 2 && sw.isEnd;
-      frame.classList.toggle("spn-near-end", nearEnd);
-      frame.classList.toggle("spn-at-end", atEnd);
-    }
-    sw.on("slideChange", upd);
-    sw.on("slideChangeTransitionEnd", upd);
-    sw.on("resize", upd);
-    upd();
-  }
-
   var coursesFrame = document.querySelector(".courses-frame");
   var coursesSwiper = null;
   if (coursesFrame && typeof Swiper !== "undefined") {
@@ -267,7 +250,6 @@
     });
     wireReset(coursesSwiper, coursesFrame.querySelector(".swiper-button-next"));
     wireReset(coursesSwiper, coursesFrame.querySelector(".swiper-button-home"));
-    wireEndGlow(coursesSwiper, coursesFrame);
   }
 
   var newsFrame = document.querySelector(".es-news-frame");
@@ -285,7 +267,6 @@
     if (newsSwiper.autoplay) newsSwiper.autoplay.stop();
     wireReset(newsSwiper, newsFrame.querySelector(".swiper-button-next"));
     wireReset(newsSwiper, newsFrame.querySelector(".swiper-button-home"));
-    wireEndGlow(newsSwiper, newsFrame);
   }
 
   // checkViewPortStatus — همان منطق سایت eseminar برای بخش اطلاعیه‌ها
