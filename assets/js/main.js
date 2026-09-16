@@ -390,6 +390,7 @@
         .then(function (data) {
           if (!data || !Array.isArray(data.items)) return;
           var current = data.items;
+          console.log("[notif] pollLatest: primed=" + primed + " current=" + current.length + " seen=" + seen.length);
           if (!primed) {
             current.forEach(function (it) {
               if (seen.indexOf(it.id) === -1) seen.push(it.id);
@@ -400,12 +401,16 @@
             return;
           }
           var changed = false;
+          var newCount = 0;
           current.forEach(function (it) {
             if (seen.indexOf(it.id) !== -1) return;
             seen.push(it.id);
             changed = true;
+            newCount++;
+            console.log("[notif] NEW: " + it.id);
             fireNotification(it);
           });
+          console.log("[notif] newCount=" + newCount + " changed=" + changed);
           if (changed) {
             if (seen.length > 400) seen = seen.slice(-400);
             saveSeen(seen);
@@ -469,6 +474,7 @@
 
     function enable() {
       if (!supported) { toast("مرورگر شما از اعلان پشتیبانی نمی‌کند"); return; }
+      console.log("[notif] enable() called, permission=" + Notification.permission);
       var cont = function () {
         enabled = true;
         primed = false;
@@ -508,8 +514,7 @@
     });
 
     setUI();
-    /* اگر قبلاً روشن بوده و اجازه هست: poll شروع می‌شود؛
-       اولین اجرا بی‌صدا پایه می‌گیرد تا پیام‌های قدیمی پخش نشوند */
+    console.log("[notif] init: enabled=" + enabled + " perm=" + Notification.permission);
     if (enabled && supported && Notification.permission === "granted") startPolling();
   }
 
