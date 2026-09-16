@@ -9,7 +9,9 @@ self.addEventListener("activate", function (e) {
   e.waitUntil(self.clients.claim());
 });
 
-/* وقتی یک سرویس‌دهندهٔ Push در آینده وصل شود، پیام‌ها از اینجا نمایش داده می‌شوند */
+/* وقتی پیام push می‌رسد، آن را نشان بده.
+   اگر صفحهٔ سایت باز و فوکوس باشد، خودِ صفحه نوتیف را می‌دهد؛
+   پس اینجا ساکت می‌مانیم تا تکراری نزند. */
 self.addEventListener("push", function (e) {
   if (!self.registration || !self.registration.showNotification) return;
   var data = {};
@@ -19,11 +21,17 @@ self.addEventListener("push", function (e) {
     data = { title: "اعلان پلتفرم دانشگاه سمنان", body: "" };
   }
   e.waitUntil(
-    self.registration.showNotification(data.title || "اعلان پلتفرم دانشگاه سمنان", {
-      body: data.body || "",
-      icon: data.icon || "assets/images/SVG/logo.svg",
-      data: { url: data.url || "/" },
-      tag: data.tag || "platform-notif"
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
+      var focused = list.some(function (w) {
+        return typeof w.focused === "boolean" && w.focused;
+      });
+      if (focused) return null;
+      return self.registration.showNotification(data.title || "اعلان پلتفرم دانشگاه سمنان", {
+        body: data.body || "",
+        icon: data.icon || "assets/images/SVG/logo.svg",
+        data: { url: data.url || "/" },
+        tag: data.tag || "platform-notif"
+      });
     })
   );
 });

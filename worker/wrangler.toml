@@ -1,11 +1,26 @@
 name = "decap-cms-oauth"
 main = "src/index.js"
 compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
 
 # دامنه‌ای که این Worker روی آن خواهد بود (از DNS کلادفلر، حالت Proxied)
 workers_dev = false
 
+# ذخیره‌سازی اشتراک‌های اعلان و اسنپ‌شاتِ آیتم‌های ارسالی
+[[kv_namespaces]]
+binding = "NOTIF_SUBS"
+id = "e9bbb91a962344adbeb7f26c16a8faf6"
+
+# هر ۲ دقیقه latest.json را چک و فقط آیتم‌های جدید را push می‌کند
+[triggers]
+crons = ["*/2 * * * *"]
+
 [vars]
+# کلید عمومی VAPID (امن است — سمت کلاینت و برای امضای push استفاده می‌شود)
+VAPID_PUBLIC_KEY = "BKiNVkyEdUYc70SDo_umdZsFVR408ECzHhQVUJep7RBddrQAjRWHmobowOtx5SOvN_W8BED3PTdNGIZjW5EMNGU"
+
 # این متغیرها هنگام دیپلوی با --secret مقداردهی می‌شوند:
 #   npx wrangler secret put GITHUB_CLIENT_ID
 #   npx wrangler secret put GITHUB_CLIENT_SECRET
+#   npx wrangler secret put VAPID_PRIVATE_KEY
+#   npx wrangler secret put ADMIN_KEY

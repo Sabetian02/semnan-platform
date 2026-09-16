@@ -298,6 +298,20 @@
      فقط پیام‌هایی که بعد از آن در اطلاعیه/آموزش/تخفیف اضافه شوند،
      یک‌به‌یک (بدون تجمیع) نوتیف می‌گیرند.
      ============================================================ */
+  /* ================= اعلان پس‌زمینه (Web Push) =================
+     هنگام فعال‌سازی، مرورگر در سرور اعلان ثبت می‌شود؛ Worker هر ۲ دقیقه
+     latest.json را چک می‌کند و فقط پیام‌های جدید را حتی وقتی سایت بسته است
+     می‌فرستد. هنگام غیرفعال‌سازی، اشتراک لغو می‌شود تا دیگر پیامی نیاید. */
+  var VAPID_PUBLIC_KEY = "BKiNVkyEdUYc70SDo_umdZsFVR408ECzHhQVUJep7RBddrQAjRWHmobowOtx5SOvN_W8BED3PTdNGIZjW5EMNGU";
+  var NOTIF_API = "https://auth.semnanplatform.ir";
+
+  function urlBase64ToUint8Array(b64) {
+    var bin = atob(b64.replace(/-/g, "+").replace(/_/g, "/"));
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return arr;
+  }
+
   function initNotifications() {
     var ON_KEY = "sp_notif_on";
     var SEEN_KEY = "sp_seen_items_v1";
@@ -411,6 +425,48 @@
       navigator.serviceWorker.register("/sw.js").catch(function () {});
     }
 
+    /* ثبت‌نام نزد سرور اعلان برای دریافت حتی با سایت بسته */
+    function enablePush() {
+      if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+      navigator.serviceWorker.ready
+        .then(function (reg) {
+          return reg.pushManager.getSubscription().then(function (sub) {
+            if (sub) return sub;
+            return reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
+          });
+        })
+        .then(function (sub) {
+          var keys = sub.toJSON().keys;
+          return fetch(NOTIF_API + "/api/subscribe", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ subscription: { endpoint: sub.endpoint, keys: keys } })
+          });
+        })
+        .catch(function () {});
+    }
+
+    /* لغو اشتراک نزد سرور + مرورگر موقع غیرفعال کردن */
+    function disablePush() {
+      if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+      navigator.serviceWorker.ready
+        .then(function (reg) {
+          return reg.pushManager.getSubscription().then(function (sub) {
+            if (!sub) return;
+            fetch(NOTIF_API + "/api/unsubscribe", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ endpoint: sub.endpoint })
+            }).catch(function () {});
+            return sub.unsubscribe();
+          });
+        })
+        .catch(function () {});
+    }
+
     function enable() {
       if (!supported) { toast("مرورگر شما از اعلان پشتیبانی نمی‌کند"); return; }
       var cont = function () {
@@ -419,6 +475,7 @@
         try { localStorage.setItem(ON_KEY, "1"); } catch (_) {}
         registerSW();
         startPolling();
+        enablePush();
         setUI();
         toast("اعلان‌ها فعال شد ✓ — فقط برای پیام جدید اطلاع می‌دهد");
       };
@@ -438,6 +495,7 @@
       primed = false;
       try { localStorage.setItem(ON_KEY, "0"); } catch (_) {}
       stopPolling();
+      disablePush();
       setUI();
       toast("اعلان‌ها غیرفعال شد");
     }

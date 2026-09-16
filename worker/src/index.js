@@ -1,20 +1,39 @@
 /**
- * Decap CMS OAuth gateway — GitHub external OAuth for GitHub Pages.
- * Deploy: npx wrangler deploy (inside ./worker)
+ * Decap CMS OAuth gateway + Web Push relay (پلتفرم دانشگاه سمنان)
+ * Deploy: npx wrangler deploy        (inside ./worker)
+ * Test dev: npx wrangler dev --local   (uses .dev.vars for secrets)
  *
- * Env secrets (set via wrangler secret put):
- *   GITHUB_CLIENT_ID     — OAuth App Client ID (from GitHub)
- *   GITHUB_CLIENT_SECRET — OAuth App Client Secret
+ * Env secrets (set via: npx wrangler secret put <NAME>):
+ *   GITHUB_CLIENT_ID      — OAuth App Client ID (from GitHub)
+ *   GITHUB_CLIENT_SECRET  — OAuth App Client Secret
+ *   VAPID_PRIVATE_KEY     — private half of the VAPID keypair
+ *   ADMIN_KEY             — secret to trigger /api/_cron manually
  *
- * Flow:
+ * Routes (OAuth):
  *   /auth?client_id=..&redirect_uri=..&scope=..&state=..
  *     -> redirect to GitHub authorize
  *   /auth/callback?code=..&state=..
- *     -> exchange code for token, redirect back to redirect_uri with #access_token=..
+ *     -> exchange code for token, redirect back with #access_token=..
+ *
+ * Routes (Web Push):
+ *   POST /api/subscribe    {endpoint,p256dh,auth} -> store PushSubscription
+ *   POST /api/unsubscribe  {endpoint}            -> remove subscription
+ *   GET  /api/health       -> { ok, subs }
+ *   GET  /api/_cron?key=<ADMIN_KEY> -> run publish loop manually (testing)
+ *
+ * Scheduled (every 2 min):
+ *   fetch https://semnanplatform.ir/latest.json, diff ids against the KV
+ *   snapshot, then Web-Push ONLY the newly added items (no history burst).
  */
+import webPush from "web-push";
+
 const GITHUB_AUTH = "https://github.com/login/oauth/authorize";
 const GITHUB_TOKEN = "https://github.com/login/oauth/access_token";
 const FALLBACK_REDIRECT = "https://semnanplatform.ir/admin/index.html";
+const ORIGIN = "https://semnanplatform.ir";
+const K_SUBS = "notif:subs";
+const K_IDS = "notif:snapshot_ids";
+const MAX_SUBS = 2000;
 
 function htmlPage(title, body) {
   return new Response(
@@ -34,11 +53,183 @@ function htmlPage(title, body) {
   );
 }
 
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "content-type": "application/json; charset=utf-8" }
+  });
+}
+
+async function getSubs(env) {
+  const v = await env.NOTIF_SUBS.get(K_SUBS, "json");
+  return Array.isArray(v) ? v : [];
+}
+
+async function setSubs(env, subs) {
+  await env.NOTIF_SUBS.put(K_SUBS, JSON.stringify(subs.slice(0, MAX_SUBS)));
+}
+
+async function getIds(env) {
+  const v = await env.NOTIF_SUBS.get(K_IDS, "json");
+  return Array.isArray(v) ? v : null;
+}
+
+async function setIds(env, ids) {
+  await env.NOTIF_SUBS.put(K_IDS, JSON.stringify(ids));
+}
+
+/* Payload دقیقاً همان قالب اعلان صفحه (main.js) — فقط از سمت SW نمایش داده می‌شود */
+function toPayload(it, origin) {
+  const title = it.title || "";
+  const url =
+    it.link && /^https?:/.test(it.link) ? it.link : origin + (it.link || "/");
+  let ntitle, body;
+  if (it.type === "course") {
+    ntitle = "دوره‌ی آموزشی جدید 📚 " + title;
+    body = it.teacher ? it.teacher + (it.price ? " · " + it.price : "") : it.summary || "";
+  } else if (it.type === "discount") {
+    ntitle = "تخفیف جدید 🎁 " + title;
+    body = it.summary || "";
+    if (it.code) body = (body ? body + " — " : "") + "کد تخفیف: " + it.code;
+  } else {
+    ntitle = "اطلاعیه‌ی جدید 📣 " + title;
+    body = it.summary || "";
+  }
+  return {
+    id: it.id,
+    title: ntitle,
+    body,
+    url,
+    tag: "spn-" + it.id,
+    icon: origin + "/assets/images/SVG/logo.svg"
+  };
+}
+
+async function sendPush(sub, payload, env) {
+  const options = {
+    TTL: 86400,
+    urgency: "normal",
+    vapidDetails: {
+      subject: "mailto:pouyab.team@gmail.com",
+      publicKey: env.VAPID_PUBLIC_KEY,
+      privateKey: env.VAPID_PRIVATE_KEY
+    }
+  };
+  await webPush.sendNotification(sub, JSON.stringify(payload), options);
+}
+
+/* اولین اجرا فقط اسنپ‌شات می‌گیرد (silent baseline)؛
+   فقط آیتم‌های «جدیدتر» از اسنپ‌شات قبلی push می‌شوند — تاریخچه پخش نمی‌شود */
+async function processNewItems(env) {
+  const origin = (env && env.SITE_ORIGIN) || ORIGIN;
+  let latest = null;
+  try {
+    const res = await fetch(origin + "/latest.json", {
+      headers: { accept: "application/json" },
+      cf: { cacheTtl: 30 }
+    });
+    if (!res.ok) throw new Error("latest.json HTTP " + res.status);
+    latest = await res.json();
+  } catch (e) {
+    console.error("latest.json fetch failed:", e.message);
+    return;
+  }
+  const items = Array.isArray(latest && latest.items) ? latest.items : [];
+  const ids = items.map((i) => i && i.id).filter(Boolean);
+  if (ids.length === 0) return;
+
+  const prev = await getIds(env);
+  if (prev === null) {
+    await setIds(env, ids); // باری اول: بی‌صدا
+    return;
+  }
+
+  const newItems = items.filter((i) => i.id && prev.indexOf(i.id) === -1);
+  if (newItems.length > 0) {
+    const subs = await getSubs(env);
+    for (const item of newItems) {
+      const payload = toPayload(item, ORIGIN);
+      await Promise.allSettled(
+        subs.map((sub) =>
+          sendPush(sub, payload, env).catch((err) => {
+            const status = err && err.statusCode;
+            if (status === 404 || status === 410) {
+              console.log("removing stale sub:", sub.endpoint.slice(0, 60));
+              return removeSub(env, sub.endpoint);
+            }
+            console.error("push failed:", status || err.message);
+          })
+        )
+      );
+    }
+  }
+  await setIds(env, ids);
+}
+
+async function removeSub(env, endpoint) {
+  const subs = await getSubs(env);
+  const next = subs.filter((s) => s.endpoint !== endpoint);
+  if (next.length !== subs.length) await setSubs(env, next);
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const { pathname, searchParams } = url;
 
+    /* ---------- Web Push API ---------- */
+    if (pathname === "/api/subscribe" && request.method === "POST") {
+      let body;
+      try {
+        body = await request.json();
+      } catch (_) {
+        return json({ error: "bad json" }, 400);
+      }
+      const sub = body.subscription || body;
+      if (!sub || !sub.endpoint || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) {
+        return json({ error: "invalid subscription" }, 400);
+      }
+      const record = {
+        endpoint: sub.endpoint,
+        keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth },
+        at: new Date().toISOString()
+      };
+      const subs = await getSubs(env);
+      const idx = subs.findIndex((s) => s.endpoint === sub.endpoint);
+      if (idx >= 0) subs[idx] = record;
+      else subs.push(record);
+      await setSubs(env, subs);
+      return json({ ok: true, subs: subs.length });
+    }
+
+    if (pathname === "/api/unsubscribe" && request.method === "POST") {
+      let body;
+      try {
+        body = await request.json();
+      } catch (_) {
+        return json({ error: "bad json" }, 400);
+      }
+      if (!body || !body.endpoint) return json({ error: "endpoint required" }, 400);
+      const subs = await getSubs(env);
+      const next = subs.filter((s) => s.endpoint !== body.endpoint);
+      if (next.length !== subs.length) await setSubs(env, next);
+      return json({ ok: true });
+    }
+
+    if (pathname === "/api/health") {
+      const subs = await getSubs(env);
+      return json({ ok: true, subs: subs.length });
+    }
+
+    if (pathname === "/api/_cron") {
+      if (!env.ADMIN_KEY || searchParams.get("key") !== env.ADMIN_KEY) {
+        return json({ error: "forbidden" }, 403);
+      }
+      await processNewItems(env);
+      return json({ ok: true });
+    }
+
+    /* ---------- OAuth (داشبورد) ---------- */
     if (pathname === "/") {
       return htmlPage("دروازه ورود داشبورد", `
         <h1>سرویس ورود به داشبورد پلتفرم دانشگاه سمنان</h1>
@@ -115,6 +306,10 @@ export default {
       return Response.redirect(back.toString(), 302);
     }
 
-    return htmlPage("یافت نشد", `<h1>صفحه پیدا نشد</h1><p>مسیرهای مجاز: <code>/</code>، <code>/auth</code>، <code>/auth/callback</code></p>`);
+    return htmlPage("یافت نشد", `<h1>صفحه پیدا نشد</h1><p>مسیرهای مجاز: <code>/</code>، <code>/auth</code>، <code>/auth/callback</code> و API اعلان‌ها</p>`);
+  },
+
+  async scheduled(_event, env, ctx) {
+    ctx.waitUntil(processNewItems(env));
   }
 };

@@ -1,7 +1,10 @@
 node_modules/
 .wrangler/
 worker/.wrangler/
+worker/.wrangler/state/
 worker/node_modules/
+worker/.dev.vars
+worker/vapid.local.json
 *.log
 .DS_Store
 Thumbs.db
