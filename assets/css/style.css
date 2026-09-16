@@ -932,7 +932,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- اسلایدر آموزش‌های مجازی (es-home-page-slide-show / بنر navy) ---------- */
 .es-home-page-slide-show-container {
-  background: linear-gradient(170deg, #102A71 0%, #001840 100%);
+  background: #fff;
   min-height: 250px;
   padding-top: 24px;
   overflow: hidden;
@@ -949,7 +949,7 @@ img { max-width: 100%; display: block; }
 .featured-head-title {
   margin: 0;
   padding: 0;
-  color: #fff;
+  color: var(--navy-dark);
   font-size: 20px;
   font-weight: 800;
   line-height: 1.4;
@@ -968,27 +968,40 @@ img { max-width: 100%; display: block; }
   color: var(--navy-dark) !important;
 }
 
-/* دکمه‌های «همه دورهها» و «مشاهده همه» — استایل نئونی طلایی */
+/* دکمه‌های «همه دورهها» و «مشاهده همه» — استایل فلت خردلی با حاشیه گرد */
 .es-featured-all,
 .news-all {
-  position: relative;
-  background: linear-gradient(135deg, #ffe880 0%, var(--gold) 55%, #cc9d00 100%) !important;
-  border: 1.5px solid var(--gold-soft) !important;
+  background: var(--gold) !important;
+  border: none !important;
   color: var(--navy-dark) !important;
-  box-shadow: 0 0 10px 2px rgba(245, 196, 0, .4), 0 0 24px 6px rgba(245, 196, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .55);
-  animation: spn-neon-gold 2.2s ease-in-out infinite;
+  padding: 9px 28px !important;
+  font-weight: 800 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 8px rgba(245, 196, 0, .25);
+  transition: all .25s ease;
+  position: relative;
 }
 .es-featured-all:hover,
 .news-all:hover {
-  background: linear-gradient(135deg, #fff4c6 0%, var(--gold-soft) 50%, var(--gold) 100%) !important;
-  border-color: #ffe880 !important;
-  box-shadow: 0 0 16px 4px rgba(245, 196, 0, .7), 0 0 36px 10px rgba(245, 196, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .65);
+  background: var(--gold-soft) !important;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 196, 0, .35);
+}
+
+/* فقط وقتی اسلایدر به آخر رسید: نئون طلایی درخشان */
+.spn-end-glow .es-featured-all,
+.spn-end-glow .news-all {
+  animation: spn-neon-gold 2s ease-in-out infinite;
+}
+.spn-end-glow .es-featured-all:hover,
+.spn-end-glow .news-all:hover {
   animation: none;
+  background: linear-gradient(135deg, #fff4c6 0%, var(--gold-soft) 50%, var(--gold) 100%) !important;
+  box-shadow: 0 0 16px 4px rgba(245, 196, 0, .7), 0 0 36px 10px rgba(245, 196, 0, .35);
 }
 @keyframes spn-neon-gold {
-  0%, 100% { box-shadow: 0 0 8px 2px rgba(245, 196, 0, .35), 0 0 18px 5px rgba(245, 196, 0, .15), inset 0 1px 0 rgba(255, 255, 255, .55); }
-  50%      { box-shadow: 0 0 14px 4px rgba(245, 196, 0, .7), 0 0 32px 10px rgba(245, 196, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .55); }
+  0%, 100% { box-shadow: 0 2px 8px rgba(245, 196, 0, .25); }
+  50%      { box-shadow: 0 0 14px 4px rgba(245, 196, 0, .7), 0 0 32px 10px rgba(245, 196, 0, .35); }
 }
 .featured-slider-stage { position: relative; margin-inline: auto; max-width: 1440px; padding: 0 50px 24px; overflow-x: clip; overflow-y: visible; }
 .featured-slider-scroller { display: flex; align-items: flex-start; }
@@ -1189,7 +1202,7 @@ img { max-width: 100%; display: block; }
   margin: 0 auto;
   padding: 32px 80px 40px;
 }
-.es-news-section { background: #fff; }
+.es-news-section { background: var(--navy); }
 .es-main-page-slider-section .es-main-page-section-title { margin: 0; padding: 0 0 24px; }
 .es__sectionTitle {
   display: flex;
@@ -1202,15 +1215,17 @@ img { max-width: 100%; display: block; }
   gap: 12px;
 }
 .double-color-slider-title-container h2 {
-  color: var(--navy-dark);
+  color: #fff;
   border-radius: 6px;
-  padding: 0 4px;
+  padding: 0 4px 0 14px;
   font-size: 24px;
   font-weight: 900;
   line-height: 36px;
   display: inline-block;
   position: relative;
   margin: 0;
+  border-right: 4px solid var(--gold);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .3);
 }
 .double-color-slider-title-container h2:before {
   content: "";
@@ -1229,7 +1244,7 @@ img { max-width: 100%; display: block; }
 .small-text {
   font-weight: 400;
   font-size: 14px;
-  color: #889098;
+  color: rgba(255, 255, 255, .75);
   margin: 4px 4px 0;
 }
 .es__sectionTitle-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }

@@ -236,6 +236,18 @@
     });
   }
 
+  // وقتی اسلایدر به آخر رسید، دکمهٔ «مشاهده همه»/«همه دورهها» نئونی می‌شود.
+  function wireEndGlow(sw, section) {
+    if (!sw || !section) return;
+    function upd() {
+      section.classList.toggle("spn-end-glow", sw.isEnd);
+    }
+    sw.on("slideChange", upd);
+    sw.on("slideChangeTransitionEnd", upd);
+    sw.on("resize", upd);
+    upd();
+  }
+
   var coursesFrame = document.querySelector(".courses-frame");
   var coursesSwiper = null;
   if (coursesFrame && typeof Swiper !== "undefined") {
@@ -250,6 +262,7 @@
     });
     wireReset(coursesSwiper, coursesFrame.querySelector(".swiper-button-next"));
     wireReset(coursesSwiper, coursesFrame.querySelector(".swiper-button-home"));
+    wireEndGlow(coursesSwiper, coursesFrame.closest('.es-home-page-slide-show-container'));
   }
 
   var newsFrame = document.querySelector(".es-news-frame");
@@ -267,6 +280,7 @@
     if (newsSwiper.autoplay) newsSwiper.autoplay.stop();
     wireReset(newsSwiper, newsFrame.querySelector(".swiper-button-next"));
     wireReset(newsSwiper, newsFrame.querySelector(".swiper-button-home"));
+    wireEndGlow(newsSwiper, newsFrame.closest('.es-news-section'));
   }
 
   // checkViewPortStatus — همان منطق سایت eseminar برای بخش اطلاعیه‌ها
