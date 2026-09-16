@@ -1410,6 +1410,18 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   pointer-events: none;
 }
 .notif-pop.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+/* در موبایل: پنجرهٔ اعلان وسط صفحه (به‌جای چسبیدن به زنگوله که بیرون کادر می‌افتاد) */
+.notif-pop--center {
+  left: 50% !important;
+  top: 50% !important;
+  right: auto !important;
+  width: min(320px, calc(100vw - 28px));
+  transform: translate(-50%, calc(-50% + 8px));
+}
+.notif-pop--center.show { transform: translate(-50%, -50%); }
+@media (max-width: 767px) {
+  .notif-pop--center .notif-pop-list { max-height: 45vh; }
+}
 .notif-pop-head {
   padding: 11px 14px;
   font-weight: 800; font-size: .85rem;

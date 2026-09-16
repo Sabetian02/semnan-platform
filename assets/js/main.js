@@ -412,9 +412,13 @@
         pop.appendChild(foot);
       }
       document.body.appendChild(pop);
-      var r = bell.getBoundingClientRect();
-      pop.style.top = (r.bottom + 8) + "px";
-      pop.style.right = (window.innerWidth - r.right) + "px";
+      if (window.innerWidth < 768) {
+        pop.classList.add("notif-pop--center");
+      } else {
+        var r = bell.getBoundingClientRect();
+        pop.style.top = (r.bottom + 8) + "px";
+        pop.style.right = (window.innerWidth - r.right) + "px";
+      }
       pop.classList.add("show");
     }
 
