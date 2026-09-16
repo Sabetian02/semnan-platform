@@ -1081,15 +1081,16 @@ img { max-width: 100%; display: block; }
 
 /* فلش‌های اسلایدر (معادل swiper-button-prev/next در eseminar) */
 .swiper-button-prev,
-.swiper-button-next {
+.swiper-button-next,
+.swiper-button-home {
   display: none;
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   border-radius: 100%;
   align-items: center;
   justify-content: center;
-  background: var(--gold);
-  box-shadow: 0 5px 14px 0 rgba(245, 196, 0, .38);
-  border: 1px solid rgba(0, 24, 64, .08);
+  background: radial-gradient(circle at 30% 25%, var(--gold-soft), var(--gold) 70%);
+  box-shadow: 0 4px 14px 0 rgba(245, 196, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .5);
+  border: 1.5px solid rgba(245, 196, 0, .9);
   color: var(--navy-dark);
   font-size: 16px;
   transition: all .25s;
@@ -1098,23 +1099,79 @@ img { max-width: 100%; display: block; }
   top: 50%;
   z-index: 3;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 0;
+}
+.swiper-button-home {
+  width: 40px; height: 40px;
+  background: radial-gradient(circle at 30% 25%, #fff8e0, #ffe9a8 60%, var(--gold));
+}
+.swiper-button-prev svg,
+.swiper-button-next svg,
+.swiper-button-home svg {
+  display: block;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .55));
 }
 .swiper-button-prev:hover,
-.swiper-button-next:hover { background: var(--gold-soft); border-color: var(--gold); box-shadow: 0 6px 16px 0 rgba(245, 196, 0, .6); transform: translateY(-50%) scale(1.06); }
+.swiper-button-next:hover,
+.swiper-button-home:hover {
+  background: radial-gradient(circle at 30% 25%, #fff3c4, var(--gold-soft) 60%, var(--gold));
+  border-color: #fff3c4;
+  box-shadow: 0 0 0 4px rgba(245, 196, 0, .18), 0 6px 20px 2px rgba(245, 196, 0, .65), inset 0 1px 0 rgba(255, 255, 255, .6);
+  transform: translateY(-50%) scale(1.08);
+}
 .swiper-button-prev:disabled,
 .swiper-button-next:disabled,
+.swiper-button-home:disabled,
 .swiper-button-disabled { opacity: .35; cursor: default; }
 .swiper-button-prev::after,
-.swiper-button-next::after { content: none !important; }
+.swiper-button-next::after,
+.swiper-button-home::after { content: none !important; }
+
+/* نزدیک‌شدن به پایان لیست: فلش‌ها با گلوِ نئونی پررنگ‌تر می‌شوند */
+.spn-near-end .swiper-button-prev,
+.spn-near-end .swiper-button-home,
+.spn-at-end .swiper-button-next {
+  animation: spn-neon-pulse 1.4s ease-in-out infinite;
+  border-color: rgba(0, 229, 255, .95);
+  color: #9a0404;
+}
+.spn-at-end .swiper-button-prev,
+.spn-at-end .swiper-button-home {
+  border-color: #00e5ff;
+  box-shadow: 0 0 0 5px rgba(0, 229, 255, .22), 0 0 24px 8px rgba(0, 229, 255, .7), inset 0 1px 0 rgba(255, 255, 255, .6);
+  color: #5c0a0a;
+}
+@keyframes spn-neon-pulse {
+  0%   { box-shadow: 0 0 6px 2px rgba(0, 229, 255, .35), inset 0 1px 0 rgba(255, 255, 255, .5); }
+  50%  { box-shadow: 0 0 20px 7px rgba(0, 229, 255, .75), inset 0 1px 0 rgba(255, 255, 255, .6); }
+  100% { box-shadow: 0 0 8px 3px rgba(0, 229, 255, .45), inset 0 1px 0 rgba(255, 255, 255, .5); }
+}
+
 /* قاب اسلایدر: فلش‌ها داخل گاترِ کنار کارت‌ها (داخل قاب، بیرون از کادر کارت‌ها، بدون بیرون‌زدگی از صفحه) */
 .es-slider-frame { position: relative; }
 .courses-frame .swiper-button-prev { left: 120px; }
 .courses-frame .swiper-button-next { right: 120px; }
 .es-news-frame .swiper-button-prev { left: -70px; }
 .es-news-frame .swiper-button-next { right: -70px; }
+
+/* دکمهٔ «بازگشت به اولین مورد» در موبایل: پایین وسط کاروسل، قابل لمس */
 @media (min-width: 1200px) {
   .swiper-button-prev,
   .swiper-button-next { display: flex; }
+  .swiper-button-home { display: none; }
+}
+@media (max-width: 1199.98px) {
+  .swiper-button-home {
+    display: flex;
+    top: auto;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px; height: 44px;
+    z-index: 5;
+  }
+  .swiper-button-home:hover { transform: translateX(-50%) scale(1.08); }
 }
 
 /* ریسپانسیو هیرو اسلایدشو (مثل eseminar: عکس 216 در بالا، کارت 224×334) */

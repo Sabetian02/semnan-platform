@@ -113,7 +113,7 @@ function toPayload(it, origin) {
 }
 
 async function sendPush(sub, payload, env) {
-  const options = {
+  const details = webPush.generateRequestDetails(sub, JSON.stringify(payload), {
     TTL: 86400,
     urgency: "normal",
     vapidDetails: {
@@ -121,8 +121,18 @@ async function sendPush(sub, payload, env) {
       publicKey: env.VAPID_PUBLIC_KEY,
       privateKey: env.VAPID_PRIVATE_KEY
     }
-  };
-  await webPush.sendNotification(sub, JSON.stringify(payload), options);
+  });
+  const res = await fetch(details.endpoint, {
+    method: details.method,
+    headers: details.headers,
+    body: details.body
+  });
+  if (res.status !== 201 && res.status !== 202 && res.status !== 204) {
+    const err = new Error("push HTTP " + res.status + " " + (await res.text()).slice(0, 120));
+    err.statusCode = res.status;
+    throw err;
+  }
+  return details;
 }
 
 /* اولین اجرا فقط اسنپ‌شات می‌گیرد (silent baseline)؛
@@ -239,6 +249,57 @@ export default {
       }
       await processNewItems(env);
       return json({ ok: true });
+    }
+
+    /* تشخیصی: push تستی به همه اشتراک‌ها + نتیجه دقیق هر کدام */
+    if (pathname === "/api/_testpush") {
+      if (!env.ADMIN_KEY || searchParams.get("key") !== env.ADMIN_KEY) {
+        return json({ error: "forbidden" }, 403);
+      }
+      const sid = searchParams.get("sub") || "";
+      const payload = {
+        id: "test:manual",
+        title: "🧪 تست اعلان پس‌زمینه",
+        body: "اگر این را دیدی، push کاملاً کار می‌کند",
+        url: ORIGIN + "/",
+        tag: "spn-test:manual",
+        icon: ORIGIN + "/assets/images/SVG/logo.svg"
+      };
+      const subs = await getSubs(env);
+      const targets = sid ? subs.filter((s) => s.endpoint.includes(sid)) : subs;
+      const results = [];
+      for (const sub of targets) {
+        try {
+          await sendPush(sub, payload, env);
+          results.push({ ok: true, endpoint: sub.endpoint.slice(0, 60) });
+        } catch (err) {
+          results.push({
+            ok: false,
+            endpoint: sub.endpoint.slice(0, 60),
+            status: err && err.statusCode,
+            message: err && err.message ? err.message : String(err)
+          });
+        }
+      }
+      return json({ ok: true, total: subs.length, sent: results });
+    }
+
+    /* تشخیصی: لیست کامل اشتراک‌ها (بدون کلیدهای حساس) */
+    if (pathname === "/api/_listsubs") {
+      if (!env.ADMIN_KEY || searchParams.get("key") !== env.ADMIN_KEY) {
+        return json({ error: "forbidden" }, 403);
+      }
+      const subs = await getSubs(env);
+      return json({
+        ok: true,
+        count: subs.length,
+        subs: subs.map((s, i) => ({
+          index: i + 1,
+          shorten: s.endpoint.slice(0, 90),
+          host: (s.endpoint.split("/")[2] || "").split(".").slice(-2).join("."),
+          registered: s.at
+        }))
+      });
     }
 
     /* ---------- OAuth (داشبورد) ---------- */
