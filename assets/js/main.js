@@ -432,14 +432,24 @@
 
     /* ثبت‌نام نزد سرور اعلان برای دریافت حتی با سایت بسته */
     function enablePush() {
-      if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
-      navigator.serviceWorker.ready
+      if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+        console.log("[notif] enablePush: SW/PushManager unsupported");
+        return;
+      }
+      console.log("[notif] enablePush: starting subscription");
+      navigator.serviceWorker.register("/sw.js")
         .then(function (reg) {
+          console.log("[notif] enablePush: sw active, reg has pushManager=" + (!!reg.pushManager));
+          if (!reg.pushManager) throw new Error("no pushManager on reg");
           return reg.pushManager.getSubscription().then(function (sub) {
+            console.log("[notif] enablePush: existing sub=" + (sub ? "yes" : "none"));
             if (sub) return sub;
             return reg.pushManager.subscribe({
               userVisibleOnly: true,
               applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            }).then(function (s) {
+              console.log("[notif] enablePush: subscribed, endpoint=" + s.endpoint);
+              return s;
             });
           });
         })
@@ -449,15 +459,20 @@
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ subscription: { endpoint: sub.endpoint, keys: keys } })
+          }).then(function (r) {
+            console.log("[notif] enablePush: server response=" + r.status);
+            return r;
           });
         })
-        .catch(function () {});
+        .catch(function (err) {
+          console.log("[notif] enablePush ERROR: " + (err && err.message ? err.message : err));
+        });
     }
 
     /* لغو اشتراک نزد سرور + مرورگر موقع غیرفعال کردن */
     function disablePush() {
       if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
-      navigator.serviceWorker.ready
+      navigator.serviceWorker.register("/sw.js")
         .then(function (reg) {
           return reg.pushManager.getSubscription().then(function (sub) {
             if (!sub) return;
@@ -469,7 +484,9 @@
             return sub.unsubscribe();
           });
         })
-        .catch(function () {});
+        .catch(function (err) {
+          console.log("[notif] disablePush error: " + (err && err.message ? err.message : err));
+        });
     }
 
     function enable() {
