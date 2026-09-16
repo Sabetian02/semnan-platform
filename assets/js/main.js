@@ -292,29 +292,31 @@
   }
 
   initDiscounts();
-
   /* ============================================================
-     اعلان‌ها — نوتیف مرورگر برای اطلاعیه‌ها و دوره‌های جدید
-     (سایت استاتیک بدون سرور: تا وقتی صفحه باز است هر ۶۰ ثانیه
-      latest.json چک می‌شود و مطلب تازه -> نوتیف نمایش داده می‌شود)
+     اعلان‌ها — دکمهٔ زنگوله/دکمهٔ هیرو صرفاً کلید روشن/خاموش است
+     اولین poll بعد از هر (فعال‌سازی/باز شدن صفحه) بی‌صدا «پایه» می‌گیرد؛
+     فقط پیام‌هایی که بعد از آن در اطلاعیه/آموزش/تخفیف اضافه شوند،
+     یک‌به‌یک (بدون تجمیع) نوتیف می‌گیرند.
      ============================================================ */
   function initNotifications() {
-    var supported = "Notification" in window;
+    var ON_KEY = "sp_notif_on";
     var SEEN_KEY = "sp_seen_items_v1";
-    var UNREAD_KEY = "sp_unread_items_v1";
-
-    function loadJSON(key) {
-      try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch (_) { return []; }
-    }
-    function saveJSON(key, list) {
-      try { localStorage.setItem(key, JSON.stringify(list)); } catch (_) {}
-    }
-
-    var seen = loadJSON(SEEN_KEY);
-    var unread = loadJSON(UNREAD_KEY);
+    var supported = "Notification" in window;
     var pollTimer = null;
-    var bell = document.querySelector(".nav-bell");
-    var pop = null;
+    var primed = false;
+    var enabled = false;
+    try { enabled = localStorage.getItem(ON_KEY) === "1"; } catch (_) {}
+
+    function loadSeen() {
+      try { return JSON.parse(localStorage.getItem(SEEN_KEY) || "[]"); } catch (_) { return []; }
+    }
+    function saveSeen(list) {
+      try { localStorage.setItem(SEEN_KEY, JSON.stringify(list)); } catch (_) {}
+    }
+    var seen = loadSeen();
+
+    var ON_LABEL = "غیرفعال کردن اعلان";
+    var OFF_LABEL = "فعال کردن اعلان";
 
     function toast(msg) {
       var old = document.querySelector(".ntf-toast");
@@ -330,16 +332,34 @@
       }, 3200);
     }
 
+    function setUI() {
+      document.querySelectorAll(".notif-bell").forEach(function (btn) {
+        btn.classList.toggle("on", enabled);
+        btn.setAttribute("aria-pressed", enabled ? "true" : "false");
+        var lbl = btn.querySelector(".notif-label");
+        if (lbl) lbl.textContent = enabled ? ON_LABEL : OFF_LABEL;
+      });
+    }
+
+    function stopPolling() {
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+
     function fireNotification(it) {
-      if (Notification.permission !== "granted") return;
-      var title = (it.type === "course" ? "دورهٔ جدید 📚 " : "اطلاعیهٔ جدید 📣 ") + (it.title || "");
-      var body = it.summary || (it.type === "course" ? it.teacher + " · " + it.price : "");
+      if (!enabled || Notification.permission !== "granted") return;
+      var title;
+      if (it.type === "course") title = "دوره‌ی آموزشی جدید 📚 " + (it.title || "");
+      else if (it.type === "discount") title = "تخفیف جدید 🎁 " + (it.title || "");
+      else title = "اطلاعیه‌ی جدید 📣 " + (it.title || "");
+      var body = it.summary || "";
+      if (it.type === "course" && it.teacher) body = it.teacher + (it.price ? " · " + it.price : "");
+      if (it.type === "discount" && it.code) body = (body ? body + " — " : "") + "کد تخفیف: " + it.code;
       var n;
       try {
         n = new Notification(title, {
           body: body,
           icon: "assets/images/SVG/logo.svg",
-          tag: "sp-" + it.id,
+          tag: "spn-" + it.id,
           data: { url: it.link || "/" }
         });
         n.onclick = function () {
@@ -350,93 +370,35 @@
       } catch (_) {}
     }
 
-    function updateBell() {
-      if (!bell) return;
-      var dot = bell.querySelector(".nav-bell-dot");
-      var count = unread.length;
-      if (dot) {
-        dot.textContent = count > 9 ? "۹+" : String(count);
-        dot.hidden = count === 0;
-      }
-      bell.classList.toggle("on", Notification.permission === "granted");
-    }
-
-    function renderPop() {
-      if (!bell) { updateBell(); return; }
-      closePop();
-      pop = document.createElement("div");
-      pop.className = "notif-pop";
-      var head = document.createElement("div");
-      head.className = "notif-pop-head";
-      head.textContent = unread.length ? "اعلان‌های جدید" : "اعلان‌ها";
-      pop.appendChild(head);
-      var list = document.createElement("div");
-      list.className = "notif-pop-list";
-      if (unread.length) {
-        unread.forEach(function (it) {
-          var a = document.createElement("a");
-          a.href = it.link || "/";
-          var t = document.createElement("b");
-          t.textContent = it.title;
-          var s = document.createElement("span");
-          s.textContent = it.type === "course" ? "دورهٔ آموزشی" : "اطلاعیه";
-          a.appendChild(t);
-          a.appendChild(s);
-          a.addEventListener("click", function () {
-            unread = unread.filter(function (u) { return u.id !== it.id; });
-            saveJSON(UNREAD_KEY, unread);
-            updateBell();
+    function pollLatest() {
+      fetch("/latest.json?ts=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+        .then(function (data) {
+          if (!data || !Array.isArray(data.items)) return;
+          var current = data.items;
+          if (!primed) {
+            current.forEach(function (it) {
+              if (seen.indexOf(it.id) === -1) seen.push(it.id);
+            });
+            if (seen.length > 400) seen = seen.slice(-400);
+            saveSeen(seen);
+            primed = true; // بی‌صدا پایه می‌گیرد؛ پخشِ پیام‌های قدیمی ممنوع
+            return;
+          }
+          var changed = false;
+          current.forEach(function (it) {
+            if (seen.indexOf(it.id) !== -1) return;
+            seen.push(it.id);
+            changed = true;
+            fireNotification(it);
           });
-          list.appendChild(a);
-        });
-      } else {
-        var e = document.createElement("div");
-        e.className = "notif-pop-empty";
-        e.textContent = Notification.permission === "granted" ? "مورد جدیدی نیست" : "برای فعال کردن اعلان، روی زنگوله بزن";
-        list.appendChild(e);
-      }
-      pop.appendChild(list);
-      if (unread.length) {
-        var foot = document.createElement("div");
-        foot.className = "notif-pop-foot";
-        var clear = document.createElement("button");
-        clear.type = "button";
-        clear.textContent = "پاک کردن همه";
-        clear.addEventListener("click", function () {
-          unread = [];
-          saveJSON(UNREAD_KEY, unread);
-          updateBell();
-          renderPop();
-        });
-        foot.appendChild(clear);
-        pop.appendChild(foot);
-      }
-      document.body.appendChild(pop);
-      if (window.innerWidth < 768) {
-        pop.classList.add("notif-pop--center");
-      } else {
-        var r = bell.getBoundingClientRect();
-        pop.style.top = (r.bottom + 8) + "px";
-        pop.style.right = (window.innerWidth - r.right) + "px";
-      }
-      pop.classList.add("show");
+          if (changed) {
+            if (seen.length > 400) seen = seen.slice(-400);
+            saveSeen(seen);
+          }
+        })
+        .catch(function () {});
     }
-
-    function closePop() {
-      if (pop) { pop.remove(); pop = null; }
-      if (bell) bell.setAttribute("aria-expanded", "false");
-    }
-    function togglePop() {
-      if (pop) { closePop(); return; }
-      renderPop();
-      if (bell) bell.setAttribute("aria-expanded", "true");
-    }
-
-    document.addEventListener("click", function (e) {
-      if (pop && e.target.closest && !e.target.closest(".notif-pop, .nav-bell, .mm-notif")) closePop();
-    });
-    window.addEventListener("scroll", closePop, { passive: true });
-    window.addEventListener("resize", closePop);
 
     function startPolling() {
       if (pollTimer) return;
@@ -444,80 +406,53 @@
       pollTimer = setInterval(pollLatest, 60e3);
     }
 
-    function pollLatest() {
-      fetch("/latest.json?ts=" + Date.now(), { cache: "no-store" })
-        .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-        .then(function (data) {
-          if (!data || !Array.isArray(data.items)) return;
-          data.items.forEach(function (it) {
-            var id = it.id;
-            if (seen.indexOf(id) !== -1) return;
-            seen.push(id);
-            unread.push({ id: id, title: it.title || "", link: it.link || "/", type: it.type || "" });
-            fireNotification(it);
-          });
-          if (seen.length > 400) seen = seen.slice(-400);
-          saveJSON(SEEN_KEY, seen);
-          if (unread.length > 30) unread = unread.slice(-30);
-          saveJSON(UNREAD_KEY, unread);
-          updateBell();
-        })
-        .catch(function () {});
-    }
-
     function registerSW() {
       if (!("serviceWorker" in navigator)) return;
       navigator.serviceWorker.register("/sw.js").catch(function () {});
     }
 
-    function requestEnable() {
+    function enable() {
       if (!supported) { toast("مرورگر شما از اعلان پشتیبانی نمی‌کند"); return; }
-      if (Notification.permission === "denied") {
-        toast("اجازهٔ اعلان از طرف مرورگر رد شده — در تنظیمات مرورگر اجازه بده");
-        return;
-      }
-      if (Notification.permission === "granted") {
-        toast("اعلان‌ها فعال است — برای مطالب جدید خبر می‌گیری");
+      var cont = function () {
+        enabled = true;
+        primed = false;
+        try { localStorage.setItem(ON_KEY, "1"); } catch (_) {}
+        registerSW();
         startPolling();
-        updateBell();
+        setUI();
+        toast("اعلان‌ها فعال شد ✓ — فقط برای پیام جدید اطلاع می‌دهد");
+      };
+      if (Notification.permission === "granted") { cont(); return; }
+      if (Notification.permission === "denied") {
+        toast("اجازه‌ی اعلان مسدود شده — در تنظیمات مرورگر اجازه دهید");
         return;
       }
       Notification.requestPermission().then(function (perm) {
-        if (perm === "granted") {
-          registerSW();
-          startPolling();
-          toast("اعلان‌ها فعال شد ✓");
-        } else {
-          toast("برای فعال شدن اعلان، اجازه را در مرورگر بده");
-        }
-        updateBell();
+        if (perm === "granted") cont();
+        else toast("برای فعال شدن اعلان، اجازه را در مرورگر بدهید");
       });
+    }
+
+    function disable() {
+      enabled = false;
+      primed = false;
+      try { localStorage.setItem(ON_KEY, "0"); } catch (_) {}
+      stopPolling();
+      setUI();
+      toast("اعلان‌ها غیرفعال شد");
     }
 
     document.querySelectorAll(".notif-bell").forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         e.stopPropagation();
-        if (btn.classList.contains("nav-bell")) {
-          requestEnable();
-          if (Notification.permission === "granted") togglePop();
-          return;
-        }
-        requestEnable();
+        if (enabled) disable(); else enable();
       });
     });
 
-    if (bell) {
-      var label = bell.querySelector(".notif-label");
-      if (Notification.permission === "granted") {
-        if (label) label.textContent = "اعلان‌ها فعال شد";
-        startPolling();
-      }
-      updateBell();
-    }
-
-    /* به‌روزرسانی لیبل دکمهٔ هیرو بعد از فعال بودن */
-    var heroLabel = document.querySelector(".btn-notif .notif-label");
-    if (heroLabel && Notification.permission === "granted") heroLabel.textContent = "اعلان‌ها فعال شد";
+    setUI();
+    /* اگر قبلاً روشن بوده و اجازه هست: poll شروع می‌شود؛
+       اولین اجرا بی‌صدا پایه می‌گیرد تا پیام‌های قدیمی پخش نشوند */
+    if (enabled && supported && Notification.permission === "granted") startPolling();
   }
 
   initNotifications();
