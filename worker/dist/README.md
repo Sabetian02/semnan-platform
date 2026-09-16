@@ -1,1 +1,0 @@
-This folder contains the built output assets for the worker "decap-cms-oauth" generated at 2026-09-16T10:48:16.272Z.

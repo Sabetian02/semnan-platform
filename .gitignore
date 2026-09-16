@@ -6,5 +6,6 @@ worker/node_modules/
 worker/.dev.vars
 worker/vapid.local.json
 *.log
+worker/dist/
 .DS_Store
 Thumbs.db
