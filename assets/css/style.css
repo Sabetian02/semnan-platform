@@ -835,10 +835,20 @@ img { max-width: 100%; display: block; }
   .section { padding: 64px 0; }
   .list-grid { grid-template-columns: 1fr; }
   .profile-head .container { flex-direction: column; text-align: center; }
+  .hero h1 { font-size: 1.45rem; line-height: 1.5; margin-bottom: 12px; }
+  .hero p.lead { font-size: .9rem; line-height: 1.7; margin-bottom: 20px; }
+  .hero-badge { font-size: .74rem; padding: 5px 14px; margin-bottom: 16px; }
+  .hero-eyebrow { font-size: .7rem; margin-bottom: 12px; }
+  .hero-sep { margin: 12px 0 8px; }
+  .hc-title { font-size: .95rem; }
+  .hc-txt b { font-size: .88rem; }
+  .hc-txt span { font-size: .72rem; }
+  .hc-bar.lbl { font-size: .72rem; }
   .hero-cta { flex-direction: column; align-items: stretch; }
   .hero-cta .btn { justify-content: center; }
   .hero-stats { gap: 14px 20px; }
   .hs b { font-size: 1.5rem; }
+  .hs span { font-size: .78rem; }
   .hc-item { padding: 10px 0; }
   .hc-ico { width: 38px; height: 38px; font-size: 1.05rem; }
   .hero-card { padding: 20px 16px; }
@@ -1117,8 +1127,7 @@ img { max-width: 100%; display: block; }
 
 /* فلش‌های اسلایدر (معادل swiper-button-prev/next در eseminar) */
 .swiper-button-prev,
-.swiper-button-next,
-.swiper-button-home {
+.swiper-button-next {
   display: none;
   width: 40px; height: 40px;
   border-radius: 100%;
@@ -1137,15 +1146,12 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
 }
 .swiper-button-prev:hover,
-.swiper-button-next:hover,
-.swiper-button-home:hover { background: var(--gold-soft); border-color: var(--gold); box-shadow: 0 6px 16px 0 rgba(245, 196, 0, .6); transform: translateY(-50%) scale(1.06); }
+.swiper-button-next:hover { background: var(--gold-soft); border-color: var(--gold); box-shadow: 0 6px 16px 0 rgba(245, 196, 0, .6); transform: translateY(-50%) scale(1.06); }
 .swiper-button-prev:disabled,
 .swiper-button-next:disabled,
-.swiper-button-home:disabled,
 .swiper-button-disabled { opacity: .35; cursor: default; }
 .swiper-button-prev::after,
-.swiper-button-next::after,
-.swiper-button-home::after { content: none !important; }
+.swiper-button-next::after { content: none !important; }
 
 /* قاب اسلایدر: فلش‌ها داخل گاترِ کنار کارت‌ها (داخل قاب، بیرون از کادر کارت‌ها، بدون بیرون‌زدگی از صفحه) */
 .es-slider-frame { position: relative; }
@@ -1154,23 +1160,9 @@ img { max-width: 100%; display: block; }
 .es-news-frame .swiper-button-prev { left: -70px; }
 .es-news-frame .swiper-button-next { right: -70px; }
 
-/* دکمهٔ «بازگشت به اولین مورد» در موبایل: پایین وسط کاروسل، قابل لمس */
 @media (min-width: 1200px) {
   .swiper-button-prev,
   .swiper-button-next { display: flex; }
-  .swiper-button-home { display: none; }
-}
-@media (max-width: 1199.98px) {
-  .swiper-button-home {
-    display: flex;
-    top: auto;
-    bottom: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 44px; height: 44px;
-    z-index: 5;
-  }
-  .swiper-button-home:hover { transform: translateX(-50%) scale(1.06); }
 }
 
 /* ریسپانسیو هیرو اسلایدشو (مثل eseminar: عکس 216 در بالا، کارت 224×334) */
@@ -1197,12 +1189,16 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---------- اسلایدر اطلاعیه‌ها (es-main-page-slider-swiper-contianer) ---------- */
+.es-news-section {
+  background: var(--navy);
+  width: 100%;
+  padding: 32px 0 40px;
+}
 .es-main-page-slider-section {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 32px 80px 40px;
+  padding: 0 80px;
 }
-.es-news-section { background: var(--navy); }
 .es-main-page-slider-section .es-main-page-section-title { margin: 0; padding: 0 0 24px; }
 .es__sectionTitle {
   display: flex;
@@ -1396,10 +1392,10 @@ img { max-width: 100%; display: block; }
 
 /* ریسپانسیو اسلایدر اطلاعیه‌ها */
 @media (max-width: 991px) {
-  .es-main-page-slider-section { padding: 32px 20px 40px; }
+  .es-main-page-slider-section { padding: 0 20px; }
 }
 @media (max-width: 768px) {
-  .es-main-page-slider-section { padding: 32px 12px 40px; }
+  .es-main-page-slider-section { padding: 0 12px; }
   .es-main-page-slider-section .es-main-page-section-title { padding-bottom: 18px; }
   .double-color-slider-title-container h2 { font-size: 20px; line-height: 32px; }
   .es-main-page-slider-swiper-contianer { padding: 0 34px 20px; }

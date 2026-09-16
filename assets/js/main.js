@@ -261,7 +261,6 @@
       }
     });
     wireReset(coursesSwiper, coursesFrame.querySelector(".swiper-button-next"));
-    wireReset(coursesSwiper, coursesFrame.querySelector(".swiper-button-home"));
     wireEndGlow(coursesSwiper, coursesFrame.closest('.es-home-page-slide-show-container'));
   }
 
@@ -279,7 +278,6 @@
     });
     if (newsSwiper.autoplay) newsSwiper.autoplay.stop();
     wireReset(newsSwiper, newsFrame.querySelector(".swiper-button-next"));
-    wireReset(newsSwiper, newsFrame.querySelector(".swiper-button-home"));
     wireEndGlow(newsSwiper, newsFrame.closest('.es-news-section'));
   }
 

@@ -428,8 +428,8 @@ function renderNews(head, newsList) {
   if (!newsList.length) return "";
   const slides = newsList.slice(0, MAX_SLIDES).map((n) => newsSlide(n)).join("\n        ");
   return `<!-- NEWS (اسلایدر به سبک es-main-page-slider-swiper-contianer سایت eseminar) -->
-    <section class="es-main-page-slider-section es-news-section" id="news">
-      <div class="es-page-inner">
+    <section class="es-news-section" id="news">
+      <div class="es-main-page-slider-section">
         <div class="es__sectionTitle justify-content-between es-main-page-section-title" dir="rtl">
           <div class="double-color-slider-title-container">
             <h2>${esc(head.title)}</h2>
@@ -450,7 +450,6 @@ function renderNews(head, newsList) {
           </div>
           <button class="swiper-button-prev" type="button" aria-label="اطلاعیهٔ بعدی"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M19 12H6"/><path d="M12 19l-7-7 7-7"/></svg></span></button>
           <button class="swiper-button-next" type="button" aria-label="بازگشت به ابتدای اطلاعیه‌ها"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 5v14"/><path d="M7 5l12 7-12 7V5Z"/></svg></span></button>
-          <button class="swiper-button-home" type="button" aria-label="بازگشت به اولین اطلاعیه"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M5 5v14"/><path d="M6 5l12 7-12 7V5Z"/></svg></span></button>
         </div>
       </div>
     </section>`;
@@ -519,7 +518,6 @@ function renderCourses(head, courseList) {
         </div>
         <button class="swiper-button-prev" type="button" aria-label="دورهٔ بعدی"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M19 12H6"/><path d="M12 19l-7-7 7-7"/></svg></span></button>
         <button class="swiper-button-next" type="button" aria-label="بازگشت به ابتدای دوره‌ها"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 5v14"/><path d="M7 5l12 7-12 7V5Z"/></svg></span></button>
-        <button class="swiper-button-home" type="button" aria-label="بازگشت به اولین دوره"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M5 5v14"/><path d="M6 5l12 7-12 7V5Z"/></svg></span></button>
       </div>
     </section>`;
 }
