@@ -53,10 +53,17 @@ function htmlPage(title, body) {
   );
 }
 
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "content-type",
+  "Access-Control-Max-Age": "86400"
+};
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "content-type": "application/json; charset=utf-8" }
+    headers: { "content-type": "application/json; charset=utf-8", ...CORS }
   });
 }
 
@@ -176,6 +183,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const { pathname, searchParams } = url;
+
+    /* ---------- CORS preflight ---------- */
+    if (request.method === "OPTIONS" && pathname.startsWith("/api/")) {
+      return new Response(null, { status: 204, headers: CORS });
+    }
 
     /* ---------- Web Push API ---------- */
     if (pathname === "/api/subscribe" && request.method === "POST") {
