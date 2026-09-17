@@ -42,6 +42,83 @@
   }
 
   /* ============================================================
+     صفحات فهرست (دوره‌ها / اطلاعیه‌ها): جستجو، فیلتر، مرتب‌سازی
+     ============================================================ */
+  function faDigitsN(n) {
+    return String(n).replace(/[0-9]/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹"[+d]; });
+  }
+  function normTxt(s) {
+    return String(s || "")
+      .replace(/ي/g, "ی").replace(/ك/g, "ک")
+      .replace(/[^\u0600-\u06FFa-zA-Z0-9]+/g, " ")
+      .trim().toLowerCase();
+  }
+  function initListings() {
+    var wrap = document.querySelector("[data-lp]");
+    if (!wrap) return;
+    var list = wrap.querySelector("[data-lp-list]");
+    var cards = Array.prototype.slice.call(list.children);
+    var search = wrap.querySelector("[data-lp-search]");
+    var catSel = wrap.querySelector("[data-lp-cat]");
+    var priceSel = wrap.querySelector("[data-lp-price]");
+    var sortSel = wrap.querySelector("[data-lp-sort]");
+    var empty = wrap.querySelector("[data-lp-empty]");
+    if (!cards.length) return;
+
+    function apply() {
+      var q = normTxt(search ? search.value : "");
+      var cat = catSel ? catSel.value : "";
+      var pr = priceSel ? priceSel.value : "";
+      var sort = sortSel ? sortSel.value : "";
+      var visible = cards.filter(function (card) {
+        if (q && normTxt(card.getAttribute("data-search")).indexOf(q) === -1) return false;
+        if (cat && card.getAttribute("data-cat") !== cat) return false;
+        if (pr && card.getAttribute("data-price") !== pr) return false;
+        return true;
+      });
+      if (sort === "title") {
+        visible = visible.slice().sort(function (a, b) {
+          return String(a.getAttribute("data-title")).localeCompare(String(b.getAttribute("data-title")), "fa");
+        });
+      } else if (sort === "old" || sort === "new") {
+        var asc = sort === "old";
+        visible = visible.slice().sort(function (a, b) {
+          var dA = Date.parse(a.getAttribute("data-dt") || "") || 0;
+          var dB = Date.parse(b.getAttribute("data-dt") || "") || 0;
+          return asc ? dA - dB : dB - dA;
+        });
+      }
+      visible.forEach(function (card) { list.appendChild(card); });
+      cards.forEach(function (card) {
+        var show = visible.indexOf(card) !== -1;
+        card.hidden = !show;
+        card.classList.toggle("in", show);
+      });
+      var n = visible.length;
+      document.querySelectorAll("[data-lp-count]").forEach(function (el) { el.textContent = faDigitsN(n); });
+      if (empty) empty.hidden = n !== 0;
+      document.querySelectorAll("[data-lp-reset]").forEach(function (b) { b.hidden = !(q || cat || pr); });
+    }
+
+    if (search) search.addEventListener("input", apply);
+    if (catSel) catSel.addEventListener("change", apply);
+    if (priceSel) priceSel.addEventListener("change", apply);
+    if (sortSel) sortSel.addEventListener("change", apply);
+    document.querySelectorAll("[data-lp-reset]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (search) search.value = "";
+        if (catSel) catSel.selectedIndex = 0;
+        if (priceSel) priceSel.selectedIndex = 0;
+        if (sortSel) sortSel.selectedIndex = 0;
+        apply();
+        if (search) search.focus();
+      });
+    });
+    apply();
+  }
+  initListings();
+
+  /* ============================================================
      بخش تخفیف‌ها — تاریخ شمسی، شمارش معکوس، کپی کد
      ============================================================ */
 

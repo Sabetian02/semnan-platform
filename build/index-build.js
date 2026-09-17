@@ -18,6 +18,10 @@ const esc = (s) =>
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+/* خروجی امن برای داخل attribute های HTML */
+const escA = (s) => esc(s).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+/* عدد فارسی برای شمارنده‌های استاتیک صفحهٔ فهرست */
+const faNum = (n) => String(n).replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+d]);
 
 const TELE_URL = (home.hero && home.hero.telegram_url) || "https://t.me/PlatformSem";
 /* نسخهٔ دارایی‌ها: با هر دیپلوی، URL سیاس/جی‌اس عوض می‌شود تا کش مرورگر باطل شود */
@@ -295,95 +299,126 @@ function renderAds(a) {
     </section>`;
 }
 
-/* ---------- NEWS ---------- */
-const NEWS_BANNERS = {
-  "دوره": {
-    color: "#102A71",
-    svg: `<rect width="96" height="64" rx="10" fill="#102A71"/>
-                <g stroke="#FFDC5F" stroke-width="1.6">
-                  <rect x="56" y="12" width="28" height="28" rx="6"/>
-                  <path d="M63 16v20M70 16v20M63 26h14"/>
-                </g>
-                <g stroke="#FFFDF0" stroke-width="1.6">
-                  <path d="M14 26h30M14 34h30M14 42h22"/>
-                </g>
-                <circle cx="78" cy="50" r="4" fill="#FFDC5F"/>
-                <circle cx="66" cy="50" r="4" fill="#FFFDF0" fill-opacity=".7"/>
-                <circle cx="20" cy="54" r="3" fill="#FFDC5F" fill-opacity=".8"/>`
-  },
-  "رویداد": {
-    color: "#001840",
-    svg: `<rect width="96" height="64" rx="10" fill="#001840"/>
-                <g fill="#FFDC5F">
-                  <circle cx="48" cy="30" r="10"/>
-                  <rect x="44" y="40" width="8" height="12" rx="3"/>
-                  <path d="M18 24h60M34 10l-6 14M62 10l6 14"/>
-                </g>
-                <g fill="#FFFDF0" fill-opacity=".85">
-                  <circle cx="30" cy="30" r="6"/>
-                  <circle cx="66" cy="30" r="6"/>
-                  <rect x="27" y="36" width="6" height="10" rx="3"/>
-                  <rect x="63" y="36" width="6" height="10" rx="3"/>
-                </g>`
-  },
-  "فراخوان": {
-    color: "#1b3a8b",
-    svg: `<rect width="96" height="64" rx="10" fill="#1b3a8b"/>
-                <g stroke="#FFDC5F" stroke-width="2" fill="none">
-                  <path d="M26 12l-10 20 10 20h44l10-20-10-20z"/>
-                </g>
-                <g stroke="#FFFDF0" stroke-width="2" fill="none">
-                  <path d="M31 18l-7 14 7 14h34l7-14-7-14z"/>
-                </g>
-                <g fill="#FFDC5F">
-                  <circle cx="48" cy="32" r="10"/>
-                  <path d="M48 26l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/>
-                </g>`
-  }
-};
-const NEWS_BANNER_DEFAULT = {
-  color: "#102A71",
-  svg: `<rect width="96" height="64" rx="10" fill="#102A71"/>
-                <rect width="96" height="64" rx="10" fill="url(#ng1)" fill-opacity=".25"/>
-                <g fill="#FFDC5F">
-                  <rect x="30" y="20" width="36" height="5" rx="2.5"/>
-                  <rect x="30" y="30" width="26" height="5" rx="2.5"/>
-                  <circle cx="30" cy="42" r="5"/>
-                </g>
-                <g stroke="#FFDC5F" stroke-width="1.4">
-                  <path d="M14 34l8 8 12-14"/>
-                  <path d="M70 30l6 6 8-10"/>
-                </g>`
+
+/* ---------- صفحات فهرست (دوره‌ها و اطلاعیه‌ها): نوار کنترل، کارت‌ها، حالت خالی ---------- */
+const LP_ICON = {
+  search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`,
+  arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M19 12H5M13 18l-6-6 6-6"/></svg>`
 };
 
-/* ---------- کارت اطلاعیه (مشترک بین صفحهٔ اصلی و صفحهٔ همهٔ اطلاعیه‌ها) ---------- */
-const newsCard = (n) => {
-  const ban = NEWS_BANNERS[n.category] || NEWS_BANNER_DEFAULT;
-  const img = imageOrNull(n.image);
-  const banner = img
-    ? `<div class="n-banner" style="--ban:${ban.color}">
-              <img class="n-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">
-            </div>`
-    : `<div class="n-banner" style="--ban:${ban.color}">
-              <svg viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                ${ban.svg}
-              </svg>
-            </div>`;
-  const chip = `<span class="n-chip-svg"><span class="n-chip">${esc(n.category || "خبر")}</span></span>`;
-  const depth = "ettelaieh/" + n._slug + ".html";
-  const dateHtml = n.date
-    ? `<div class="n-meta"><span class="n-date" data-date="${esc(n.date)}"></span></div>`
-    : "";
-  return `<article class="n-card reveal">
-            ${banner.replace("</div>", chip + "</div>")}
-            <div class="n-body">
-              <h3>${esc(n.title)}</h3>
-              ${dateHtml}
-              <p>${esc(n.summary)}</p>
-              <a class="btn btn-navy btn-sm n-more" href="${depth}">اطلاعات بیشتر ←</a>
-            </div>
-          </article>`;
+/* نوار کنترل مشترک دو صفحه: جستجو + فیلتر دسته + قیمت (اختیاری) + مرتب‌سازی + پاک‌کردن */
+function renderLpToolbar(o) {
+  const opts = (arr) =>
+    arr.map((x) => `<option value="${escA(x.value)}">${esc(x.label)}</option>`).join("");
+  const catSelect = `
+          <label class="lp-field">
+            <span class="lp-vhidden">${o.catName}</span>
+            <select data-lp-cat>${opts(o.cats)}</select>
+          </label>`;
+  const priceSelect = o.price ? `
+          <label class="lp-field">
+            <span class="lp-vhidden">قیمت</span>
+            <select data-lp-price>${opts([{ value: "", label: "همهٔ قیمت‌ها" }, { value: "free", label: "رایگان" }, { value: "paid", label: "با هزینه" }])}</select>
+          </label>` : "";
+  const sortSelect = `
+          <label class="lp-field">
+            <span class="lp-vhidden">مرتب‌سازی</span>
+            <select data-lp-sort>${opts(o.sorts)}</select>
+          </label>`;
+  return `<div class="lp-toolbar reveal">
+          <div class="lp-toolbar-row">
+            <label class="lp-search">
+              <span class="lp-vhidden">جستجو</span>
+              ${LP_ICON.search}
+              <input type="search" data-lp-search placeholder="${esc(o.searchPlaceholder)}" autocomplete="off">
+            </label>
+            <div class="lp-selects">${catSelect}${priceSelect}${sortSelect}</div>
+            <button class="lp-reset" type="button" data-lp-reset hidden>
+              ${LP_ICON.x}
+              <span>پاک کردن فیلترها</span>
+            </button>
+          </div>
+        </div>`;
+}
+
+/* کارت دوره — کاور رنگی با آیکن (بدون تصویر جعلی)، دسته، تیتر، خلاصه، مدرس، جلسات، قیمت */
+const courseListCard = (c) => {
+  const link = linkOrDefault(c.link);
+  const price = (c.price || "رایگان").trim();
+  const free = /رایگان\s*$/.test(price) ? "free" : "paid";
+  const teacher = c.teacher ? `<span class="lp-meta-i">👤 ${esc(c.teacher)}</span>` : "";
+  const lessons = c.lessons ? `<span class="lp-meta-i">🗂 ${esc(c.lessons)}</span>` : "";
+  const hay = [c.title, c.summary, c.category, c.teacher, price].filter(Boolean).join(" ");
+  return `<article class="lp-card lp-course reveal"
+          data-cat="${escA(c.category || "")}" data-price="${free}" data-title="${escA(c.title)}" data-search="${escA(hay)}">
+        <a class="lp-cover" href="${link}" style="--c1:${escA(c.cover_a || "#102A71")};--c2:${escA(c.cover_b || "#001840")}" aria-hidden="true" tabindex="-1">
+          <span class="lp-cover-ico" aria-hidden="true">${esc(c.icon || "🎓")}</span>
+        </a>
+        <div class="lp-body">
+          <span class="lp-cat-chip">${esc(c.category || "دوره")}</span>
+          <h3 class="lp-title"><a href="${link}">${esc(c.title)}</a></h3>
+          <p class="lp-sum">${esc(c.summary || "")}</p>
+          ${teacher || lessons ? `<div class="lp-meta">${teacher}${lessons}</div>` : ""}
+          <div class="lp-foot">
+            <span class="lp-price${free === "free" ? " lp-price--free" : ""}">${esc(price)}</span>
+            <a class="btn btn-navy btn-sm lp-cta" href="${link}">مشاهدهٔ دوره ${LP_ICON.arrow}</a>
+          </div>
+        </div>
+      </article>`;
 };
+
+/* کارت اطلاعیه — استایل ادیتوریال: دسته + تاریخ، تیتر، خلاصه، لینک جزئیات */
+const newsListCard = (n) => {
+  const depth = "ettelaieh/" + n._slug + ".html";
+  const date = n.date
+    ? `<time class="lp-date" data-date="${escA(n.date)}"></time>`
+    : `<span class="lp-date">اطلاعیه</span>`;
+  const hay = [n.title, n.summary, n.category].filter(Boolean).join(" ");
+  return `<article class="lp-card lp-news lp-body reveal"
+          data-cat="${escA(n.category || "خبر")}" data-dt="${escA(n.date || "")}" data-title="${escA(n.title)}" data-search="${escA(hay)}">
+        <div class="lp-news-head">
+          <span class="lp-cat-chip">${esc(n.category || "خبر")}</span>
+          ${date}
+        </div>
+        <h3 class="lp-title"><a href="${depth}">${esc(n.title)}</a></h3>
+        <p class="lp-sum">${esc(n.summary || "")}</p>
+        <div class="lp-foot">
+          <a class="lp-link" href="${depth}">مشاهدهٔ اطلاعیه ${LP_ICON.arrow}</a>
+        </div>
+      </article>`;
+};
+
+/* مقدمهٔ صفحهٔ فهرست: crumbs + تیتر + توضیح + شمارنده */
+function renderLpIntro(crumb, title, desc, countLabel, count) {
+  return `<section class="lp-intro">
+        <div class="container">
+          <div class="crumbs"><a href="index.html">خانه</a><span class="sep">/</span>${crumb}</div>
+          <div class="lp-intro-row">
+            <div class="lp-intro-txt">
+              <span class="lp-intro-line" aria-hidden="true"></span>
+              <div>
+                <h1>${esc(title)}</h1>
+                <p>${esc(desc)}</p>
+              </div>
+            </div>
+            <span class="lp-count-chip" aria-live="polite"><b data-lp-count>${faNum(count)}</b><small>${esc(countLabel)}</small></span>
+          </div>
+        </div>
+      </section>`;
+}
+
+/* حالت خالی (پس از فیلتر بدون نتیجه) */
+function renderLpEmpty(ico, title, hint, resetLabel) {
+  return `<div class="lp-empty" data-lp-empty hidden>
+          <span class="lp-empty-ico" aria-hidden="true">${ico}</span>
+          <h3>${esc(title)}</h3>
+          <p>${esc(hint)}</p>
+          <button class="btn btn-navy" type="button" data-lp-reset>${esc(resetLabel)}</button>
+        </div>`;
+}
+
+const distinctCats = (xs) => [...new Set(xs.filter(Boolean))].sort((a, b) => a.localeCompare(b, "fa"));
 
 /* ---------- کارت اطلاعیه‌ٔ اسلایدر اصلی (به سبک webinarCard سایت eseminar) ---------- */
 const CAT_EMOJI = { "دوره": "🎓", "رویداد": "🗓", "فراخوان": "📣", "اطلاع‌رسانی": "✉", "جدید": "✨", "خبر": "📰" };
@@ -522,31 +557,101 @@ function renderCourses(head, courseList) {
     </section>`;
 }
 
-/* ---------- صفحهٔ فهرست اطلاعیه‌ها (همهٔ اطلاعیه‌ها با چیدمان کارت مثل صفحهٔ اصلی) ---------- */
+/* ---------- صفحهٔ فهرست اطلاعیه‌ها (همهٔ اطلاعیه‌ها؛ جستجو/فیلتر/مرتب‌سازی) ---------- */
 function renderAnnListPage(newsList) {
-  const cards = newsList.map((n) => newsCard(n)).join("\n        ");
+  const cats = distinctCats(newsList.map((n) => n.category));
+  const cards = newsList.map(newsListCard).join("\n        ");
   const body = [
     `<main>
-      <section class="page-hero">
-        <div class="container">
-          <div class="crumbs"><a href="index.html">خانه</a><span class="sep">/</span>اطلاعیه‌ها</div>
-          <h1>اطلاعیه‌های پلتفرم</h1>
-          <p>همه فراخوان‌ها، دوره‌ها و رویدادهای دانشگاه؛ جدیدترین‌ها اول.</p>
-        </div>
-      </section>
-      <section class="section" style="padding-top:0">
-        <div class="container">
-          <div class="news-grid">
+      ${renderLpIntro(
+        "اطلاعیه‌ها",
+        "اطلاعیه‌های پلتفرم",
+        "همهٔ فراخوان‌ها، دوره‌ها و رویدادهای دانشگاه یک‌جا؛ جدیدترین‌ها اول.",
+        "اطلاعیه",
+        newsList.length
+      )}
+      <section class="lp-page">
+        <div class="container" data-lp>
+          <header class="lp-list-head">
+            <div>
+              <span class="eyebrow">آرشیو اطلاع‌رسانی</span>
+              <h2>همهٔ اطلاعیه‌ها و رویدادها</h2>
+            </div>
+          </header>
+          ${renderLpToolbar({
+            searchPlaceholder: "جستجوی تیتر یا متن اطلاعیه…",
+            catName: "دسته‌بندی",
+            cats: [{ value: "", label: "همهٔ دسته‌ها" }].concat(cats.map((c) => ({ value: c, label: c }))),
+            sorts: [
+              { value: "new", label: "مرتب‌سازی: جدیدترین" },
+              { value: "old", label: "قدیمی‌ترین" },
+              { value: "title", label: "عنوان (الف تا ی)" }
+            ]
+          })}
+          <div class="lp-grid" data-lp-list>
             ${cards}
           </div>
+          ${renderLpEmpty("🔎", "اطلاعیه‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ اطلاعیه‌ها")}
         </div>
       </section>
     </main>`
   ];
-return assemble(
+  return assemble(
     open,
-    " اطلاعیه\u200cهای پلتفرم | " + site.brand_name,
+    "اطلاعیه\u200cهای پلتفرم | " + site.brand_name,
     "همه اطلاعیه\u200cها و اخبار پلتفرم دانشگاه سمنان؛ به ترتیب تاریخ، جدیدترین\u200cها اول.",
+    header,
+    body,
+    footer,
+    close
+  );
+}
+
+/* ---------- صفحهٔ فهرست دوره‌ها (از data واقعی content/courses؛ جستجو/فیلتر/مرتب‌سازی) ---------- */
+function renderCourseListPage(courseList) {
+  const list = courseList.slice().sort((a, b) => (a.sort || 0) - (b.sort || 0));
+  const cats = distinctCats(list.map((c) => c.category));
+  const cards = list.map(courseListCard).join("\n        ");
+  const body = [
+    `<main>
+      ${renderLpIntro(
+        "آموزش‌های مجازی",
+        "آموزش‌های مجازی پلتفرم",
+        "دوره‌ها و کارگاه‌های آنلاین پلتفرم با گواهی معتبر؛ از مهارت‌های نرم تا نرم‌افزارهای تخصصی. جستجو کن، فیلتر بزن و مسیر یادگیری‌ات را شروع کن.",
+        "دوره",
+        list.length
+      )}
+      ${P("_marquee.html")}
+      <section class="lp-page">
+        <div class="container" data-lp>
+          <header class="lp-list-head">
+            <div>
+              <span class="eyebrow">کتابخانهٔ دوره‌ها</span>
+              <h2>همهٔ دوره‌های آموزش مجازی</h2>
+            </div>
+          </header>
+          ${renderLpToolbar({
+            searchPlaceholder: "جستجوی عنوان، مدرس یا مهارت…",
+            catName: "دسته‌بندی",
+            cats: [{ value: "", label: "همهٔ دسته‌ها" }].concat(cats.map((c) => ({ value: c, label: c }))),
+            price: true,
+            sorts: [
+              { value: "", label: "مرتب‌سازی: پیش‌فرض" },
+              { value: "title", label: "عنوان (الف تا ی)" }
+            ]
+          })}
+          <div class="lp-grid" data-lp-list>
+            ${cards}
+          </div>
+          ${renderLpEmpty("🔍", "دوره‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ دوره‌ها")}
+        </div>
+      </section>
+    </main>`
+  ];
+  return assemble(
+    open,
+    "آموزش\u200cهای مجازی | " + site.brand_name,
+    "دوره\u200cهای آموزش مجازی و مهارتی پلتفرم دانشگاه سمنان؛ گواهی معتبر، مدرس‌های حرفه‌ای و مسیر یادگیری آسان.",
     header,
     body,
     footer,
@@ -769,16 +874,7 @@ const index = assemble(
 fs.writeFileSync(path.join(ROOT, "index.html"), index, "utf8");
 console.log("✔ index.html");
 
-const amoozesh = assemble(
-  open,
-  "آموزش‌های مجازی | پلتفرم دانشگاه سمنان",
-  "دوره‌های آموزش مجازی و مهارتی پلتفرم دانشگاه سمنان؛ گواهی معتبر، مدرس‌های حرفه‌ای و مسیر یادگیری آسان.",
-  header,
-  [P("amoozesh-part.html")],
-  footer,
-  close
-);
-fs.writeFileSync(path.join(ROOT, "amoozesh.html"), amoozesh, "utf8");
+fs.writeFileSync(path.join(ROOT, "amoozesh.html"), renderCourseListPage(courseList), "utf8");
 console.log("✔ amoozesh.html");
 
 /* ---------- صفحات اطلاعیه‌ها ---------- */
