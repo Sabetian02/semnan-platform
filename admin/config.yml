@@ -270,6 +270,50 @@ collections:
           label: مورد
           name: item
           widget: string
+      - label: سال تأسیس (اختیاری)
+        name: founded
+        widget: string
+        required: false
+      - label: ایمیل رسمی (اختیاری)
+        name: email
+        widget: string
+        required: false
+      - label: محل فعالیت (اختیاری)
+        name: location
+        widget: string
+        required: false
+      - label: اعضای تیم (اختیاری)
+        name: team
+        widget: list
+        required: false
+        summary: "{{fields.name}} — {{fields.role}}"
+        fields:
+          - label: نام
+            name: name
+            widget: string
+          - label: نقش
+            name: role
+            widget: string
+          - label: تصویر (اختیاری)
+            name: photo
+            widget: image
+            required: false
+      - label: افتخارات و دستاوردها (اختیاری)
+        name: achievements
+        widget: list
+        required: false
+        field:
+          label: مورد
+          name: item
+          widget: string
+      - label: گالری تصاویر (اختیاری)
+        name: gallery
+        widget: list
+        required: false
+        field:
+          label: تصویر
+          name: image
+          widget: image
 
   # ================= انجمن‌های علمی =================
   - name: anjomanha
@@ -340,6 +384,50 @@ collections:
           label: مورد
           name: item
           widget: string
+      - label: سال تأسیس (اختیاری)
+        name: founded
+        widget: string
+        required: false
+      - label: ایمیل رسمی (اختیاری)
+        name: email
+        widget: string
+        required: false
+      - label: محل فعالیت (اختیاری)
+        name: location
+        widget: string
+        required: false
+      - label: اعضای تیم (اختیاری)
+        name: team
+        widget: list
+        required: false
+        summary: "{{fields.name}} — {{fields.role}}"
+        fields:
+          - label: نام
+            name: name
+            widget: string
+          - label: نقش
+            name: role
+            widget: string
+          - label: تصویر (اختیاری)
+            name: photo
+            widget: image
+            required: false
+      - label: افتخارات و دستاوردها (اختیاری)
+        name: achievements
+        widget: list
+        required: false
+        field:
+          label: مورد
+          name: item
+          widget: string
+      - label: گالری تصاویر (اختیاری)
+        name: gallery
+        widget: list
+        required: false
+        field:
+          label: تصویر
+          name: image
+          widget: image
 
   # ================= صفحه اصلی =================
   - name: home

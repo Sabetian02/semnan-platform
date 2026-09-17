@@ -407,39 +407,14 @@ function renderLpSidebar(o) {
 }
 
 /* ---------- فهرست کانون‌ها و انجمن‌ها (بدون فیلتر، فقط جستجو + کارت لوگومحور) ---------- */
-/* نگاشت اسلاگ → نام فایل لوگو در assets/images/SVG.
-   هر تشکلی که لوگو ندارد، نشان جایگزین (مونوگرام) می‌گیرد تا لوگوی واقعی‌اش اضافه شود. */
-const LOGO_MAP = {
-  "hoghoogh-feqh": "لوگوی انجمن علمی حقوق و فقه.svg",
-  "govandegi-va-ecra": "لوگوی_کانون_فرهنگی_گویندگی_و_اجرا.svg",
-  "kooir-shenasi": "لوگو انجمن علمی کویرشناسی.svg"
-};
-
-/* نشان جایگزین موقت — طرح یکسان برای همهٔ تشکل‌های بدون لوگو */
-function entityPlaceholder(name) {
-  const ch = String(name || "؟").trim().charAt(0) || "؟";
-  return `<svg class="kn-mono" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="46" fill="#102A71"/><circle cx="50" cy="50" r="46" fill="none" stroke="#F5C400" stroke-width="2.5" stroke-dasharray="5 8" stroke-opacity=".85"/><text x="50" y="50" text-anchor="middle" dominant-baseline="central" font-family="Vazirmatn, Tahoma, sans-serif" font-size="42" font-weight="800" fill="#FFDC5F">${esc(ch)}</text></svg>`;
-}
-
-function entityLogo(it) {
-  const file = String((it.logo || LOGO_MAP[it.slug]) || "").trim();
-  if (file) {
-    if (/^https?:\/\//.test(file)) {
-      return `<img class="kn-logo-img" src="${escA(file)}" alt="لوگوی ${escA(it.name)}" loading="lazy" decoding="async">`;
-    }
-    const rel = file.indexOf("assets/") === 0 ? file : "assets/images/SVG/" + file;
-    if (fs.existsSync(path.join(ROOT, rel))) {
-      return `<img class="kn-logo-img" src="${encodeURI(rel)}" alt="لوگوی ${escA(it.name)}" loading="lazy" decoding="async">`;
-    }
-  }
-  return entityPlaceholder(it.short || it.name);
-}
+/* لوگو/نشان جایگزین از build/org.js می‌آید (مشترک با صفحهٔ پروفایل) */
+const { orgLogo } = require("./org");
 
 function entityCard(it, base) {
   const search = [it.name, it.short, it.cat, it.desc, (it.activities || []).join(" "), (it.events || []).join(" "), (it.classes || []).join(" ")].join(" ");
   const tele = it.telegram && ABS_URI.test(it.telegram) ? it.telegram : "";
   return `<a class="kn-card reveal" href="${base}/${escA(it.slug)}.html" data-search="${escA(search)}"${tele ? ` data-telegram="${escA(tele)}"` : ""}>
-        <span class="kn-logo">${entityLogo(it)}</span>
+        <span class="kn-logo">${orgLogo(it, "", "kn-logo-img", "kn-mono")}</span>
         <span class="kn-cat">${esc(it.cat)}</span>
         <h3 class="kn-name">${esc(it.name)}</h3>
         <p class="kn-desc">${esc(it.desc)}</p>

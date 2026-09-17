@@ -148,6 +148,26 @@
   initListings();
 
   /* ============================================================
+     پروفایل تشکل‌ها — «ادامه مطلب» برای توضیح بلند
+     ============================================================ */
+  function initOrgProfile() {
+    var buttons = document.querySelectorAll("[data-op-more]");
+    if (!buttons.length) return;
+    buttons.forEach(function (btn) {
+      var text = document.getElementById(btn.getAttribute("aria-controls")) ||
+        btn.parentNode.querySelector("[data-op-about]");
+      var label = btn.querySelector("[data-op-more-label]");
+      if (!text) return;
+      btn.addEventListener("click", function () {
+        var clamped = text.classList.toggle("is-clamped");
+        btn.setAttribute("aria-expanded", clamped ? "false" : "true");
+        if (label) label.textContent = clamped ? "ادامه مطلب" : "کمتر";
+      });
+    });
+  }
+  initOrgProfile();
+
+  /* ============================================================
      بخش تخفیف‌ها — تاریخ شمسی، شمارش معکوس، کپی کد
      ============================================================ */
 
