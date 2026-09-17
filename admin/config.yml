@@ -64,10 +64,16 @@ collections:
         widget: string
         required: false
         hint: "مثلاً amoozesh.html یا یک آدرس کامل https://"
-      - label: تصویر شاخص (اختیاری)
+      - label: تصویر شاخص (آپلود از سیستم — اختیاری)
         name: image
         widget: image
         required: false
+        hint: "از سیستم آپلود کن؛ در کارت و صفحهٔ همین اطلاعیه نمایش داده می‌شود."
+      - label: یا آدرس تصویر (URL — اختیاری)
+        name: image_url
+        widget: string
+        required: false
+        hint: "به‌جای آپلود می‌توانی آدرس کامل تصویر (https://…) را وارد کنی. اگر هر دو پر باشند، عکس آپلودی اولویت دارد."
       - label: تاریخ انتشار
         name: date
         widget: datetime
@@ -159,17 +165,23 @@ collections:
         required: true
         default: "رایگان"
         hint: "مثلاً «رایگان» یا «ویژهٔ دانشجویان»"
-      - label: ایموجی نماد دوره
-        name: icon
+      - label: تصویر دوره (آپلود از سیستم)
+        name: image
+        widget: image
+        required: false
+        hint: "عکس کارت و صفحهٔ همین دوره. بالای ۱۲۰۰ پیکسل و افقی باشد بهتر است."
+      - label: یا آدرس تصویر (URL)
+        name: image_url
         widget: string
-        required: true
-        default: "🎓"
-      - label: رنگ اول جلد (هگز)
+        required: false
+        hint: "به‌جای آپلود می‌توانی آدرس کامل تصویر (https://…) را وارد کنی. اگر هر دو پر باشند، عکس آپلودی اولویت دارد."
+      - label: رنگ اول جلد (هگز) — فقط وقتی تصویر نداری
         name: cover_a
         widget: string
         required: false
         default: "#102A71"
-      - label: رنگ دوم جلد (هگز)
+        hint: "رنگ پشتیبان کاور دوره‌های بدون تصویر."
+      - label: رنگ دوم جلد (هگز) — فقط وقتی تصویر نداری
         name: cover_b
         widget: string
         required: false

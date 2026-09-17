@@ -920,6 +920,18 @@ img { max-width: 100%; display: block; }
   border-top: 1px dashed var(--line);
 }
 
+/* اطلاعات کلیدی دوره در صفحهٔ مجزا */
+.course-facts {
+  display: flex; flex-wrap: wrap; gap: 12px 30px;
+  margin: 4px 0 22px; padding: 16px 18px;
+  background: rgba(16, 42, 113, .045);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.course-facts div { display: flex; flex-direction: column; gap: 3px; }
+.course-facts dt { font-size: .72rem; font-weight: 600; color: var(--muted); }
+.course-facts dd { margin: 0; font-size: .92rem; font-weight: 800; color: var(--navy-dark); }
+
 @media (max-width: 600px) {
   .ann-row { padding: 18px 16px; }
   .ann-head { flex-direction: column; align-items: flex-start; }
@@ -1038,6 +1050,7 @@ img { max-width: 100%; display: block; }
   font-size: 5rem;
   color: #fff;
 }
+.main-page-slide-show-image-container .cs-cover--img { background-size: cover; background-position: center; }
 .main-page-slide-show-content-container {
   flex-direction: column;
   justify-content: space-between;
@@ -1586,7 +1599,11 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
     radial-gradient(240px 120px at 78% -20%, rgba(255, 220, 95, .28), transparent 62%),
     linear-gradient(135deg, var(--c1, #102A71), var(--c2, #001840));
 }
-.lp-cover-ico { font-size: 2.6rem; filter: drop-shadow(0 6px 12px rgba(0, 24, 64, .35)); }
+/* کاور تصویری دوره (وقتی تصویر واقعی موجود است) + نقش گرافیکی جایگزین */
+.lp-cover--img { height: 168px; background: #0a1f54; }
+.lp-cover-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lp-cover--art { height: 132px; }
+.lp-art { width: 100%; height: 100%; display: block; }
 
 /* بدنهٔ مشترک کارت */
 .lp-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
@@ -1609,7 +1626,8 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   margin-bottom: 14px;
 }
 .lp-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 16px; }
-.lp-meta-i { font-size: .8rem; color: var(--muted); font-weight: 500; }
+.lp-meta-i { display: inline-flex; align-items: center; gap: 5px; font-size: .8rem; color: var(--muted); font-weight: 500; }
+.lp-meta-i svg { width: 14px; height: 14px; flex: none; opacity: .85; }
 .lp-foot {
   margin-top: auto;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;

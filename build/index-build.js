@@ -53,6 +53,8 @@ const safeLink = (link) => {
 const linkOrDefault = (link) => safeLink(link) || TELE_URL;
 const imageOrNull = (img) =>
   img && (ABS_URI.test(img) || fs.existsSync(path.join(ROOT, img))) ? img : "";
+/* تصویر محتوا: اول فایل آپلودی (image)، بعد آدرس اینترنتی (image_url) */
+const pickImage = (it) => imageOrNull(it.image) || imageOrNull(it.image_url);
 
 /* ---------- قالب‌های هدر/فوتر با پیشوند مسیر (برای صفحه‌های داخل پوشه) ---------- */
 const hrefN = (link, prefix) => {
@@ -210,6 +212,20 @@ function loadFolder(folder, includeInactive) {
     .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 }
 
+/* پاک‌سازی: HTMLهای هر پوشهٔ تولیدی که دیگر در محتوا نیستند حذف می‌شوند (صفحات یتیم) */
+function cleanPages(dir, keep) {
+  if (!fs.existsSync(dir)) return 0;
+  let n = 0;
+  fs.readdirSync(dir)
+    .filter((f) => f.endsWith(".html") && !keep.has(f))
+    .forEach((f) => {
+      fs.unlinkSync(path.join(dir, f));
+      console.log("🗑 حذف صفحهٔ یتیم:", path.relative(ROOT, path.join(dir, f)));
+      n++;
+    });
+  return n;
+}
+
 function assemble(open, title, desc, header, bodyParts, footer, close) {
   return (
     open
@@ -304,7 +320,9 @@ function renderAds(a) {
 const LP_ICON = {
   search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>`,
   x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`,
-  arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M19 12H5M13 18l-6-6 6-6"/></svg>`
+  arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M19 12H5M13 18l-6-6 6-6"/></svg>`,
+  user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>`,
+  layers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5Z"/><path d="M3 13l9 5 9-5"/></svg>`
 };
 
 /* نوار کنترل مشترک دو صفحه: جستجو + فیلتر دسته + قیمت (اختیاری) + مرتب‌سازی + پاک‌کردن */
@@ -342,27 +360,41 @@ function renderLpToolbar(o) {
         </div>`;
 }
 
-/* کارت دوره — کاور رنگی با آیکن (بدون تصویر جعلی)، دسته، تیتر، خلاصه، مدرس، جلسات، قیمت */
+/* کاور گرافیکی برند — جایگزین ایموجی برای دوره‌های بدون تصویر */
+const COURSE_ART_SVG = `<svg class="lp-art" viewBox="0 0 240 130" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g fill="none" stroke="#FFDC5F" stroke-width="2"><circle cx="201" cy="15" r="49" stroke-opacity=".5"/><circle cx="201" cy="15" r="31" stroke-opacity=".3"/><circle cx="27" cy="117" r="37" stroke-opacity=".28"/></g><g fill="#FFDC5F"><rect x="22" y="28" width="58" height="7" rx="3.5" fill-opacity=".85"/><rect x="22" y="46" width="40" height="7" rx="3.5" fill-opacity=".55"/><rect x="22" y="64" width="50" height="7" rx="3.5" fill-opacity=".35"/></g></svg>`;
+
+/* کاور دوره: تصویر واقعی (در صورت وجود) وگرنه نقش گرافیکی برند — بدون ایموجی */
+const courseCover = (c, prefix, href) => {
+  const img = pickImage(c);
+  const inner = img
+    ? `<img class="lp-cover-img" src="${esc(ABS_URI.test(img) ? img : prefix + img)}" alt="" loading="lazy">`
+    : COURSE_ART_SVG;
+  const cls = "lp-cover " + (img ? "lp-cover--img" : "lp-cover--art");
+  const style = img ? "" : ` style="--c1:${escA(c.cover_a || "#102A71")};--c2:${escA(c.cover_b || "#001840")}"`;
+  return href
+    ? `<a class="${cls}" href="${href}"${style} aria-hidden="true" tabindex="-1">${inner}</a>`
+    : `<span class="${cls}"${style} aria-hidden="true">${inner}</span>`;
+};
+
+/* کارت دوره — کاور تصویری، دسته، تیتر، خلاصه، مدرس، جلسات، قیمت؛ لینک به صفحهٔ مجزای دوره */
 const courseListCard = (c) => {
-  const link = linkOrDefault(c.link);
+  const detail = "amoozesh/" + c._slug + ".html";
   const price = (c.price || "رایگان").trim();
   const free = /رایگان\s*$/.test(price) ? "free" : "paid";
-  const teacher = c.teacher ? `<span class="lp-meta-i">👤 ${esc(c.teacher)}</span>` : "";
-  const lessons = c.lessons ? `<span class="lp-meta-i">🗂 ${esc(c.lessons)}</span>` : "";
+  const teacher = c.teacher ? `<span class="lp-meta-i">${LP_ICON.user} ${esc(c.teacher)}</span>` : "";
+  const lessons = c.lessons ? `<span class="lp-meta-i">${LP_ICON.layers} ${esc(c.lessons)}</span>` : "";
   const hay = [c.title, c.summary, c.category, c.teacher, price].filter(Boolean).join(" ");
   return `<article class="lp-card lp-course reveal"
           data-cat="${escA(c.category || "")}" data-price="${free}" data-title="${escA(c.title)}" data-search="${escA(hay)}">
-        <a class="lp-cover" href="${link}" style="--c1:${escA(c.cover_a || "#102A71")};--c2:${escA(c.cover_b || "#001840")}" aria-hidden="true" tabindex="-1">
-          <span class="lp-cover-ico" aria-hidden="true">${esc(c.icon || "🎓")}</span>
-        </a>
+        ${courseCover(c, "", detail)}
         <div class="lp-body">
           <span class="lp-cat-chip">${esc(c.category || "دوره")}</span>
-          <h3 class="lp-title"><a href="${link}">${esc(c.title)}</a></h3>
+          <h3 class="lp-title"><a href="${detail}">${esc(c.title)}</a></h3>
           <p class="lp-sum">${esc(c.summary || "")}</p>
           ${teacher || lessons ? `<div class="lp-meta">${teacher}${lessons}</div>` : ""}
           <div class="lp-foot">
             <span class="lp-price${free === "free" ? " lp-price--free" : ""}">${esc(price)}</span>
-            <a class="btn btn-navy btn-sm lp-cta" href="${link}">مشاهدهٔ دوره ${LP_ICON.arrow}</a>
+            <a class="btn btn-navy btn-sm lp-cta" href="${detail}">مشاهدهٔ دوره ${LP_ICON.arrow}</a>
           </div>
         </div>
       </article>`;
@@ -423,7 +455,7 @@ const distinctCats = (xs) => [...new Set(xs.filter(Boolean))].sort((a, b) => a.l
 /* ---------- کارت اطلاعیه‌ٔ اسلایدر اصلی (به سبک webinarCard سایت eseminar) ---------- */
 const CAT_EMOJI = { "دوره": "🎓", "رویداد": "🗓", "فراخوان": "📣", "اطلاع‌رسانی": "✉", "جدید": "✨", "خبر": "📰" };
 const newsSlide = (n) => {
-  const img = imageOrNull(n.image);
+  const img = pickImage(n);
   const emoji = CAT_EMOJI[n.category] || "📰";
   const visual = img
     ? `<img class="wc-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">`
@@ -493,19 +525,24 @@ function renderNews(head, newsList) {
 /* ---------- اسلایدر آموزش‌های مجازی (به سبک es-home-page-slide-show سایت eseminar) ---------- */
 const courseSlide = (c, idx) => {
   const link = linkOrDefault(c.link);
+  const detail = "amoozesh/" + c._slug + ".html";
   const name = c.teacher || "مدرس دوره";
   const initial = esc(name.trim().charAt(0));
   const lessons = c.lessons ? `<span class="cs-lessons-mini">▸ ${esc(c.lessons)}</span>` : "";
+  const img = pickImage(c);
+  const cover = img
+    ? `<span class="cs-cover cs-cover--img" style="background-image:url('${escA(img)}')" aria-hidden="true"></span>`
+    : `<span class="cs-cover" style="--c1:${escA(c.cover_a || "#102A71")};--c2:${escA(c.cover_b || "#001840")}" aria-hidden="true">${COURSE_ART_SVG}</span>`;
   return `
           <div class="swiper-slide" dir="rtl">
             <article class="main-page-slide-show-container">
-              <a class="main-page-slide-show-image-container" href="${link}" id="slideshow_course_img_${idx}" aria-label="${esc(c.title)}">
-                <span class="cs-cover" style="--c1:${esc(c.cover_a || "#102A71")};--c2:${esc(c.cover_b || "#001840")}" aria-hidden="true">${esc(c.icon || "🎓")}</span>
+              <a class="main-page-slide-show-image-container" href="${detail}" id="slideshow_course_img_${idx}" aria-label="${esc(c.title)}">
+                ${cover}
               </a>
               <div class="main-page-slide-show-content-container">
                 <div class="main-page-slide-show-title-description-container">
                   <div class="main-page-slide-show-title-container">
-                    <a href="${link}" id="slideshow_course_title_${idx}">${esc(c.title)}</a>
+                    <a href="${detail}" id="slideshow_course_title_${idx}">${esc(c.title)}</a>
                   </div>
                   <div class="main-page-slide-show-description-container">${esc(c.summary || "")}</div>
                 </div>
@@ -659,6 +696,75 @@ function renderCourseListPage(courseList) {
   );
 }
 
+/* ---------- صفحهٔ یک دوره (پوشهٔ amoozesh/) ---------- */
+function renderCoursePage(c) {
+  const prefix = "../";
+  const openN = open.replace('href="assets/css/style.css"', 'href="' + prefix + 'assets/css/style.css"');
+  const closeN = close.replace('src="assets/js/main.js"', 'src="' + prefix + 'assets/js/main.js"');
+  const headerN = renderHeaderN(prefix);
+  const footerN = renderFooterN(prefix);
+
+  const img = pickImage(c);
+  const heroImg = img
+    ? `<div class="ann-img"><img src="${ABS_URI.test(img) ? img : prefix + img}" alt="${esc(c.title)}" loading="lazy"></div>`
+    : "";
+  const content = mdToHtml(c.body || "") || `<p>${esc(c.summary || "")}</p>`;
+
+  const facts = [
+    c.teacher ? `<div><dt>مدرس</dt><dd>${esc(c.teacher)}</dd></div>` : "",
+    c.lessons ? `<div><dt>ساختار دوره</dt><dd>${esc(c.lessons)}</dd></div>` : "",
+    c.category ? `<div><dt>دسته‌بندی</dt><dd>${esc(c.category)}</dd></div>` : "",
+    `<div><dt>هزینه</dt><dd>${esc(c.price || "رایگان")}</dd></div>`
+  ].filter(Boolean).join("");
+
+  /* لینک ثبت‌نام: URL بیرونی یا صفحهٔ داخلی؛ اگر لینک، همان صفحهٔ فهرست بود به کانال ثبت‌نام برمی‌گردد */
+  const rawLink = safeLink(c.link);
+  let regHref = TELE_URL;
+  let regTarget = ` target="_blank" rel="noopener"`;
+  if (rawLink && !/^\.?\/?amoozesh\.html$/i.test(rawLink)) {
+    if (ABS_URI.test(rawLink)) {
+      regHref = rawLink;
+    } else {
+      regHref = prefix + rawLink.replace(/^\.\//, "");
+      regTarget = "";
+    }
+  }
+
+  const body = [
+    `<main>
+      <section class="section ann-single">
+        <div class="container ann-open">
+          <article>
+            <div class="crumbs">
+              <a href="${prefix}index.html">خانه</a><span class="sep">/</span><a href="${prefix}amoozesh.html">آموزش‌های مجازی</a><span class="sep">/</span>
+            </div>
+            <div class="ann-head">
+              <span class="n-chip">${esc(c.category || "دوره")}</span>
+            </div>
+            <h1 class="ann-title">${esc(c.title)}</h1>
+            ${heroImg}
+            <dl class="course-facts">${facts}</dl>
+            <div class="ann-body">${content}</div>
+            <div class="ann-cta">
+              <a class="btn btn-gold" href="${esc(regHref)}"${regTarget}>ثبت‌نام دوره</a>
+              <a class="btn btn-navy" href="${prefix}amoozesh.html">→ بازگشت به دوره‌ها</a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>`
+  ];
+  return assemble(
+    openN,
+    esc(c.title) + " | آموزش‌های مجازی",
+    esc(c.summary || ""),
+    headerN,
+    body,
+    footerN,
+    closeN
+  );
+}
+
 /* ---------- صفحهٔ یک اطلاعیه (پوشهٔ ettelaieh/) ---------- */
 function renderAnnPage(n) {
   const prefix = "../";
@@ -667,7 +773,7 @@ function renderAnnPage(n) {
   const headerN = renderHeaderN(prefix);
   const footerN = renderFooterN(prefix);
 
-  const img = imageOrNull(n.image);
+  const img = pickImage(n);
   const bannerImg = img
     ? `<div class="ann-img"><img src="${ABS_URI.test(img) ? img : prefix + img}" alt="${esc(n.title)}" loading="lazy"></div>`
     : "";
@@ -883,15 +989,24 @@ console.log("✔ ettelaieh.html");
 
 const ETT_DIR = path.join(ROOT, "ettelaieh");
 fs.mkdirSync(ETT_DIR, { recursive: true });
+const ettKeep = new Set();
 newsList.forEach((n) => {
-  const file = path.join(ETT_DIR, n._slug + ".html");
-  fs.writeFileSync(file, renderAnnPage(n), "utf8");
-  console.log("✔", path.relative(ROOT, file));
+  ettKeep.add(n._slug + ".html");
+  fs.writeFileSync(path.join(ETT_DIR, n._slug + ".html"), renderAnnPage(n), "utf8");
 });
-if (!newsList.length) {
-  fs.writeFileSync(path.join(ETT_DIR, ".gitkeep"), "", "utf8");
-}
-console.log("✔ صفحات اطلاعیه:", newsList.length, "فایل");
+const ettRemoved = cleanPages(ETT_DIR, ettKeep);
+console.log("✔ صفحات اطلاعیه:", newsList.length, "فایل" + (ettRemoved ? " (" + ettRemoved + " یتیم حذف شد)" : ""));
+
+/* ---------- صفحات دوره‌ها ---------- */
+const AMO_DIR = path.join(ROOT, "amoozesh");
+fs.mkdirSync(AMO_DIR, { recursive: true });
+const amoKeep = new Set();
+courseList.forEach((c) => {
+  amoKeep.add(c._slug + ".html");
+  fs.writeFileSync(path.join(AMO_DIR, c._slug + ".html"), renderCoursePage(c), "utf8");
+});
+const amoRemoved = cleanPages(AMO_DIR, amoKeep);
+console.log("✔ صفحات دوره:", courseList.length, "فایل" + (amoRemoved ? " (" + amoRemoved + " یتیم حذف شد)" : ""));
 
 /* ---------- latest.json: فهرست آخرین اطلاعیه‌ها و دوره‌ها (برای اعلان مرورگر) ---------- */
 (function writeLatest() {
@@ -908,11 +1023,11 @@ console.log("✔ صفحات اطلاعیه:", newsList.length, "فایل");
   });
   courseList.slice().forEach((c) => {
     items.push({
-      id: "course:" + (c.slug || c.title || "item"),
+      id: "course:" + c._slug,
       type: "course",
       title: c.title || "",
       summary: c.summary || "",
-      link: safeLink(c.link) || "amoozesh.html",
+      link: "amoozesh/" + c._slug + ".html",
       date: "",
       teacher: c.teacher || "",
       price: c.price || ""
