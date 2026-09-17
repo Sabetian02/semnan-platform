@@ -406,6 +406,84 @@ function renderLpSidebar(o) {
       </div>`;
 }
 
+/* ---------- فهرست کانون‌ها و انجمن‌ها (بدون فیلتر، فقط جستجو + کارت لوگومحور) ---------- */
+/* نگاشت اسلاگ → نام فایل لوگو در assets/images/SVG.
+   هر تشکلی که لوگو ندارد، نشان جایگزین (مونوگرام) می‌گیرد تا لوگوی واقعی‌اش اضافه شود. */
+const LOGO_MAP = {
+  "hoghoogh-feqh": "لوگوی انجمن علمی حقوق و فقه.svg",
+  "govandegi-va-ecra": "لوگوی_کانون_فرهنگی_گویندگی_و_اجرا.svg",
+  "kooir-shenasi": "لوگو انجمن علمی کویرشناسی.svg"
+};
+
+/* نشان جایگزین موقت — طرح یکسان برای همهٔ تشکل‌های بدون لوگو */
+function entityPlaceholder(name) {
+  const ch = String(name || "؟").trim().charAt(0) || "؟";
+  return `<svg class="kn-mono" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="46" fill="#102A71"/><circle cx="50" cy="50" r="46" fill="none" stroke="#F5C400" stroke-width="2.5" stroke-dasharray="5 8" stroke-opacity=".85"/><text x="50" y="50" text-anchor="middle" dominant-baseline="central" font-family="Vazirmatn, Tahoma, sans-serif" font-size="42" font-weight="800" fill="#FFDC5F">${esc(ch)}</text></svg>`;
+}
+
+function entityLogo(it) {
+  const file = String((it.logo || LOGO_MAP[it.slug]) || "").trim();
+  if (file) {
+    if (/^https?:\/\//.test(file)) {
+      return `<img class="kn-logo-img" src="${escA(file)}" alt="لوگوی ${escA(it.name)}" loading="lazy" decoding="async">`;
+    }
+    const rel = file.indexOf("assets/") === 0 ? file : "assets/images/SVG/" + file;
+    if (fs.existsSync(path.join(ROOT, rel))) {
+      return `<img class="kn-logo-img" src="${encodeURI(rel)}" alt="لوگوی ${escA(it.name)}" loading="lazy" decoding="async">`;
+    }
+  }
+  return entityPlaceholder(it.short || it.name);
+}
+
+function entityCard(it, base) {
+  const search = [it.name, it.short, it.cat, it.desc, (it.activities || []).join(" "), (it.events || []).join(" "), (it.classes || []).join(" ")].join(" ");
+  const tele = it.telegram && ABS_URI.test(it.telegram) ? it.telegram : "";
+  return `<a class="kn-card reveal" href="${base}/${escA(it.slug)}.html" data-search="${escA(search)}"${tele ? ` data-telegram="${escA(tele)}"` : ""}>
+        <span class="kn-logo">${entityLogo(it)}</span>
+        <span class="kn-cat">${esc(it.cat)}</span>
+        <h3 class="kn-name">${esc(it.name)}</h3>
+        <p class="kn-desc">${esc(it.desc)}</p>
+        <span class="kn-foot"><span>مشاهده پروفایل</span>${LP_ICON.arrow}</span>
+      </a>`;
+}
+
+/* صفحهٔ فهرست تشکل‌ها: مقدمهٔ برند + نوار جستجو + گرید کارت‌های لوگومحور + حالت خالی */
+function renderEntityListPage(items, o) {
+  const cards = items.map((it) => entityCard(it, o.base)).join("\n        ");
+  const body = [
+    `<main>
+      ${renderLpIntro(o.crumb, o.title, o.desc, o.countLabel, items.length)}
+      ${P("_marquee.html")}
+      <section class="lp-page">
+        <div class="container" data-lp>
+          <header class="lp-list-head">
+            <div>
+              <span class="eyebrow">${esc(o.eyebrow)}</span>
+              <h2>${esc(o.heading)}</h2>
+            </div>
+          </header>
+          <div class="kn-toolbar reveal">
+            <label class="lp-search">
+              <span class="lp-vhidden">جستجو</span>
+              ${LP_ICON.search}
+              <input type="search" data-lp-search placeholder="${escA(o.searchPlaceholder)}" autocomplete="off">
+            </label>
+            <button class="lp-reset" type="button" data-lp-reset hidden>
+              ${LP_ICON.x}
+              <span>حذف جستجو</span>
+            </button>
+          </div>
+          <div class="lp-grid" data-lp-list>
+            ${cards}
+          </div>
+          ${renderLpEmpty(LP_ICON.search, o.emptyTitle, o.emptyHint, o.emptyReset)}
+        </div>
+      </section>
+    </main>`
+  ];
+  return assemble(open, o.title + " | " + site.brand_name, o.metaDesc, header, body, footer, close);
+}
+
 /* کاور گرافیکی برند — جایگزین ایموجی برای دوره‌های بدون تصویر */
 const COURSE_ART_SVG = `<svg class="lp-art" viewBox="0 0 240 130" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g fill="none" stroke="#FFDC5F" stroke-width="2"><circle cx="201" cy="15" r="49" stroke-opacity=".5"/><circle cx="201" cy="15" r="31" stroke-opacity=".3"/><circle cx="27" cy="117" r="37" stroke-opacity=".28"/></g><g fill="#FFDC5F"><rect x="22" y="28" width="58" height="7" rx="3.5" fill-opacity=".85"/><rect x="22" y="46" width="40" height="7" rx="3.5" fill-opacity=".55"/><rect x="22" y="64" width="50" height="7" rx="3.5" fill-opacity=".35"/></g></svg>`;
 
@@ -1005,6 +1083,9 @@ const close = P("index-99-close.html");
 const newsList = loadFolder("news");
 const courseList = loadFolder("courses");
 const discountList = loadFolder("discounts", true);
+const bySort = (a, b) => (a.sort || 0) - (b.sort || 0) || String(a.name || "").localeCompare(String(b.name || ""), "fa");
+const kanonhaList = loadFolder("kanonha").sort(bySort);
+const anjomanhaList = loadFolder("anjomanha").sort(bySort);
 
 const index = assemble(
   open,
@@ -1028,6 +1109,47 @@ console.log("✔ index.html");
 
 fs.writeFileSync(path.join(ROOT, "amoozesh.html"), renderCourseListPage(courseList), "utf8");
 console.log("✔ amoozesh.html");
+
+/* ---------- فهرست کانون‌ها و انجمن‌ها ---------- */
+fs.writeFileSync(
+  path.join(ROOT, "kanonha.html"),
+  renderEntityListPage(kanonhaList, {
+    base: "kanonha",
+    crumb: "کانون‌های فرهنگی",
+    title: "کانون‌های فرهنگی دانشگاه سمنان",
+    desc: "کانون‌های فرهنگی، قلبِ زندگی دانشجویی‌اند؛ از هنر و موسیقی تا رسانه و کارآفرینی. میان‌شان جستجو کن و پروفایل هر کانون را ببین.",
+    metaDesc: "فهرست کانون‌های فرهنگی دانشگاه سمنان؛ فعالیت‌ها، رویدادها و کانال تلگرام هر کانون.",
+    countLabel: "کانون فعال",
+    eyebrow: "تشکل‌های دانشجویی",
+    heading: "همهٔ کانون‌های فرهنگی",
+    searchPlaceholder: "جستجوی نام کانون، دسته یا فعالیت…",
+    emptyTitle: "کانونی با این مشخصات پیدا نشد",
+    emptyHint: "عبارت دیگری جستجو کن یا فهرست کامل را ببین.",
+    emptyReset: "نمایش همهٔ کانون‌ها"
+  }),
+  "utf8"
+);
+console.log("✔ kanonha.html (" + kanonhaList.length + " کانون)");
+
+fs.writeFileSync(
+  path.join(ROOT, "anjomanha.html"),
+  renderEntityListPage(anjomanhaList, {
+    base: "anjomanha",
+    crumb: "انجمن‌های علمی",
+    title: "انجمن‌های علمی دانشگاه سمنان",
+    desc: "انجمن‌های علمی، پلِ میان کلاس و پژوهش‌اند؛ نشست تخصصی، کارگاه و رویداد. انجمن رشتهٔ خودت را پیدا کن و عضو شو.",
+    metaDesc: "فهرست انجمن‌های علمی دانشگاه سمنان؛ فعالیت‌ها، رویدادها و کانال تلگرام هر انجمن.",
+    countLabel: "انجمن فعال",
+    eyebrow: "تشکل‌های دانشجویی",
+    heading: "همهٔ انجمن‌های علمی",
+    searchPlaceholder: "جستجوی نام انجمن، رشته یا فعالیت…",
+    emptyTitle: "انجمنی با این مشخصات پیدا نشد",
+    emptyHint: "عبارت دیگری جستجو کن یا فهرست کامل را ببین.",
+    emptyReset: "نمایش همهٔ انجمن‌ها"
+  }),
+  "utf8"
+);
+console.log("✔ anjomanha.html (" + anjomanhaList.length + " انجمن)");
 
 /* ---------- صفحات اطلاعیه‌ها ---------- */
 fs.writeFileSync(path.join(ROOT, "ettelaieh.html"), renderAnnListPage(newsList), "utf8");

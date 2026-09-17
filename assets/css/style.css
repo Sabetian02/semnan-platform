@@ -1813,3 +1813,79 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .lp-link svg { transform: none !important; transition: none; }
   .lp-filters.is-open { animation: none; }
 }
+
+/* ============================================================
+   فهرست کانون‌ها و انجمن‌ها (kanonha / anjomanha)
+   نوار جستجو + کارت‌های لوگومحور — هم‌زبان با صفحات فهرست دوره/اطلاعیه
+   ============================================================ */
+.kn-toolbar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 26px;
+}
+.kn-toolbar .lp-search { flex: 1 1 320px; }
+.kn-toolbar .lp-reset { width: auto; margin: 0; }
+
+.kn-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 22px 0;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+.kn-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 22px 44px -26px rgba(0, 24, 64, .35);
+  border-color: rgba(245, 196, 0, .75);
+}
+.kn-logo {
+  display: grid; place-items: center;
+  width: 92px; height: 92px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 220, 95, .32), transparent 64%),
+    linear-gradient(150deg, #fff, var(--cream));
+  border: 2px solid rgba(245, 196, 0, .5);
+  box-shadow: 0 16px 32px -22px rgba(0, 24, 64, .55);
+  margin-bottom: 16px;
+}
+.kn-logo-img, .kn-mono { width: 60%; height: 60%; object-fit: contain; display: block; }
+.kn-cat {
+  font-size: .74rem; font-weight: 700;
+  color: var(--navy);
+  background: rgba(245, 196, 0, .18);
+  border: 1px solid rgba(245, 196, 0, .5);
+  border-radius: 999px;
+  padding: 3px 12px;
+  margin-bottom: 10px;
+}
+.kn-name { font-size: 1.06rem; font-weight: 800; color: var(--navy-dark); line-height: 1.75; margin-bottom: 8px; }
+.kn-desc {
+  color: var(--muted); font-size: .86rem; line-height: 1.9;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 18px;
+}
+.kn-foot {
+  margin-top: auto; width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px dashed var(--line);
+  padding: 14px 0;
+  font-size: .86rem; font-weight: 800; color: var(--navy);
+}
+.kn-foot svg { width: 15px; height: 15px; transition: transform .2s; }
+.kn-card:hover .kn-foot { color: var(--navy-dark); }
+.kn-card:hover .kn-foot svg { transform: translateX(-3px); }
+
+@media (max-width: 640px) {
+  .kn-toolbar { padding: 12px 14px; }
+  .kn-toolbar .lp-reset { width: 100%; }
+  .kn-card { padding: 22px 18px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kn-card, .kn-card:hover { transform: none; transition: none; }
+  .kn-foot svg { transform: none !important; transition: none; }
+}

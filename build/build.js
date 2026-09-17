@@ -246,37 +246,7 @@ function renderProfile(prefix, item, kindTitle, backHref, backLabel) {
   return pageSkeleton(prefix, item.name, body);
 }
 
-/* ---------- List page (no filter, no telegram) ---------- */
-function renderListPage(prefix, items, title, subtitle, catLabel) {
-  const cards = items
-    .map((it) => `<a class="list-card reveal" href="${prefix}${catLabel}/${it.slug}.html">
-        <span class="lc-ico">${it.icon}</span>
-        <span class="lc-body"><h3>${esc(it.short)}</h3><span class="lc-cat">${esc(it.cat)}</span></span>
-        <span class="lc-arrow">←</span>
-      </a>`)
-    .join("\n        ");
-
-  const body = `
-  ${renderHeader(prefix)}
-  <main>
-    <section class="page-hero">
-      <div class="container">
-        <div class="crumbs"><a href="${prefix}index.html">خانه</a><span class="sep">/</span>${esc(title)}</div>
-        <h1>${esc(title)}</h1>
-        <p>${esc(subtitle)}</p>
-      </div>
-    </section>
-    ${renderMarquee()}
-    <section class="section" style="padding-top:0">
-      <div class="container">
-        <div class="list-grid">${cards}</div>
-      </div>
-    </section>
-  </main>
-  ${renderFooter(prefix)}`;
-
-  return pageSkeleton(prefix, title, body);
-}
+/* ---------- List pages (kanonha / anjomanha) are rendered by index-build.js ---------- */
 
 /* ---------- Write all ---------- */
 function writeProfile(folder, it, kindTitle, backHref) {
@@ -289,21 +259,7 @@ function writeProfile(folder, it, kindTitle, backHref) {
 kanonha.forEach((k) => writeProfile(KANON_DIR, k, "کانون‌های فرهنگی", "../kanonha.html"));
 anjomanha.forEach((a) => writeProfile(ANJOMAN_DIR, a, "انجمن‌های علمی", "../anjomanha.html"));
 
-fs.writeFileSync(
-  path.join(ROOT, "kanonha.html"),
-  renderListPage("", kanonha, "کانون‌های فرهنگی دانشگاه سمنان", "پروفایل هر کانون را ببین، با فعالیت‌هایش آشنا شو و در کانال تلگرامش عضو شو.", "kanonha"),
-  "utf8"
-);
-console.log("✔ kanonha.html");
-
-fs.writeFileSync(
-  path.join(ROOT, "anjomanha.html"),
-  renderListPage("", anjomanha, "انجمن‌های علمی دانشگاه سمنان", "پروفایل هر انجمن را ببین، با فعالیت‌هایش آشنا شو و در کانال تلگرامش عضو شو.", "anjomanha"),
-  "utf8"
-);
-console.log("✔ anjomanha.html");
-
-console.log("\nتولید شد:", kanonha.length + anjomanha.length, "پروفایل + 2 صفحه فهرست");
+console.log("\nتولید شد:", kanonha.length + anjomanha.length, "پروفایل");
 
 /* ---------- Dump shared header/footer for root-level hand-built pages ---------- */
 const partsDir = path.join(__dirname, "parts");

@@ -233,6 +233,11 @@ collections:
         name: icon
         widget: string
         required: true
+      - label: لوگو (اختیاری)
+        name: logo
+        widget: string
+        required: false
+        hint: "نام فایل SVG داخل assets/images/SVG — مثال: لوگوی انجمن علمی حقوق و فقه.svg . خالی بگذار تا نشان جایگزین نمایش داده شود."
       - label: لینک کانال تلگرام
         name: telegram
         widget: string
@@ -298,6 +303,11 @@ collections:
         name: icon
         widget: string
         required: true
+      - label: لوگو (اختیاری)
+        name: logo
+        widget: string
+        required: false
+        hint: "نام فایل SVG داخل assets/images/SVG — مثال: لوگوی انجمن علمی حقوق و فقه.svg . خالی بگذار تا نشان جایگزین نمایش داده شود."
       - label: لینک کانال تلگرام
         name: telegram
         widget: string
