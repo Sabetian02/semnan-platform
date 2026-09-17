@@ -322,42 +322,88 @@ const LP_ICON = {
   x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>`,
   arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M19 12H5M13 18l-6-6 6-6"/></svg>`,
   user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>`,
-  layers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5Z"/><path d="M3 13l9 5 9-5"/></svg>`
+  layers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5Z"/><path d="M3 13l9 5 9-5"/></svg>`,
+  filter: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v5l-4 2v-7L3 5Z"/></svg>`,
+  chev: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`
 };
 
-/* نوار کنترل مشترک دو صفحه: جستجو + فیلتر دسته + قیمت (اختیاری) + مرتب‌سازی + پاک‌کردن */
-function renderLpToolbar(o) {
-  const opts = (arr) =>
-    arr.map((x) => `<option value="${escA(x.value)}">${esc(x.label)}</option>`).join("");
-  const catSelect = `
-          <label class="lp-field">
-            <span class="lp-vhidden">${o.catName}</span>
-            <select data-lp-cat>${opts(o.cats)}</select>
-          </label>`;
-  const priceSelect = o.price ? `
-          <label class="lp-field">
-            <span class="lp-vhidden">قیمت</span>
-            <select data-lp-price>${opts([{ value: "", label: "همهٔ قیمت‌ها" }, { value: "free", label: "رایگان" }, { value: "paid", label: "با هزینه" }])}</select>
-          </label>` : "";
-  const sortSelect = `
-          <label class="lp-field">
-            <span class="lp-vhidden">مرتب‌سازی</span>
-            <select data-lp-sort>${opts(o.sorts)}</select>
-          </label>`;
-  return `<div class="lp-toolbar reveal">
-          <div class="lp-toolbar-row">
-            <label class="lp-search">
-              <span class="lp-vhidden">جستجو</span>
-              ${LP_ICON.search}
-              <input type="search" data-lp-search placeholder="${esc(o.searchPlaceholder)}" autocomplete="off">
-            </label>
-            <div class="lp-selects">${catSelect}${priceSelect}${sortSelect}</div>
-            <button class="lp-reset" type="button" data-lp-reset hidden>
-              ${LP_ICON.x}
-              <span>پاک کردن فیلترها</span>
-            </button>
+/* گروه رادیویی فیلتر (به سبک سایدبار eseminar) */
+function lpRadios(name, attr, items) {
+  return `<div class="lp-radios" data-${attr}>${items
+    .map(
+      (x, i) => `
+              <label class="lp-radio">
+                <input type="radio" name="${name}" value="${escA(x.value)}"${i === 0 ? " checked" : ""}>
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">${esc(x.label)}</span>${x.count != null ? `<span class="lp-radio-count">${faNum(x.count)}</span>` : ""}
+              </label>`
+    )
+    .join("")}
+            </div>`;
+}
+
+/* سایدبار فیلتر (دسکتاپ) + نوار مرتب‌سازی بالای گرید — جستجو، دسته، قیمت، مرتب‌سازی */
+function renderLpSidebar(o) {
+  const priceBox = o.price
+    ? `
+          <fieldset class="lp-fbox">
+            <legend class="lp-fbox-title">هزینه</legend>
+            ${lpRadios("lp-price", "lp-price", [
+              { value: "", label: "همه" },
+              { value: "free", label: "رایگان" },
+              { value: "paid", label: "با هزینه" },
+            ])}
+          </fieldset>`
+    : "";
+  return `<div class="lp-layout">
+        <aside class="lp-side" aria-label="فیلترها">
+          <div class="lp-side-inner">
+            <div class="lp-side-head">
+              <span class="lp-side-title">${LP_ICON.filter}<span>فیلترها</span></span>
+              <button class="lp-side-toggle" type="button" data-lp-toggle aria-expanded="false" aria-controls="lpFilters">
+                <span>نمایش</span>
+                ${LP_ICON.chev}
+              </button>
+            </div>
+            <div class="lp-filters" id="lpFilters" data-lp-filters>
+              <div class="lp-fbox">
+                <label class="lp-fbox-title" for="lpSearch">جستجو</label>
+                <div class="lp-search">
+                  ${LP_ICON.search}
+                  <input id="lpSearch" type="search" data-lp-search placeholder="${esc(o.searchPlaceholder)}" autocomplete="off">
+                </div>
+              </div>
+              <fieldset class="lp-fbox">
+                <legend class="lp-fbox-title">${esc(o.catName)}</legend>
+                ${lpRadios("lp-cat", "lp-cat", o.cats)}
+              </fieldset>${priceBox}
+              <button class="lp-reset" type="button" data-lp-reset hidden>
+                ${LP_ICON.x}
+                <span>حذف فیلترها</span>
+              </button>
+            </div>
           </div>
-        </div>`;
+        </aside>
+        <div class="lp-main">
+          <div class="lp-sortbar reveal">
+            <span class="lp-sortbar-label">مرتب‌سازی براساس:</span>
+            <div class="lp-chips" data-lp-sort>${o.sorts
+              .map(
+                (x, i) => `
+              <label class="lp-chip">
+                <input type="radio" name="lp-sort" value="${escA(x.value)}"${i === 0 ? " checked" : ""}>
+                <span>${esc(x.label)}</span>
+              </label>`
+              )
+              .join("")}
+            </div>
+          </div>
+          <div class="lp-grid" data-lp-list>
+            ${o.cards}
+          </div>
+          ${o.empty || ""}
+        </div>
+      </div>`;
 }
 
 /* کاور گرافیکی برند — جایگزین ایموجی برای دوره‌های بدون تصویر */
@@ -615,20 +661,20 @@ function renderAnnListPage(newsList) {
               <h2>همهٔ اطلاعیه‌ها و رویدادها</h2>
             </div>
           </header>
-          ${renderLpToolbar({
+          ${renderLpSidebar({
             searchPlaceholder: "جستجوی تیتر یا متن اطلاعیه…",
             catName: "دسته‌بندی",
-            cats: [{ value: "", label: "همهٔ دسته‌ها" }].concat(cats.map((c) => ({ value: c, label: c }))),
+            cats: [{ value: "", label: "همهٔ دسته‌ها", count: newsList.length }].concat(
+              cats.map((c) => ({ value: c, label: c, count: newsList.filter((x) => x.category === c).length }))
+            ),
             sorts: [
-              { value: "new", label: "مرتب‌سازی: جدیدترین" },
+              { value: "new", label: "جدیدترین" },
               { value: "old", label: "قدیمی‌ترین" },
               { value: "title", label: "عنوان (الف تا ی)" }
-            ]
+            ],
+            cards,
+            empty: renderLpEmpty(LP_ICON.search, "اطلاعیه‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ اطلاعیه‌ها")
           })}
-          <div class="lp-grid" data-lp-list>
-            ${cards}
-          </div>
-          ${renderLpEmpty("🔎", "اطلاعیه‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ اطلاعیه‌ها")}
         </div>
       </section>
     </main>`
@@ -667,20 +713,20 @@ function renderCourseListPage(courseList) {
               <h2>همهٔ دوره‌های آموزش مجازی</h2>
             </div>
           </header>
-          ${renderLpToolbar({
+          ${renderLpSidebar({
             searchPlaceholder: "جستجوی عنوان، مدرس یا مهارت…",
             catName: "دسته‌بندی",
-            cats: [{ value: "", label: "همهٔ دسته‌ها" }].concat(cats.map((c) => ({ value: c, label: c }))),
+            cats: [{ value: "", label: "همهٔ دسته‌ها", count: list.length }].concat(
+              cats.map((c) => ({ value: c, label: c, count: list.filter((x) => x.category === c).length }))
+            ),
             price: true,
             sorts: [
-              { value: "", label: "مرتب‌سازی: پیش‌فرض" },
+              { value: "", label: "پیش‌فرض" },
               { value: "title", label: "عنوان (الف تا ی)" }
-            ]
+            ],
+            cards,
+            empty: renderLpEmpty(LP_ICON.search, "دوره‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ دوره‌ها")
           })}
-          <div class="lp-grid" data-lp-list>
-            ${cards}
-          </div>
-          ${renderLpEmpty("🔍", "دوره‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ دوره‌ها")}
         </div>
       </section>
     </main>`

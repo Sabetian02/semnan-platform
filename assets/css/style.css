@@ -1521,18 +1521,88 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .lp-list-head .eyebrow { margin-bottom: 12px; }
 .lp-list-head h2 { font-size: clamp(1.35rem, 2.8vw, 1.8rem); font-weight: 800; color: var(--navy-dark); }
 
-/* نوار کنترل: جستجو / فیلتر / مرتب‌سازی */
-.lp-toolbar {
+/* چیدمان فهرست: سایدبار فیلتر (دسکتاپ) + ستون محتوا */
+.lp-layout { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; }
+.lp-side { min-width: 0; }
+.lp-side-inner {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 30px;
+  overflow: hidden;
 }
-.lp-toolbar-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.lp-side-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.lp-side-title { display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 800; color: var(--navy-dark); }
+.lp-side-title svg { width: 18px; height: 18px; color: var(--navy); }
+.lp-side-toggle {
+  display: none;
+  align-items: center; gap: 6px;
+  font-family: inherit; font-size: .84rem; font-weight: 700; color: var(--navy);
+  background: rgba(245, 196, 0, .18);
+  border: 1px solid rgba(245, 196, 0, .55);
+  border-radius: 999px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.lp-side-toggle svg { transition: transform .25s; }
+.lp-side-toggle:hover { background: var(--gold); color: var(--navy-dark); }
+.lp-side-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.lp-filters { padding: 2px 18px 18px; }
+.lp-fbox {
+  border: 0; margin: 0; padding: 15px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.lp-fbox:last-of-type { border-bottom: 0; }
+.lp-fbox-title {
+  display: block; padding: 0;
+  font-size: .82rem; font-weight: 800; color: var(--navy-dark);
+  margin-bottom: 12px;
+}
+.lp-radios { display: grid; gap: 2px; }
+.lp-radio {
+  position: relative;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: .9rem; color: var(--ink);
+  cursor: pointer;
+  transition: background .15s;
+}
+.lp-radio:hover { background: rgba(16, 42, 113, .06); }
+.lp-radio input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.lp-radio-dot {
+  flex: none; width: 17px; height: 17px;
+  border-radius: 50%;
+  border: 2px solid #c3cbe0;
+  background: #fff;
+  display: grid; place-items: center;
+  transition: border-color .15s;
+}
+.lp-radio-dot::after {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold);
+  transform: scale(0);
+  transition: transform .15s;
+}
+.lp-radio input:checked ~ .lp-radio-dot { border-color: var(--navy); }
+.lp-radio input:checked ~ .lp-radio-dot::after { transform: scale(1); }
+.lp-radio-label { flex: 1; }
+.lp-radio input:checked ~ .lp-radio-label { color: var(--navy-dark); font-weight: 800; }
+.lp-radio input:focus-visible ~ .lp-radio-dot { outline: 3px solid rgba(245, 196, 0, .7); outline-offset: 2px; }
+.lp-radio-count {
+  flex: none;
+  font-size: .74rem; font-weight: 700; color: var(--muted);
+  background: rgba(16, 42, 113, .06);
+  border-radius: 999px;
+  padding: 1px 9px;
+}
 .lp-search {
-  flex: 1 1 280px;
   display: inline-flex; align-items: center; gap: 10px;
+  width: 100%;
   min-height: 46px; padding: 0 16px;
   background: var(--cream);
   border: 1.5px solid var(--line);
@@ -1548,31 +1618,54 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   padding: 12px 0;
 }
 .lp-search input::placeholder { color: #98a0ad; }
-.lp-selects { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.lp-field select {
-  font-family: inherit;
-  font-size: .9rem; font-weight: 600; color: var(--navy);
-  background: var(--cream);
-  border: 1.5px solid var(--line);
-  border-radius: 999px;
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: border-color .2s;
-}
-.lp-field select:hover { border-color: rgba(245, 196, 0, .85); }
 .lp-reset {
-  display: inline-flex; align-items: center; gap: 7px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%;
   font-family: inherit; font-size: .86rem; font-weight: 700;
   color: var(--navy);
   background: rgba(245, 196, 0, .18);
   border: 1px solid rgba(245, 196, 0, .55);
   border-radius: 999px;
-  padding: 9px 16px;
-  margin-inline-start: auto;
+  padding: 10px 16px;
+  margin-top: 14px;
+  cursor: pointer;
   transition: background .2s, color .2s;
 }
 .lp-reset svg { width: 15px; height: 15px; }
 .lp-reset:hover { background: var(--gold); color: var(--navy-dark); }
+
+/* ستون محتوا + نوار مرتب‌سازی */
+.lp-main { min-width: 0; }
+.lp-sortbar {
+  display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 22px;
+}
+.lp-sortbar-label { font-size: .86rem; font-weight: 800; color: var(--navy-dark); }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.lp-chip {
+  position: relative;
+  display: inline-flex; align-items: center;
+  font-size: .84rem; font-weight: 700; color: var(--navy);
+  background: var(--cream);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 15px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.lp-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.lp-chip:hover { border-color: rgba(245, 196, 0, .85); }
+.lp-chip input:checked ~ span { font-weight: 800; }
+.lp-chip:has(input:checked), .lp-chip.is-on {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+.lp-chip input:focus-visible ~ span { text-decoration: underline; text-underline-offset: 3px; }
 
 /* گرید کارت‌ها */
 .lp-grid {
@@ -1669,11 +1762,24 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   border: 1.5px dashed rgba(16, 42, 113, .22);
   border-radius: var(--radius);
 }
-.lp-empty-ico { display: block; font-size: 2.6rem; margin-bottom: 14px; }
+.lp-empty-ico { display: block; margin-bottom: 14px; }
+.lp-empty-ico svg { width: 44px; height: 44px; color: var(--navy); opacity: .45; }
 .lp-empty h3 { font-size: 1.25rem; color: var(--navy-dark); font-weight: 800; margin-bottom: 8px; }
 .lp-empty p { color: var(--muted); font-size: .92rem; margin-bottom: 20px; }
 
 /* ریسپانسیو */
+@media (min-width: 992px) {
+  .lp-layout { grid-template-columns: 300px minmax(0, 1fr); gap: 28px; }
+  .lp-side { position: sticky; top: 96px; }
+  .lp-side-toggle { display: none; }
+}
+@media (max-width: 991px) {
+  .lp-side-toggle { display: inline-flex; }
+  .lp-filters { display: none; }
+  .lp-filters.is-open { display: block; animation: lpFade .2s ease; }
+  .lp-sortbar { margin-top: 0; }
+}
+@keyframes lpFade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 @media (max-width: 900px) {
   .lp-intro-row { flex-direction: column; align-items: flex-start; }
   .lp-count-chip { flex-direction: row; gap: 10px; min-width: 0; }
@@ -1682,15 +1788,12 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 @media (max-width: 640px) {
   .lp-page { padding: 30px 0 64px; }
   .lp-intro { padding: 38px 0 42px; }
-  .lp-toolbar-row { flex-direction: column; align-items: stretch; }
-  .lp-search { flex: 1 1 auto; }
-  .lp-selects { display: grid; grid-template-columns: 1fr 1fr; }
-  .lp-field select { width: 100%; }
-  .lp-reset { margin-inline-start: 0; justify-content: center; }
+  .lp-sortbar { padding: 12px 14px; }
+  .lp-chips { gap: 7px; }
+  .lp-chip { padding: 6px 12px; font-size: .8rem; }
   .lp-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
 @media (max-width: 400px) {
-  .lp-selects { grid-template-columns: 1fr; }
   .lp-grid { grid-template-columns: 1fr; }
 }
 
@@ -1699,4 +1802,5 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
   .lp-card, .lp-card:hover { transform: none; transition: none; }
   .lp-link svg { transform: none !important; transition: none; }
+  .lp-filters.is-open { animation: none; }
 }

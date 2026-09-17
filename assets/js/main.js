@@ -57,19 +57,34 @@
     var wrap = document.querySelector("[data-lp]");
     if (!wrap) return;
     var list = wrap.querySelector("[data-lp-list]");
+    if (!list) return;
     var cards = Array.prototype.slice.call(list.children);
     var search = wrap.querySelector("[data-lp-search]");
-    var catSel = wrap.querySelector("[data-lp-cat]");
-    var priceSel = wrap.querySelector("[data-lp-price]");
-    var sortSel = wrap.querySelector("[data-lp-sort]");
+    var catGrp = wrap.querySelector("[data-lp-cat]");
+    var priceGrp = wrap.querySelector("[data-lp-price]");
+    var sortGrp = wrap.querySelector("[data-lp-sort]");
     var empty = wrap.querySelector("[data-lp-empty]");
     if (!cards.length) return;
 
+    /* رادیو/چک‌باکس یا select — مقدار انتخاب‌شدهٔ هر گروه فیلتر */
+    function grpVal(grp) {
+      if (!grp) return "";
+      if (grp.tagName === "SELECT") return grp.value;
+      var el = grp.querySelector("input:checked");
+      return el ? el.value : "";
+    }
+    function grpReset(grp) {
+      if (!grp) return;
+      if (grp.tagName === "SELECT") { grp.selectedIndex = 0; return; }
+      var first = grp.querySelector('input[value=""]');
+      if (first) first.checked = true;
+    }
+
     function apply() {
       var q = normTxt(search ? search.value : "");
-      var cat = catSel ? catSel.value : "";
-      var pr = priceSel ? priceSel.value : "";
-      var sort = sortSel ? sortSel.value : "";
+      var cat = grpVal(catGrp);
+      var pr = grpVal(priceGrp);
+      var sort = grpVal(sortGrp);
       var visible = cards.filter(function (card) {
         if (q && normTxt(card.getAttribute("data-search")).indexOf(q) === -1) return false;
         if (cat && card.getAttribute("data-cat") !== cat) return false;
@@ -98,22 +113,36 @@
       document.querySelectorAll("[data-lp-count]").forEach(function (el) { el.textContent = faDigitsN(n); });
       if (empty) empty.hidden = n !== 0;
       document.querySelectorAll("[data-lp-reset]").forEach(function (b) { b.hidden = !(q || cat || pr); });
+      wrap.querySelectorAll(".lp-chip").forEach(function (chip) {
+        var inp = chip.querySelector("input");
+        chip.classList.toggle("is-on", !!(inp && inp.checked));
+      });
     }
 
     if (search) search.addEventListener("input", apply);
-    if (catSel) catSel.addEventListener("change", apply);
-    if (priceSel) priceSel.addEventListener("change", apply);
-    if (sortSel) sortSel.addEventListener("change", apply);
+    [catGrp, priceGrp, sortGrp].forEach(function (grp) {
+      if (grp) grp.addEventListener("change", apply);
+    });
     document.querySelectorAll("[data-lp-reset]").forEach(function (b) {
       b.addEventListener("click", function () {
         if (search) search.value = "";
-        if (catSel) catSel.selectedIndex = 0;
-        if (priceSel) priceSel.selectedIndex = 0;
-        if (sortSel) sortSel.selectedIndex = 0;
+        grpReset(catGrp);
+        grpReset(priceGrp);
+        grpReset(sortGrp);
         apply();
         if (search) search.focus();
       });
     });
+
+    /* باز/بستن پنل فیلترها روی موبایل */
+    var toggle = wrap.querySelector("[data-lp-toggle]");
+    var filters = wrap.querySelector("[data-lp-filters]");
+    if (toggle && filters) {
+      toggle.addEventListener("click", function () {
+        var open = filters.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
     apply();
   }
   initListings();
