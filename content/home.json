@@ -83,12 +83,12 @@
   ],
   "ads": {
     "slot1": {
-      "image": "assets/images/uploads/28-04-1405.webp",
+      "image": "https://karino.agency/wp-content/uploads/2024/04/instagram-advertising-banner-idea-3-1-1024x469.jpg",
       "link": "https://t.me/PlatformSem",
       "active": true
     },
     "slot2": {
-      "image": "assets/images/ad2.webp",
+      "image": "https://tse2.mm.bing.net/th/id/OIP.AYY0Qk9rAX0p-7FmtAPN7QHaDe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
       "link": "https://t.me/PlatformSem",
       "active": true
     },
@@ -97,17 +97,17 @@
       "link": "https://t.me/PlatformSem"
     }
   },
-"news_head": {
-    "eyebrow": "تازه\u200cها و اطلاعیه\u200cها",
+  "news_head": {
+    "eyebrow": "تازه‌ها و اطلاعیه‌ها",
     "title": "از جدیدترین رویدادها جا نمان",
-    "subtitle": "فراخوان\u200cها، دوره\u200cها و رویدادهای دانشگاه را اینجا ببین؛ جزئیات کامل همیشه در کانال پلتفرم منتشر می\u200cشود."
+    "subtitle": "فراخوان‌ها، دوره‌ها و رویدادهای دانشگاه را اینجا ببین؛ جزئیات کامل همیشه در کانال پلتفرم منتشر می‌شود."
   },
   "courses_head": {
-    "eyebrow": "آموزش\u200cهای مجازی",
+    "eyebrow": "آموزش‌های مجازی",
     "title": "دوره های آموزشی",
-    "subtitle": "دوره\u200cهای ویدیویی و زندهٔ پلتفرم دانشگاه سمنان برای دانشجوها؛ همین الان ثبت\u200cنام کن و مهارت تازه\u200cات را شروع کن.",
+    "subtitle": "دوره‌های ویدیویی و زندهٔ پلتفرم دانشگاه سمنان برای دانشجوها؛ همین الان ثبت‌نام کن و مهارت تازه‌ات را شروع کن.",
     "cta": {
-      "label": "همه دوره\u200cها",
+      "label": "همه دوره‌ها",
       "link": "amoozesh.html"
     }
   },
