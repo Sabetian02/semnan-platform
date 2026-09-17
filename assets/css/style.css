@@ -101,8 +101,8 @@ img { max-width: 100%; display: block; }
 .ticker-item .tt-ico { color: var(--navy); font-size: .95rem; flex: none; }
 .ticker-item b { color: var(--navy); font-weight: 800; }
 @keyframes mq-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ticker-track { animation: none; }
