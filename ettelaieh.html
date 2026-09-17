@@ -6,7 +6,7 @@
 <title>اطلاعیه‌های پلتفرم | پلتفرم دانشگاه سمنان</title>
   <meta name="description" content="همه اطلاعیه‌ها و اخبار پلتفرم دانشگاه سمنان؛ به ترتیب تاریخ، جدیدترین‌ها اول.">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=c836b0a">
+  <link rel="stylesheet" href="assets/css/style.css?v=830d043">
 </head>
 <body>
 
@@ -76,28 +76,89 @@
               <h2>همهٔ اطلاعیه‌ها و رویدادها</h2>
             </div>
           </header>
-          <div class="lp-toolbar reveal">
-          <div class="lp-toolbar-row">
-            <label class="lp-search">
-              <span class="lp-vhidden">جستجو</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-              <input type="search" data-lp-search placeholder="جستجوی تیتر یا متن اطلاعیه…" autocomplete="off">
-            </label>
-            <div class="lp-selects">
-          <label class="lp-field">
-            <span class="lp-vhidden">دسته‌بندی</span>
-            <select data-lp-cat><option value="">همهٔ دسته‌ها</option><option value="اطلاع‌رسانی">اطلاع‌رسانی</option><option value="جدید">جدید</option><option value="خبر">خبر</option><option value="دوره">دوره</option><option value="رویداد">رویداد</option><option value="فراخوان">فراخوان</option></select>
-          </label>
-          <label class="lp-field">
-            <span class="lp-vhidden">مرتب‌سازی</span>
-            <select data-lp-sort><option value="new">مرتب‌سازی: جدیدترین</option><option value="old">قدیمی‌ترین</option><option value="title">عنوان (الف تا ی)</option></select>
-          </label></div>
-            <button class="lp-reset" type="button" data-lp-reset hidden>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              <span>پاک کردن فیلترها</span>
-            </button>
+          <div class="lp-layout">
+        <aside class="lp-side" aria-label="فیلترها">
+          <div class="lp-side-inner">
+            <div class="lp-side-head">
+              <span class="lp-side-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v5l-4 2v-7L3 5Z"/></svg><span>فیلترها</span></span>
+              <button class="lp-side-toggle" type="button" data-lp-toggle aria-expanded="false" aria-controls="lpFilters">
+                <span>نمایش</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+            </div>
+            <div class="lp-filters" id="lpFilters" data-lp-filters>
+              <div class="lp-fbox">
+                <label class="lp-fbox-title" for="lpSearch">جستجو</label>
+                <div class="lp-search">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+                  <input id="lpSearch" type="search" data-lp-search placeholder="جستجوی تیتر یا متن اطلاعیه…" autocomplete="off">
+                </div>
+              </div>
+              <fieldset class="lp-fbox">
+                <legend class="lp-fbox-title">دسته‌بندی</legend>
+                <div class="lp-radios" data-lp-cat>
+              <label class="lp-radio">
+                <input type="radio" name="lp-cat" value="" checked>
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">همهٔ دسته‌ها</span><span class="lp-radio-count">۲۰</span>
+              </label>
+              <label class="lp-radio">
+                <input type="radio" name="lp-cat" value="اطلاع‌رسانی">
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">اطلاع‌رسانی</span><span class="lp-radio-count">۲</span>
+              </label>
+              <label class="lp-radio">
+                <input type="radio" name="lp-cat" value="جدید">
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">جدید</span><span class="lp-radio-count">۱</span>
+              </label>
+              <label class="lp-radio">
+                <input type="radio" name="lp-cat" value="خبر">
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">خبر</span><span class="lp-radio-count">۳</span>
+              </label>
+              <label class="lp-radio">
+                <input type="radio" name="lp-cat" value="دوره">
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">دوره</span><span class="lp-radio-count">۴</span>
+              </label>
+              <label class="lp-radio">
+                <input type="radio" name="lp-cat" value="رویداد">
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">رویداد</span><span class="lp-radio-count">۷</span>
+              </label>
+              <label class="lp-radio">
+                <input type="radio" name="lp-cat" value="فراخوان">
+                <span class="lp-radio-dot" aria-hidden="true"></span>
+                <span class="lp-radio-label">فراخوان</span><span class="lp-radio-count">۳</span>
+              </label>
+            </div>
+              </fieldset>
+              <button class="lp-reset" type="button" data-lp-reset hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <span>حذف فیلترها</span>
+              </button>
+            </div>
           </div>
-        </div>
+        </aside>
+        <div class="lp-main">
+          <div class="lp-sortbar reveal">
+            <span class="lp-sortbar-label">مرتب‌سازی براساس:</span>
+            <div class="lp-chips" data-lp-sort>
+              <label class="lp-chip">
+                <input type="radio" name="lp-sort" value="new" checked>
+                <span>جدیدترین</span>
+              </label>
+              <label class="lp-chip">
+                <input type="radio" name="lp-sort" value="old">
+                <span>قدیمی‌ترین</span>
+              </label>
+              <label class="lp-chip">
+                <input type="radio" name="lp-sort" value="title">
+                <span>عنوان (الف تا ی)</span>
+              </label>
+            </div>
+          </div>
           <div class="lp-grid" data-lp-list>
             <article class="lp-card lp-news lp-body reveal"
           data-cat="خبر" data-dt="2026-09-16T17:33:00.000+03:30" data-title="تست 2" data-search="تست 2 بلتابلتابلت خبر">
@@ -341,11 +402,13 @@
       </article>
           </div>
           <div class="lp-empty" data-lp-empty hidden>
-          <span class="lp-empty-ico" aria-hidden="true">🔎</span>
+          <span class="lp-empty-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></span>
           <h3>اطلاعیه‌ای با این مشخصات پیدا نشد</h3>
           <p>عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.</p>
           <button class="btn btn-navy" type="button" data-lp-reset>نمایش همهٔ اطلاعیه‌ها</button>
         </div>
+        </div>
+      </div>
         </div>
       </section>
     </main>
@@ -387,6 +450,6 @@
     </div>
   </footer>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="assets/js/main.js?v=c836b0a"></script>
+<script src="assets/js/main.js?v=830d043"></script>
 </body>
 </html>
