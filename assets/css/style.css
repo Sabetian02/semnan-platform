@@ -1686,17 +1686,26 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 /* کارت دوره */
 .lp-cover {
   position: relative;
-  display: grid; place-items: center;
+  display: block;
+  overflow: hidden;
   height: 128px;
   background:
     radial-gradient(240px 120px at 78% -20%, rgba(255, 220, 95, .28), transparent 62%),
     linear-gradient(135deg, var(--c1, #102A71), var(--c2, #001840));
 }
-/* کاور تصویری دوره (وقتی تصویر واقعی موجود است) + نقش گرافیکی جایگزین */
+/* کاور تصویری دوره (وقتی تصویر واقعی موجود است) + نقش گرافیکی جایگزین
+   تصویر/نقش داخل قابِ ثابت و بریده می‌شود تا هرگز روی متن کارت نریزد */
 .lp-cover--img { height: 168px; background: #0a1f54; }
-.lp-cover-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .lp-cover--art { height: 132px; }
-.lp-art { width: 100%; height: 100%; display: block; }
+.lp-cover-img,
+.lp-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.lp-cover-img { object-fit: cover; }
 
 /* بدنهٔ مشترک کارت */
 .lp-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
