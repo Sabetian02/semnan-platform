@@ -400,18 +400,18 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
         </section>`);
   }
 
-  /* آمار دسته‌ها — همیشه همهٔ دسته‌های اصلی؛ دستهٔ بدون اطلاعیه ۰ نمایش داده می‌شود */
+  /* آمار — فقط چهار پارامتر کلیدی؛ دستهٔ بدون اطلاعیه ۰ نمایش داده می‌شود */
+  const STAT_CATEGORIES = ["رویداد", "فراخوان", "دوره", "تخفیف"];
   const catCounts = {};
-  NEWS_CATEGORIES.forEach((c) => (catCounts[c] = 0));
+  STAT_CATEGORIES.forEach((c) => (catCounts[c] = 0));
   myNews.forEach((n) => {
-    const c = String(n.category || "خبر").trim() || "خبر";
-    catCounts[c] = (catCounts[c] || 0) + 1;
+    const c = String(n.category || "").trim();
+    if (c in catCounts) catCounts[c] += 1;
   });
   const tocStats = `<div class="op-toc-stats">
-            <h4>آمار اطلاعیه‌ها</h4>
-            <span class="op-toc-total">مجموع: <b>${faNum(myNews.length)}</b> اطلاعیه</span>
+            <h4>آمار</h4>
             <ul class="op-cat-chips">
-              ${NEWS_CATEGORIES.map((c) => `<li class="${catCounts[c] ? "" : "is-zero"}"><b>${faNum(catCounts[c])}</b><span>${esc(c)}</span></li>`).join("")}
+              ${STAT_CATEGORIES.map((c) => `<li class="${catCounts[c] ? "" : "is-zero"}"><b>${faNum(catCounts[c])}</b><span>${esc(c)}</span></li>`).join("")}
             </ul>
           </div>`;
 

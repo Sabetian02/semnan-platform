@@ -26,23 +26,27 @@ const LOGO_MAP = {
 const LOGO_SUBDIR = "assets/images/SVG/";
 const imgExists = (rel) => fs.existsSync(path.join(ROOT, rel));
 
-/* نشان جایگزین موقت — طرح یکسان برای همهٔ تشکل‌های بدون لوگو */
+/* نشان جایگزین موقت — مونوگرام تک‌حرفی هم‌رنگِ ظرف (currentColor) */
 function orgPlaceholder(name, cls) {
   const ch = String(name || "؟").trim().charAt(0) || "؟";
-  return `<svg class="${cls || "org-mono"}" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="46" fill="#102A71"/><circle cx="50" cy="50" r="46" fill="none" stroke="#F5C400" stroke-width="2.5" stroke-dasharray="5 8" stroke-opacity=".85"/><text x="50" y="50" text-anchor="middle" dominant-baseline="central" font-family="Vazirmatn, Tahoma, sans-serif" font-size="42" font-weight="800" fill="#FFDC5F">${esc(ch)}</text></svg>`;
+  return `<svg class="${cls || "org-mono"}" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><text x="50" y="52" text-anchor="middle" dominant-baseline="central" font-family="Vazirmatn, Tahoma, sans-serif" font-size="68" font-weight="800" fill="currentColor">${esc(ch)}</text></svg>`;
 }
 
 /* لوگوی تشکل: اول فیلد logo در محتوا، بعد نگاشت اسلاگ؛ در نبود هر دو → نشان جایگزین.
+   لوگوی واقعی به‌صورت ماسک رندر می‌شود تا هم‌رنگِ ظرف (آبی تیره در فهرست، سفید در پروفایل) شود.
    prefix برای صفحات داخل پوشه ("../") لازم است. */
 function orgLogo(it, prefix, imgClass, monoClass) {
   const file = String(it.logo || LOGO_MAP[it.slug] || "").trim();
   if (file) {
+    let src = "";
     if (/^https?:\/\//.test(file)) {
-      return `<img class="${imgClass}" src="${escA(file)}" alt="لوگوی ${escA(it.name)}" loading="lazy" decoding="async">`;
+      src = file;
+    } else {
+      const rel = file.indexOf("assets/") === 0 ? file : LOGO_SUBDIR + file;
+      if (imgExists(rel)) src = encodeURI(prefix + rel);
     }
-    const rel = file.indexOf("assets/") === 0 ? file : LOGO_SUBDIR + file;
-    if (imgExists(rel)) {
-      return `<img class="${imgClass}" src="${encodeURI(prefix + rel)}" alt="لوگوی ${escA(it.name)}" loading="lazy" decoding="async">`;
+    if (src) {
+      return `<span class="${imgClass} org-logo-mask" role="img" aria-label="لوگوی ${escA(it.name)}" style="--l:url('${escA(src)}')"></span>`;
     }
   }
   return orgPlaceholder(it.short || it.name, monoClass);

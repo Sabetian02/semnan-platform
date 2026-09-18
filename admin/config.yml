@@ -40,6 +40,11 @@ collections:
     delete: true
     extension: json
     summary: "{{title}} — {{category}}"
+    # پیش‌فرضِ فهرست داشبورد: جدیدترین بر اساس تاریخ انتشار
+    sortable_fields:
+      - field: date
+        default_sort: desc
+      - field: title
     fields:
       - label: عنوان
         name: title
@@ -160,6 +165,11 @@ collections:
     delete: true
     extension: json
     summary: "{{title}} — {{teacher}}"
+    # پیش‌فرضِ فهرست داشبورد: جدیدترین بر اساس تاریخ انتشار (تاریخ کامیت)
+    sortable_fields:
+      - field: commit_date
+        default_sort: desc
+      - field: title
     fields:
       - label: عنوان دوره
         name: title
