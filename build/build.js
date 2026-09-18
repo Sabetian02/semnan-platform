@@ -304,6 +304,43 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
               </a>`;
   };
 
+  const galleryImgs = gallery.map((g) => orgImage(g, prefix, `تصویر از ${item.short}`)).filter(Boolean);
+
+  /* آمار — فقط چهار پارامتر کلیدی؛ دستهٔ بدون اطلاعیه ۰ نمایش داده می‌شود */
+  const STAT_CATEGORIES = ["رویداد", "فراخوان", "دوره", "تخفیف"];
+  const catCounts = {};
+  STAT_CATEGORIES.forEach((c) => (catCounts[c] = 0));
+  myNews.forEach((n) => {
+    const c = String(n.category || "").trim();
+    if (c in catCounts) catCounts[c] += 1;
+  });
+  const tocStats = `<div class="op-toc-stats">
+            <h4>آمار</h4>
+            <ul class="op-cat-chips">
+              ${STAT_CATEGORIES.map((c) => `<li class="${catCounts[c] ? "" : "is-zero"}"><b>${faNum(catCounts[c])}</b><span>${esc(c)}</span></li>`).join("")}
+            </ul>
+          </div>`;
+
+  const tocHrefs = [
+    ["#about", `درباره ${item.short}`],
+    ["#contact", "ارتباط و عضویت"],
+    recentNews.length ? ["#flash", "فعالیت‌های ماه اخیر"] : null,
+    myNews.length ? ["#news", "اطلاعیه‌ها"] : null,
+    courseNews.length ? ["#classes", "دوره‌ها و کارگاه‌ها"] : null,
+    awards.length ? ["#achievements", "افتخارات و دستاوردها"] : null,
+    team.length ? ["#team", "اعضای مجموعه"] : null,
+    galleryImgs.length ? ["#gallery", "گالری تصاویر"] : null
+  ].filter(Boolean);
+
+  /* کارت فهرست محتوا + آمار — یک بار ساخته و در موبایل زیرِ «ارتباط و عضویت» و در دسکتاپ در نوار کنار استفاده می‌شود */
+  const tocCard = `<div class="op-side-card">
+            <h3>فهرست محتوا</h3>
+            <ul class="op-toc">
+              ${tocHrefs.map(([h, t]) => `<li><a href="${h}">${opIco("arrow", "op-toc-ico")} ${esc(t)}</a></li>`).join("")}
+            </ul>
+            ${tocStats}
+          </div>`;
+
   const sections = [];
 
   sections.push(`<section class="op-sec" id="about" aria-labelledby="op-about-h">
@@ -331,6 +368,9 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
             </div>
           </div>
         </section>`);
+
+  /* فهرست محتوا و آمار — در نمایش موبایل دقیقاً زیرِ «ارتباط و عضویت» */
+  sections.push(`<aside class="op-side op-side-inline" aria-label="فهرست محتوا و آمار">${tocCard}</aside>`);
 
   /* فعالیت‌های ماه اخیر — فلش کارت از اطلاعیه‌های همین تشکل در بازهٔ ۳۰ روز */
   if (recentNews.length) {
@@ -392,39 +432,12 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
         </section>`);
   }
 
-  const galleryImgs = gallery.map((g) => orgImage(g, prefix, `تصویر از ${item.short}`)).filter(Boolean);
   if (galleryImgs.length) {
     sections.push(`<section class="op-sec" id="gallery" aria-labelledby="op-gal-h">
           ${secHead("image", "op-gal-h", "گالری تصاویر", count(galleryImgs.length, "تصویر"))}
           <div class="op-sec-body"><div class="op-gallery">${galleryImgs.join("\n            ")}</div></div>
         </section>`);
   }
-
-  /* آمار — فقط چهار پارامتر کلیدی؛ دستهٔ بدون اطلاعیه ۰ نمایش داده می‌شود */
-  const STAT_CATEGORIES = ["رویداد", "فراخوان", "دوره", "تخفیف"];
-  const catCounts = {};
-  STAT_CATEGORIES.forEach((c) => (catCounts[c] = 0));
-  myNews.forEach((n) => {
-    const c = String(n.category || "").trim();
-    if (c in catCounts) catCounts[c] += 1;
-  });
-  const tocStats = `<div class="op-toc-stats">
-            <h4>آمار</h4>
-            <ul class="op-cat-chips">
-              ${STAT_CATEGORIES.map((c) => `<li class="${catCounts[c] ? "" : "is-zero"}"><b>${faNum(catCounts[c])}</b><span>${esc(c)}</span></li>`).join("")}
-            </ul>
-          </div>`;
-
-  const tocHrefs = [
-    ["#about", `درباره ${item.short}`],
-    ["#contact", "ارتباط و عضویت"],
-    recentNews.length ? ["#flash", "فعالیت‌های ماه اخیر"] : null,
-    myNews.length ? ["#news", "اطلاعیه‌ها"] : null,
-    courseNews.length ? ["#classes", "دوره‌ها و کارگاه‌ها"] : null,
-    awards.length ? ["#achievements", "افتخارات و دستاوردها"] : null,
-    team.length ? ["#team", "اعضای مجموعه"] : null,
-    galleryImgs.length ? ["#gallery", "گالری تصاویر"] : null
-  ].filter(Boolean);
 
   const body = `
   ${renderHeader(prefix)}
@@ -458,15 +471,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           ${sections.join("\n          ")}
           <a class="back-link" href="${backHref}">${opIco("arrow", "op-back-ico")} بازگشت به فهرست ${esc(kindTitle)}</a>
         </div>
-        <aside class="op-side" aria-label="اطلاعات تکمیلی">
-          <div class="op-side-card">
-            <h3>فهرست محتوا</h3>
-            <ul class="op-toc">
-              ${tocHrefs.map(([h, t]) => `<li><a href="${h}">${opIco("arrow", "op-toc-ico")} ${esc(t)}</a></li>`).join("")}
-            </ul>
-            ${tocStats}
-          </div>
-        </aside>
+        <aside class="op-side op-side-desk" aria-label="اطلاعات تکمیلی">${tocCard}</aside>
       </div>
     </section>
   </main>

@@ -1980,9 +1980,14 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .op-main { min-width: 0; }
 .op-main > .back-link { margin-top: 22px; }
 .op-side { min-width: 0; display: grid; gap: 20px; }
+.op-side-inline { margin-bottom: 22px; }
+@media (max-width: 991px) {
+  .op-side-desk { display: none; }
+}
 @media (min-width: 992px) {
   .op-grid { grid-template-columns: minmax(0, 1fr) 316px; }
   .op-side { position: sticky; top: 96px; }
+  .op-side-inline { display: none; }
 }
 
 /* --- بخش‌های محتوا --- */
