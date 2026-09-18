@@ -1,10 +1,11 @@
 {
-  "title": "تخفیف ویژه ورکشاپ نور و صدای صحنه",
-  "summary": "برای ثبت‌نام گروهی و اعضای کانون تا ۳۰٪ تخفیف ویژه در ورکشاپ نور و صوت به‌همراه دارد.",
   "body": "## تخفیف ویژه\n\nورکشاپ نور و صدای صحنه با تخفیف ویژهٔ اعضای کانون برگزار می‌شود.\n\n- ثبت‌نام انفرادی: ۲۰٪ تخفیف\n- ثبت‌نام گروهی: ۳۰٪ تخفیف\n\nظرفیت محدود است.",
-  "category": "تخفیف",
-  "kanon": "govandegi-va-ecra",
+  "active": true,
+  "summary": "برای ثبت‌نام گروهی و اعضای کانون تا ۳۰٪ تخفیف ویژه در ورکشاپ نور و صوت به‌همراه دارد.",
+  "image_url": "",
   "date": "2026-08-28T10:00:00.000Z",
-  "image_url": "https://picsum.photos/seed/gov-t-05/960/540",
-  "active": true
+  "kanon": "govandegi-va-ecra",
+  "title": "تخفیف ویژه ورکشاپ نور و صدای صحنه",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXbP8kQl39RYQWLodH_gpYpvgIZa05GKMzPBakee_XMeXy7ITFJaDl6fte&s=10",
+  "category": "تخفیف"
 }
