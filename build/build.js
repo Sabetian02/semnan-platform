@@ -416,11 +416,15 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
 
   /* فهرست اعضا — دو دکمهٔ بازشونده: «اعضا» و «مسئولین» */
   if (members.length) {
-    const memberRows = members.map((m, i) => `<tr>
+    const memberRows = members.map((m, i) => {
+      const t = String(m.title || "").trim();
+      return `<tr>
                       <td class="op-mem-row">${faNum(i + 1)}</td>
                       <td>${esc(m.name)}</td>
                       <td>${esc(m.major)}</td>
-                    </tr>`).join("");
+                      <td>${t ? `<span class="op-title">${esc(t)}</span>` : `<span class="op-title is-empty">—</span>`}</td>
+                    </tr>`;
+    }).join("");
     const officialRows = officials.map((m) => `<tr>
                       <td>${esc(m.name)}</td>
                       <td><span class="op-post">${esc(m.post)}</span></td>
@@ -444,6 +448,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
                       <th scope="col">ردیف</th>
                       <th scope="col">نام و نام خانوادگی</th>
                       <th scope="col">رشته تحصیلی</th>
+                      <th scope="col">عنوان</th>
                     </tr>
                   </thead>
                   <tbody>

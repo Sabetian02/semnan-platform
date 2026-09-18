@@ -282,6 +282,11 @@ collections:
             name: major
             widget: string
             required: true
+          - label: عنوان (اختیاری)
+            name: title
+            widget: string
+            required: false
+            hint: "عنوان نقش فرد، مثلاً نویسنده یا گوینده. در ستون «عنوان» جدول اعضا نمایش داده می‌شود."
           - label: مقام / مسئولیت (اختیاری)
             name: post
             widget: string
@@ -343,6 +348,11 @@ collections:
             name: major
             widget: string
             required: true
+          - label: عنوان (اختیاری)
+            name: title
+            widget: string
+            required: false
+            hint: "عنوان نقش فرد، مثلاً نویسنده یا گوینده. در ستون «عنوان» جدول اعضا نمایش داده می‌شود."
           - label: مقام / مسئولیت (اختیاری)
             name: post
             widget: string

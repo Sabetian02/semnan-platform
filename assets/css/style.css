@@ -2202,11 +2202,16 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .op-members-scroll {
   max-height: 420px;
   overflow: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
 }
 .op-members-tbl { width: 100%; border-collapse: collapse; background: var(--cream); font-size: .88rem; }
+.op-members-tbl:not(.op-officials-tbl) { min-width: 640px; }
+.op-members-tbl th,
+.op-members-tbl td { white-space: nowrap; }
 .op-members-tbl th {
   position: sticky; top: 0; z-index: 1;
   padding: 11px 14px;
@@ -2223,6 +2228,16 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .op-members-tbl tbody tr:nth-child(even) { background: rgba(16, 42, 113, .035); }
 .op-members-tbl tbody tr:hover { background: rgba(245, 196, 0, .14); }
 .op-mem-row { color: var(--muted); width: 46px; }
+.op-title {
+  display: inline-block;
+  padding: 2px 11px;
+  border-radius: 999px;
+  background: rgba(245, 196, 0, .18);
+  color: #6b5000;
+  font-size: .78rem; font-weight: 800;
+  white-space: nowrap;
+}
+.op-title.is-empty { background: none; color: var(--muted); font-weight: 700; }
 .op-officials-tbl th { background: linear-gradient(180deg, var(--gold), var(--gold-soft)); color: var(--navy-dark); }
 .op-officials-tbl tbody tr:nth-child(even) { background: rgba(245, 196, 0, .08); }
 .op-officials-tbl tbody tr:hover { background: rgba(16, 42, 113, .07); }
