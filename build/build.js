@@ -250,6 +250,14 @@ const pickActIcon = (title) => {
 
 const faNum = (n) => String(n).replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+d]);
 
+/* دسته‌های اطلاعیه — باید با گزینه‌های «بخش اطلاعیهٔ اصلی» در admin/config.yml یکی باشد */
+const NEWS_CATEGORIES = ["جدید", "رویداد", "فراخوان", "اطلاع‌رسانی", "دوره", "خبر", "تخفیف"];
+const CAT_EMOJI = { "دوره": "🎓", "رویداد": "🗓", "فراخوان": "📣", "اطلاع‌رسانی": "✉", "جدید": "✨", "خبر": "📰", "تخفیف": "🎟" };
+
+/* بازهٔ «ماه اخیر» — ۳۰ روزِ منتهی به لحظهٔ ساخت سایت */
+const LAST_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+const isRecent = (n) => new Date(n.date || 0).getTime() >= Date.now() - LAST_MONTH_MS;
+
 /* ---------- Profile page ----------
    قالب واحد پروفایل کانون/انجمن: هویت، معرفی، درباره، فعالیت‌ها، رویدادها،
    دوره‌ها و بخش‌های اختیاری (افتخارات/تیم/گالری) فقط وقتی داده وجود دارد. */
@@ -258,21 +266,43 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const joinHref = tele || TELE_URL;
   const joinLabel = tele ? "عضویت در مجموعه" : "پیگیری از کانال پلتفرم";
   const myNews = newsForOrg(item.slug, orgKind);
+  const recentNews = myNews.filter(isRecent);
+  const courseNews = myNews.filter((n) => String(n.category || "").trim() === "دوره");
 
-  const acts = (item.activities || []).filter(Boolean);
-  const evs = (item.events || []).filter(Boolean);
-  const cls = (item.classes || []).filter(Boolean);
   const team = (Array.isArray(item.team) ? item.team : []).filter((m) => m && (m.name || m.role));
   const awards = (Array.isArray(item.achievements) ? item.achievements : []).filter(Boolean);
   const gallery = (Array.isArray(item.gallery) ? item.gallery : []).filter(Boolean);
   const email = String(item.email || "").trim();
   const location = String(item.location || "").trim();
-  const founded = String(item.founded || "").trim();
   const aboutLong = String(item.desc || "").length > 420;
 
   const secHead = (ico, id, title, extra) =>
     `<header class="op-sec-head"><span class="op-sec-ico">${opIco(ico)}</span><h2 id="${id}">${esc(title)}</h2>${extra || ""}</header>`;
   const count = (n, label) => `<span class="op-sec-count">${faNum(n)} ${esc(label)}</span>`;
+
+  const newsHref = (n) => `${prefix}ettelaieh/${escA(n._slug || "")}.html`;
+
+  /* ردیف آرشیو/دوره — برگرفته از بخش اطلاعیهٔ اصلی؛ دسته‌ها همان تنظیمات داشبورد است */
+  const archiveItem = (n) => `<li class="op-news-item">
+                <a class="op-news-link" href="${newsHref(n)}">
+                  <span class="op-news-chip">${esc(n.category || "خبر")}</span>
+                  <span class="op-news-txt">${esc(n.title)}</span>
+                  <time class="op-news-date" data-date="${escA(n.date || "")}"></time>
+                </a>
+              </li>`;
+
+  /* فلش کارت «فعالیت‌های ماه اخیر» — با تصویر، به ترتیب تاریخ */
+  const flashCard = (n) => {
+    const img = orgImage(n.image || n.image_url, prefix, n.title || "");
+    const visual = img
+      ? `<span class="op-flash-img">${img}</span>`
+      : `<span class="op-flash-img op-flash-ico" aria-hidden="true">${CAT_EMOJI[n.category] || "📰"}</span>`;
+    return `<a class="op-flash" href="${newsHref(n)}">
+                ${visual}
+                <span class="op-flash-chip">${esc(n.category || "خبر")}</span>
+                <span class="op-flash-txt"><b>${esc(n.title)}</b><time class="op-news-date" data-date="${escA(n.date || "")}"></time></span>
+              </a>`;
+  };
 
   const sections = [];
 
@@ -284,51 +314,58 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           </div>
         </section>`);
 
-  /* اطلاعیه‌های همین تشکل — از بخش اطلاعیهٔ اصلی؛ همین‌ها در صفحهٔ اصلی سایت هم
-     نمایش داده می‌شوند و اعلان پس‌زمینه هم می‌گیرند. */
-  if (myNews.length) {
-    sections.push(`<section class="op-sec" id="news" aria-labelledby="op-news-h">
-          ${secHead("doc", "op-news-h", `اطلاعیه‌های ${item.short}`, count(myNews.length, "اطلاعیه"))}
-          <div class="op-sec-body"><ul class="op-news">
-            ${myNews
-              .map(
-                (n) => `<li class="op-news-item">
-                <a class="op-news-link" href="${prefix}ettelaieh/${escA(n._slug || "")}.html" data-search="${escA([n.title, n.summary, n.category].filter(Boolean).join(" "))}">
-                  <span class="op-news-chip">${esc(n.category || "خبر")}</span>
-                  <span class="op-news-txt">${esc(n.title)}</span>
-                  <time class="op-news-date" data-date="${escA(n.date || "")}"></time>
-                </a>
-              </li>`
-              )
-              .join("\n            ")}
-          </ul></div>
+  /* اطلاعات ارتباط و عضویت — زیرِ «درباره»، بدون دکمهٔ بازگشت به فهرست */
+  const contactList = [];
+  if (email) contactList.push(`<li>${opIco("mail")}<a href="mailto:${escA(email)}">${esc(email)}</a></li>`);
+  if (location) contactList.push(`<li>${opIco("pin")}<span>${esc(location)}</span></li>`);
+  sections.push(`<section class="op-sec op-contact" id="contact" aria-labelledby="op-contact-h">
+          <div class="op-contact-inner">
+            <div class="op-contact-txt">
+              <span class="op-type">ارتباط و عضویت</span>
+              <h2 id="op-contact-h">${tele ? `به ${esc(item.short)} بپیوند` : `اخبار ${esc(item.short)}`}</h2>
+              <p>${tele ? `برای عضویت، اطلاع از فراخوان‌ها و همراهی با برنامه‌های ${esc(item.short)}، کانال تلگرام مجموعه را دنبال کن.` : `کانال اختصاصی ${esc(item.short)} در دسترس نیست؛ برای پیگیری اخبار از کانال پلتفرم استفاده کن.`}</p>
+              ${contactList.length ? `<ul class="op-contact-list">${contactList.join("")}</ul>` : ""}
+            </div>
+            <div class="op-contact-cta">
+              <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${teleSvg} ${esc(tele ? "عضویت در کانال تلگرام" : "پیگیری از کانال پلتفرم")}</a>
+            </div>
+          </div>
         </section>`);
-  }
 
-  if (acts.length) {
-    sections.push(`<section class="op-sec" id="activities" aria-labelledby="op-act-h">
-          ${secHead("spark", "op-act-h", `فعالیت‌های ${item.short}`, count(acts.length, "فعالیت"))}
-          <div class="op-sec-body"><div class="op-cards">
-            ${acts.map((a) => `<article class="op-act"><span class="op-act-ico">${opIco(pickActIcon(a))}</span><h3>${esc(a)}</h3></article>`).join("\n            ")}
+  /* فعالیت‌های ماه اخیر — فلش کارت از اطلاعیه‌های همین تشکل در بازهٔ ۳۰ روز */
+  if (recentNews.length) {
+    sections.push(`<section class="op-sec" id="flash" aria-labelledby="op-flash-h">
+          ${secHead("spark", "op-flash-h", `فعالیت‌های ${item.short} در ماه اخیر`, count(recentNews.length, "فعالیت"))}
+          <div class="op-sec-body"><div class="op-flash-grid">
+            ${recentNews.map(flashCard).join("\n            ")}
           </div></div>
         </section>`);
   }
 
-  if (evs.length) {
-    sections.push(`<section class="op-sec" id="events" aria-labelledby="op-ev-h">
-          ${secHead("calendar", "op-ev-h", "رویدادها و برنامه‌ها", count(evs.length, "رویداد"))}
-          <div class="op-sec-body"><ol class="op-timeline">
-            ${evs.map((e, i) => `<li class="op-ev"><span class="op-ev-no">${faNum(i + 1)}</span><h3>${esc(e)}</h3></li>`).join("\n            ")}
-          </ol></div>
+  /* اطلاعیه‌های همین تشکل — آرشیوِ صفحه‌بندی‌شده (۱۵ مورد در هر صفحه؛ به‌صورت همان کادر) */
+  if (myNews.length) {
+    sections.push(`<section class="op-sec op-archive" id="news" aria-labelledby="op-news-h">
+          ${secHead("doc", "op-news-h", `اطلاعیه‌های ${item.short}`, count(myNews.length, "اطلاعیه"))}
+          <div class="op-sec-body">
+            <p class="op-arch-note">آرشیو اطلاعیه‌های ${esc(item.short)} — هر صفحه ۱۵ مورد؛ برای دیدن بقیه از شماره‌صفحه‌های زیر استفاده کنید.</p>
+            <ul class="op-news" data-pgr data-pgr-size="15">
+              ${myNews.map(archiveItem).join("\n              ")}
+            </ul>
+            <nav class="op-pager" data-pgr-nav hidden aria-label="صفحه‌بندی اطلاعیه‌ها"></nav>
+          </div>
         </section>`);
   }
 
-  if (cls.length) {
+  /* دوره‌ها و کارگاه‌ها — مستقیماً به اطلاعیه‌های دستهٔ «دوره» وصل است */
+  if (courseNews.length) {
     sections.push(`<section class="op-sec" id="classes" aria-labelledby="op-cls-h">
-          ${secHead("book", "op-cls-h", "دوره‌ها و کارگاه‌ها", count(cls.length, "دوره"))}
-          <div class="op-sec-body"><ul class="op-list">
-            ${cls.map((c) => `<li class="op-row"><span class="op-row-ico">${opIco("book")}</span><span class="op-row-txt">${esc(c)}</span><span class="op-row-tag">دوره</span></li>`).join("\n            ")}
-          </ul></div>
+          ${secHead("book", "op-cls-h", "دوره‌ها و کارگاه‌ها", count(courseNews.length, "دوره"))}
+          <div class="op-sec-body">
+            <p class="op-cls-hint">دوره‌ها و کارگاه‌های ${esc(item.short)} مستقیماً از اطلاعیه‌های دستهٔ «دوره» همین مجموعه ساخته می‌شود؛ روی هر مورد برای جزئیات بزنید.</p>
+            <ul class="op-news">
+              ${courseNews.map(archiveItem).join("\n              ")}
+            </ul>
+          </div>
         </section>`);
   }
 
@@ -363,44 +400,31 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
         </section>`);
   }
 
-  const contactList = [];
-  if (email) contactList.push(`<li>${opIco("mail")}<a href="mailto:${escA(email)}">${esc(email)}</a></li>`);
-  if (location) contactList.push(`<li>${opIco("pin")}<span>${esc(location)}</span></li>`);
-
-  /* آمار از دسته‌بندی اطلاعیه‌های همین تشکل (دسته‌ها همان دسته‌های تنظیمات اصلی است) */
+  /* آمار دسته‌ها — همیشه همهٔ دسته‌های اصلی؛ دستهٔ بدون اطلاعیه ۰ نمایش داده می‌شود */
   const catCounts = {};
+  NEWS_CATEGORIES.forEach((c) => (catCounts[c] = 0));
   myNews.forEach((n) => {
     const c = String(n.category || "خبر").trim() || "خبر";
     catCounts[c] = (catCounts[c] || 0) + 1;
   });
-  const categoryStats =
-    Object.keys(catCounts).length > 0
-      ? `<div class="op-side-card">
-            <h3>آمار از اطلاعیه‌ها</h3>
-            <ul class="op-stats">
-              ${Object.entries(catCounts)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 8)
-                .map(([c, cnt]) => `<li><b>${faNum(cnt)}</b><span>${esc(c)}</span></li>`)
-                .join("")}
+  const tocStats = `<div class="op-toc-stats">
+            <h4>آمار اطلاعیه‌ها</h4>
+            <span class="op-toc-total">مجموع: <b>${faNum(myNews.length)}</b> اطلاعیه</span>
+            <ul class="op-cat-chips">
+              ${NEWS_CATEGORIES.map((c) => `<li class="${catCounts[c] ? "" : "is-zero"}"><b>${faNum(catCounts[c])}</b><span>${esc(c)}</span></li>`).join("")}
             </ul>
-          </div>`
-      : "";
+          </div>`;
 
-  sections.push(`<section class="op-sec op-contact" id="contact" aria-labelledby="op-contact-h">
-          <div class="op-contact-inner">
-            <div class="op-contact-txt">
-              <span class="op-type">ارتباط و عضویت</span>
-              <h2 id="op-contact-h">${tele ? `به ${esc(item.short)} بپیوند` : `اخبار ${esc(item.short)}`}</h2>
-              <p>${tele ? `برای عضویت، اطلاع از فراخوان‌ها و همراهی با برنامه‌های ${esc(item.short)}، کانال تلگرام مجموعه را دنبال کن.` : `کانال اختصاصی ${esc(item.short)} در دسترس نیست؛ برای پیگیری اخبار از کانال پلتفرم استفاده کن.`}</p>
-              ${contactList.length ? `<ul class="op-contact-list">${contactList.join("")}</ul>` : ""}
-            </div>
-            <div class="op-contact-cta">
-              <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${teleSvg} ${esc(tele ? "عضویت در کانال تلگرام" : "پیگیری از کانال پلتفرم")}</a>
-              <a class="btn btn-outline-light" href="${backHref}">${opIco("arrow", "op-btn-ico")} همهٔ ${esc(kindTitle)}</a>
-            </div>
-          </div>
-        </section>`);
+  const tocHrefs = [
+    ["#about", `درباره ${item.short}`],
+    ["#contact", "ارتباط و عضویت"],
+    recentNews.length ? ["#flash", "فعالیت‌های ماه اخیر"] : null,
+    myNews.length ? ["#news", "اطلاعیه‌ها"] : null,
+    courseNews.length ? ["#classes", "دوره‌ها و کارگاه‌ها"] : null,
+    awards.length ? ["#achievements", "افتخارات و دستاوردها"] : null,
+    team.length ? ["#team", "اعضای مجموعه"] : null,
+    galleryImgs.length ? ["#gallery", "گالری تصاویر"] : null
+  ].filter(Boolean);
 
   const body = `
   ${renderHeader(prefix)}
@@ -420,7 +444,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
             <p class="op-tagline">${esc(item.desc)}</p>
             <div class="op-hero-actions">
               <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${teleSvg} ${esc(joinLabel)}</a>
-              ${acts.length ? `<a class="btn btn-outline-light" href="#activities">${opIco("arrow", "op-btn-ico")} مشاهده فعالیت‌ها</a>` : ""}
+              ${recentNews.length ? `<a class="btn btn-outline-light" href="#flash">${opIco("arrow", "op-btn-ico")} فعالیت‌های ماه اخیر</a>` : myNews.length ? `<a class="btn btn-outline-light" href="#news">${opIco("arrow", "op-btn-ico")} اطلاعیه‌ها</a>` : ""}
             </div>
           </div>
         </div>
@@ -436,30 +460,11 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
         </div>
         <aside class="op-side" aria-label="اطلاعات تکمیلی">
           <div class="op-side-card">
-            <h3>در یک نگاه</h3>
-            <dl class="op-facts">
-              <div><dt>نوع تشکل</dt><dd>${esc(kindShort)}</dd></div>
-              <div><dt>حوزه فعالیت</dt><dd>${esc(item.cat)}</dd></div>
-              <div><dt>دانشگاه</dt><dd>دانشگاه سمنان</dd></div>
-              ${founded ? `<div><dt>سال تأسیس</dt><dd>${esc(founded)}</dd></div>` : ""}
-            </dl>
-          </div>
-          <div class="op-side-card">
             <h3>فهرست محتوا</h3>
-            <ul class="op-stats">
-              <li><b>${faNum(acts.length)}</b><span>فعالیت</span></li>
-              <li><b>${faNum(evs.length)}</b><span>رویداد</span></li>
-              <li><b>${faNum(cls.length)}</b><span>دوره</span></li>
+            <ul class="op-toc">
+              ${tocHrefs.map(([h, t]) => `<li><a href="${h}">${opIco("arrow", "op-toc-ico")} ${esc(t)}</a></li>`).join("")}
             </ul>
-          </div>
-          ${categoryStats}
-          <div class="op-side-card">
-            <h3>مسیرهای سریع</h3>
-            <ul class="op-links">
-              <li><a href="${backHref}">${opIco("arrow")} فهرست ${esc(kindTitle)}</a></li>
-              <li><a href="${prefix}index.html">${opIco("arrow")} صفحه اصلی پلتفرم</a></li>
-              <li><a href="${prefix}amoozesh.html">${opIco("arrow")} دوره‌های آموزشی</a></li>
-            </ul>
+            ${tocStats}
           </div>
         </aside>
       </div>

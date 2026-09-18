@@ -560,7 +560,7 @@ function renderLpEmpty(ico, title, hint, resetLabel) {
 const distinctCats = (xs) => [...new Set(xs.filter(Boolean))].sort((a, b) => a.localeCompare(b, "fa"));
 
 /* ---------- کارت اطلاعیه‌ٔ اسلایدر اصلی (به سبک webinarCard سایت eseminar) ---------- */
-const CAT_EMOJI = { "دوره": "🎓", "رویداد": "🗓", "فراخوان": "📣", "اطلاع‌رسانی": "✉", "جدید": "✨", "خبر": "📰" };
+const CAT_EMOJI = { "دوره": "🎓", "رویداد": "🗓", "فراخوان": "📣", "اطلاع‌رسانی": "✉", "جدید": "✨", "خبر": "📰", "تخفیف": "🎟" };
 const newsSlide = (n) => {
   const img = pickImage(n);
   const emoji = CAT_EMOJI[n.category] || "📰";

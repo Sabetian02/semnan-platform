@@ -168,6 +168,53 @@
   initOrgProfile();
 
   /* ============================================================
+     آرشیو اطلاعیه‌های پروفایل — صفحه‌بندی داخلِ همان کادر
+     (بدون صفحهٔ جدید؛ هر صفحه ۱۵ مورد)
+     ============================================================ */
+  function initOrgPager() {
+    document.querySelectorAll("[data-pgr]").forEach(function (wrap) {
+      var nav = wrap.parentNode.querySelector("[data-pgr-nav]");
+      if (!nav) return;
+      var items = Array.prototype.slice.call(wrap.children);
+      var size = parseInt(wrap.getAttribute("data-pgr-size") || "15", 10) || 15;
+      var pages = Math.max(1, Math.ceil(items.length / size));
+      if (pages <= 1) return;
+      var pageBtns = [];
+      function show(p) {
+        items.forEach(function (li, i) { li.hidden = Math.floor(i / size) !== p; });
+        pageBtns.forEach(function (b, i) {
+          b.classList.toggle("is-active", i === p);
+          if (i === p) b.setAttribute("aria-current", "page");
+          else b.removeAttribute("aria-current");
+        });
+        var prev = nav.querySelector("[data-pg-prev]");
+        var next = nav.querySelector("[data-pg-next]");
+        if (prev) prev.disabled = p === 0;
+        if (next) next.disabled = p === pages - 1;
+      }
+      for (var p = 0; p < pages; p++) {
+        (function (pi) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = faDigits("" + (pi + 1));
+          b.addEventListener("click", function () { show(pi); });
+          pageBtns.push(b);
+        })(p);
+      }
+      var prev = document.createElement("button");
+      prev.type = "button"; prev.dataset.pgPrev = ""; prev.textContent = "قبلی";
+      var next = document.createElement("button");
+      next.type = "button"; next.dataset.pgNext = ""; next.textContent = "بعدی";
+      nav.appendChild(prev);
+      pageBtns.forEach(function (b) { nav.appendChild(b); });
+      nav.appendChild(next);
+      nav.hidden = false;
+      show(0);
+    });
+  }
+  initOrgPager();
+
+  /* ============================================================
      بخش تخفیف‌ها — تاریخ شمسی، شمارش معکوس، کپی کد
      ============================================================ */
 
