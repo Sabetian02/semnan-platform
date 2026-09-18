@@ -1872,15 +1872,6 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .kn-logo-img {
   filter: brightness(0) saturate(100%) invert(11%) sepia(75%) saturate(1743%) hue-rotate(211deg) brightness(124%) contrast(106%);
 }
-.kn-cat {
-  font-size: .74rem; font-weight: 700;
-  color: var(--navy);
-  background: rgba(245, 196, 0, .18);
-  border: 1px solid rgba(245, 196, 0, .5);
-  border-radius: 999px;
-  padding: 3px 12px;
-  margin-bottom: 10px;
-}
 .kn-name { font-size: 1.06rem; font-weight: 800; color: var(--navy-dark); line-height: 1.75; margin-bottom: 8px; }
 .kn-desc {
   color: var(--muted); font-size: .86rem; line-height: 1.9;

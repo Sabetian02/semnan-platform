@@ -411,11 +411,10 @@ function renderLpSidebar(o) {
 const { orgLogo, newsOrg } = require("./org");
 
 function entityCard(it, base) {
-  const search = [it.name, it.short, it.cat, it.desc, (it.members || []).map((m) => `${m && m.name ? m.name : ""} ${m && m.major ? m.major : ""}`).join(" ")].join(" ");
+  const search = [it.name, it.short, it.desc, (it.members || []).map((m) => `${m && m.name ? m.name : ""} ${m && m.major ? m.major : ""}`).join(" ")].join(" ");
   const tele = it.telegram && ABS_URI.test(it.telegram) ? it.telegram : "";
   return `<a class="kn-card reveal" href="${base}/${escA(it.slug)}.html" data-search="${escA(search)}"${tele ? ` data-telegram="${escA(tele)}"` : ""}>
         <span class="kn-logo">${orgLogo(it, "", "kn-logo-img", "kn-mono")}</span>
-        <span class="kn-cat">${esc(it.cat)}</span>
         <h3 class="kn-name">${esc(it.name)}</h3>
         <p class="kn-desc">${esc(it.desc)}</p>
         <span class="kn-foot"><span>مشاهده پروفایل</span>${LP_ICON.arrow}</span>

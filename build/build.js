@@ -270,12 +270,10 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const recentNews = myNews.filter(isRecent);
   const courseNews = myNews.filter((n) => String(n.category || "").trim() === "دوره");
 
-  const team = (Array.isArray(item.team) ? item.team : []).filter((m) => m && (m.name || m.role));
-  const members = (Array.isArray(item.members) ? item.members : []).filter((m) => m && String(m.name || m.major || "").trim());
-  const awards = (Array.isArray(item.achievements) ? item.achievements : []).filter(Boolean);
+  const members = (Array.isArray(item.members) ? item.members : [])
+    .filter((m) => m && String(m.name || m.major || "").trim())
+    .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "fa"));
   const gallery = (Array.isArray(item.gallery) ? item.gallery : []).filter(Boolean);
-  const email = String(item.email || "").trim();
-  const location = String(item.location || "").trim();
   const aboutLong = String(item.desc || "").length > 420;
 
   const secHead = (ico, id, title, extra) =>
@@ -334,8 +332,6 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     myNews.length ? ["#news", "اطلاعیه‌ها"] : null,
     courseNews.length ? ["#classes", "دوره‌ها و کارگاه‌ها"] : null,
     members.length ? ["#members", "فهرست اعضا"] : null,
-    awards.length ? ["#achievements", "افتخارات و دستاوردها"] : null,
-    team.length ? ["#team", "اعضای مجموعه"] : null,
     galleryImgs.length ? ["#gallery", "گالری تصاویر"] : null
   ].filter(Boolean);
 
@@ -359,16 +355,12 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
         </section>`);
 
   /* اطلاعات ارتباط و عضویت — زیرِ «درباره»، بدون دکمهٔ بازگشت به فهرست */
-  const contactList = [];
-  if (email) contactList.push(`<li>${opIco("mail")}<a href="mailto:${escA(email)}">${esc(email)}</a></li>`);
-  if (location) contactList.push(`<li>${opIco("pin")}<span>${esc(location)}</span></li>`);
   sections.push(`<section class="op-sec op-contact" id="contact" aria-labelledby="op-contact-h">
           <div class="op-contact-inner">
             <div class="op-contact-txt">
               <span class="op-type">ارتباط و عضویت</span>
               <h2 id="op-contact-h">${tele ? `به ${esc(item.short)} بپیوند` : `اخبار ${esc(item.short)}`}</h2>
               <p>${tele ? `برای عضویت، اطلاع از فراخوان‌ها و همراهی با برنامه‌های ${esc(item.short)}، کانال تلگرام مجموعه را دنبال کن.` : `کانال اختصاصی ${esc(item.short)} در دسترس نیست؛ برای پیگیری اخبار از کانال پلتفرم استفاده کن.`}</p>
-              ${contactList.length ? `<ul class="op-contact-list">${contactList.join("")}</ul>` : ""}
             </div>
             <div class="op-contact-cta">
               <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${teleSvg} ${esc(tele ? "عضویت در کانال تلگرام" : "پیگیری از کانال پلتفرم")}</a>
@@ -448,29 +440,6 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
               </div>
             </div>
           </details>
-        </section>`);
-  }
-
-  if (awards.length) {
-    sections.push(`<section class="op-sec" id="achievements" aria-labelledby="op-aw-h">
-          ${secHead("award", "op-aw-h", "افتخارات و دستاوردها", count(awards.length, "مورد"))}
-          <div class="op-sec-body"><ul class="op-awards">
-            ${awards.map((a) => `<li>${opIco("award")}<span>${esc(a)}</span></li>`).join("\n            ")}
-          </ul></div>
-        </section>`);
-  }
-
-  if (team.length) {
-    sections.push(`<section class="op-sec" id="team" aria-labelledby="op-team-h">
-          ${secHead("users", "op-team-h", `اعضای ${item.short}`, count(team.length, "نفر"))}
-          <div class="op-sec-body"><div class="op-team">
-            ${team
-              .map((m) => {
-                const photo = m.photo ? orgImage(m.photo, prefix, m.name || "") : "";
-                return `<article class="op-person"><span class="op-person-av">${photo || opIco("users", "op-person-ico")}</span><h3>${esc(m.name || "")}</h3><span>${esc(m.role || "")}</span></article>`;
-              })
-              .join("\n            ")}
-          </div></div>
         </section>`);
   }
 
