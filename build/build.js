@@ -325,10 +325,8 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
             </ul>
           </div>`;
 
+  /* فهرست محتوا — فقط بخش‌هایی که واقعاً در صفحه وجود دارند */
   const tocHrefs = [
-    ["#about", `درباره ${item.short}`],
-    ["#contact", "ارتباط و عضویت"],
-    recentNews.length ? ["#flash", "فعالیت‌های ماه اخیر"] : null,
     myNews.length ? ["#news", "اطلاعیه‌ها"] : null,
     courseNews.length ? ["#classes", "دوره‌ها و کارگاه‌ها"] : null,
     members.length ? ["#members", "فهرست اعضا"] : null,
@@ -386,8 +384,8 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     sections.push(`<section class="op-sec op-archive" id="news" aria-labelledby="op-news-h">
           ${secHead("doc", "op-news-h", `اطلاعیه‌های ${item.short}`, count(myNews.length, "اطلاعیه"))}
           <div class="op-sec-body">
-            <p class="op-arch-note">آرشیو اطلاعیه‌های ${esc(item.short)} — هر صفحه ۱۵ مورد؛ برای دیدن بقیه از شماره‌صفحه‌های زیر استفاده کنید.</p>
-            <ul class="op-news" data-pgr data-pgr-size="15">
+            <p class="op-arch-note">آرشیو اطلاعیه‌های ${esc(item.short)} — هر صفحه ۷ مورد؛ برای دیدن بقیه از شماره‌صفحه‌های زیر استفاده کنید.</p>
+            <ul class="op-news" data-pgr data-pgr-size="7">
               ${myNews.map(archiveItem).join("\n              ")}
             </ul>
             <nav class="op-pager" data-pgr-nav hidden aria-label="صفحه‌بندی اطلاعیه‌ها"></nav>
@@ -401,9 +399,10 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           ${secHead("book", "op-cls-h", "دوره‌ها و کارگاه‌ها", count(courseNews.length, "دوره"))}
           <div class="op-sec-body">
             <p class="op-cls-hint">دوره‌ها و کارگاه‌های ${esc(item.short)} مستقیماً از اطلاعیه‌های دستهٔ «دوره» همین مجموعه ساخته می‌شود؛ روی هر مورد برای جزئیات بزنید.</p>
-            <ul class="op-news">
+            <ul class="op-news" data-pgr data-pgr-size="3">
               ${courseNews.map(archiveItem).join("\n              ")}
             </ul>
+            <nav class="op-pager" data-pgr-nav hidden aria-label="صفحه‌بندی دوره‌ها و کارگاه‌ها"></nav>
           </div>
         </section>`);
   }

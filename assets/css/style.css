@@ -2291,7 +2291,12 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-hero-row { flex-direction: column; align-items: flex-start; gap: 18px; }
   .op-hero-logo { width: 88px; height: 88px; }
   .op-sec { padding: 22px 18px 24px; }
-  .op-flash-grid { grid-template-columns: 1fr; }
+  .op-flash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .op-flash-ico { font-size: 1.7rem; }
+  .op-flash-chip { top: 7px; inset-inline-start: 7px; padding: 2px 8px; font-size: .62rem; }
+  .op-flash-txt { padding: 8px 10px 10px; }
+  .op-flash-txt b { font-size: .8rem; margin-bottom: 4px; }
+  .op-flash-txt .op-news-date { font-size: .66rem; }
   .op-hero-actions { width: 100%; }
 }
 @media (max-width: 400px) {
