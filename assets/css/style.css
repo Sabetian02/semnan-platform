@@ -2159,48 +2159,58 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .op-person h3 { font-size: .95rem; font-weight: 800; color: var(--ink); }
 .op-person span { font-size: .8rem; color: var(--muted); }
 
-/* فهرست اعضا — جدول کشویی پایینِ «دوره‌ها و کارگاه‌ها» */
-.op-members { border: 0; }
-.op-members-sum {
-  list-style: none;
-  display: flex; align-items: center; gap: 12px;
-  cursor: pointer;
-  padding: 0;
+/* فهرست اعضا — دو دکمهٔ بازشونده «اعضا» و «مسئولین» + جدول‌ها */
+.op-mem-tabs {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-bottom: 16px;
 }
-.op-members-sum::-webkit-details-marker { display: none; }
-.op-mem-title { font-size: 1.15rem; font-weight: 800; color: var(--navy-dark); line-height: 1.6; }
-.op-mem-count {
-  flex: none;
-  padding: 4px 12px;
+.op-mem-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  border: 1.5px solid var(--line);
   border-radius: 999px;
-  background: rgba(16, 42, 113, .06);
-  color: var(--muted);
-  font-size: .76rem; font-weight: 700;
+  background: #fff;
+  color: var(--navy-dark);
+  font-family: inherit; font-size: .9rem; font-weight: 800;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
 }
-.op-mem-chev {
-  margin-inline-start: auto;
-  flex: none;
-  display: grid; place-items: center;
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  background: rgba(16, 42, 113, .06);
-  color: var(--navy);
-  transition: transform .2s;
+.op-mem-tab-ico { width: 18px; height: 18px; color: var(--navy); }
+.op-mem-tab:hover:not(:disabled):not(.is-open) { border-color: var(--navy); box-shadow: var(--shadow-sm); }
+.op-mem-tab.is-open {
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  border-color: var(--navy-dark);
+  color: #fff;
 }
-.op-members[open] .op-mem-chev { transform: rotate(180deg); }
-.op-mem-chev-ico { width: 16px; height: 16px; }
-.op-members-body { margin-top: 18px; }
+.op-mem-tab.is-open .op-mem-tab-ico { color: var(--gold); }
+.op-mem-tab-gold.is-open {
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  border-color: var(--gold);
+  color: var(--navy-dark);
+}
+.op-mem-tab-gold.is-open .op-mem-tab-ico { color: var(--navy-dark); }
+.op-mem-tab:disabled { opacity: .5; cursor: not-allowed; }
+.op-mem-badge {
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .24);
+  font-size: .72rem; font-weight: 800;
+}
+.op-mem-tab:not(.is-open) .op-mem-badge { background: rgba(16, 42, 113, .09); color: var(--muted); }
+.op-mem-panel { animation: opMemIn .25s ease; }
+@keyframes opMemIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .op-members-scroll {
-  max-height: 380px;
+  max-height: 420px;
   overflow: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
 .op-members-tbl { width: 100%; border-collapse: collapse; background: var(--cream); font-size: .88rem; }
 .op-members-tbl th {
-  position: sticky; top: 0;
-  padding: 10px 14px;
-  background: var(--navy);
+  position: sticky; top: 0; z-index: 1;
+  padding: 11px 14px;
+  background: linear-gradient(180deg, var(--navy), var(--navy-dark));
   color: #fff;
   text-align: start;
   font-size: .8rem; font-weight: 800;
@@ -2211,8 +2221,24 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   color: var(--ink);
 }
 .op-members-tbl tbody tr:nth-child(even) { background: rgba(16, 42, 113, .035); }
-.op-members-tbl tbody tr:hover { background: rgba(245, 196, 0, .12); }
+.op-members-tbl tbody tr:hover { background: rgba(245, 196, 0, .14); }
 .op-mem-row { color: var(--muted); width: 46px; }
+.op-officials-tbl th { background: linear-gradient(180deg, var(--gold), var(--gold-soft)); color: var(--navy-dark); }
+.op-officials-tbl tbody tr:nth-child(even) { background: rgba(245, 196, 0, .08); }
+.op-officials-tbl tbody tr:hover { background: rgba(16, 42, 113, .07); }
+.op-post {
+  display: inline-block;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: rgba(16, 42, 113, .07);
+  color: var(--navy);
+  font-size: .78rem; font-weight: 800;
+  white-space: nowrap;
+}
+.op-officials-tbl tbody tr:first-child .op-post {
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  color: var(--navy-dark);
+}
 
 /* گالری */
 .op-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
@@ -2312,5 +2338,6 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-flash, .op-flash:hover { transform: none; transition: none; }
   .op-flash-img img, .op-flash:hover .op-flash-img img { transform: none; transition: none; }
   .op-more-ico { transition: none; }
-  .op-mem-chev { transition: none; }
+  .op-mem-tab { transition: none; }
+  .op-mem-panel { animation: none; }
 }

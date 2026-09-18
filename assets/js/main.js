@@ -215,6 +215,35 @@
   initOrgPager();
 
   /* ============================================================
+     فهرست اعضا — دو دکمهٔ بازشونده «اعضا» و «مسئولین»
+     ============================================================ */
+  function initMemberTabs() {
+    var btns = Array.prototype.slice.call(document.querySelectorAll("[data-mem-toggle]"));
+    if (!btns.length) return;
+    btns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var key = btn.getAttribute("data-mem-toggle");
+        var panel = document.querySelector('[data-mem-panel="' + key + '"]');
+        if (!panel) return;
+        var wasOpen = !panel.hidden;
+        btns.forEach(function (b) {
+          b.classList.remove("is-open");
+          b.setAttribute("aria-expanded", "false");
+          b.setAttribute("aria-selected", "false");
+        });
+        document.querySelectorAll("[data-mem-panel]").forEach(function (p) { p.hidden = true; });
+        if (!wasOpen) {
+          panel.hidden = false;
+          btn.classList.add("is-open");
+          btn.setAttribute("aria-expanded", "true");
+          btn.setAttribute("aria-selected", "true");
+        }
+      });
+    });
+  }
+  initMemberTabs();
+
+  /* ============================================================
      بخش تخفیف‌ها — تاریخ شمسی، شمارش معکوس، کپی کد
      ============================================================ */
 

@@ -273,6 +273,14 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const members = (Array.isArray(item.members) ? item.members : [])
     .filter((m) => m && String(m.name || m.major || "").trim())
     .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "fa"));
+  /* مسئولین — همان اعضایی که «مقام» دارند؛ نفر اول همیشه «دبیر» است */
+  const officials = members
+    .filter((m) => String(m.post || "").trim())
+    .sort((a, b) => {
+      const da = String(a.post || "").trim() === "دبیر" ? 0 : 1;
+      const db = String(b.post || "").trim() === "دبیر" ? 0 : 1;
+      return da - db || String(a.name || "").localeCompare(String(b.name || ""), "fa");
+    });
   const gallery = (Array.isArray(item.gallery) ? item.gallery : []).filter(Boolean);
   const aboutLong = String(item.desc || "").length > 420;
 
@@ -384,7 +392,6 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     sections.push(`<section class="op-sec op-archive" id="news" aria-labelledby="op-news-h">
           ${secHead("doc", "op-news-h", `اطلاعیه‌های ${item.short}`, count(myNews.length, "اطلاعیه"))}
           <div class="op-sec-body">
-            <p class="op-arch-note">آرشیو اطلاعیه‌های ${esc(item.short)} — هر صفحه ۷ مورد؛ برای دیدن بقیه از شماره‌صفحه‌های زیر استفاده کنید.</p>
             <ul class="op-news" data-pgr data-pgr-size="7">
               ${myNews.map(archiveItem).join("\n              ")}
             </ul>
@@ -407,18 +414,29 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
         </section>`);
   }
 
-  /* فهرست اعضا — جدول کشویی پایینِ «دوره‌ها و کارگاه‌ها» (ردیف خودکار، نام، رشته تحصیلی) */
+  /* فهرست اعضا — دو دکمهٔ بازشونده: «اعضا» و «مسئولین» */
   if (members.length) {
+    const memberRows = members.map((m, i) => `<tr>
+                      <td class="op-mem-row">${faNum(i + 1)}</td>
+                      <td>${esc(m.name)}</td>
+                      <td>${esc(m.major)}</td>
+                    </tr>`).join("");
+    const officialRows = officials.map((m) => `<tr>
+                      <td>${esc(m.name)}</td>
+                      <td><span class="op-post">${esc(m.post)}</span></td>
+                    </tr>`).join("");
     sections.push(`<section class="op-sec" id="members" aria-labelledby="op-mem-h">
-          <details class="op-members">
-            <summary class="op-members-sum">
-              <span class="op-sec-ico">${opIco("users")}</span>
-              <h2 id="op-mem-h" class="op-mem-title">فهرست اعضا</h2>
-              <span class="op-mem-count">${faNum(members.length)} نفر</span>
-              <span class="op-mem-chev" aria-hidden="true">${opIco("chev", "op-mem-chev-ico")}</span>
-            </summary>
-            <div class="op-sec-body op-members-body">
-              <p class="op-cls-hint">اعضای ${esc(item.short)} — برای مشاهدهٔ فهرست کامل، این بخش را باز کنید.</p>
+          ${secHead("users", "op-mem-h", "فهرست اعضا", count(members.length, "نفر"))}
+          <div class="op-sec-body">
+            <div class="op-mem-tabs" role="tablist" aria-label="اعضا و مسئولین ${esc(item.short)}">
+              <button type="button" class="op-mem-tab is-open" role="tab" aria-selected="true" aria-expanded="true" data-mem-toggle="members">
+                ${opIco("users", "op-mem-tab-ico")} اعضا <span class="op-mem-badge">${faNum(members.length)}</span>
+              </button>
+              <button type="button" class="op-mem-tab op-mem-tab-gold" role="tab" aria-selected="false" aria-expanded="false" data-mem-toggle="officials"${officials.length ? "" : " disabled"}>
+                ${opIco("award", "op-mem-tab-ico")} مسئولین${officials.length ? ` <span class="op-mem-badge">${faNum(officials.length)}</span>` : ""}
+              </button>
+            </div>
+            <div class="op-mem-panel" data-mem-panel="members" role="tabpanel">
               <div class="op-members-scroll">
                 <table class="op-members-tbl">
                   <thead>
@@ -429,16 +447,27 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
                     </tr>
                   </thead>
                   <tbody>
-                    ${members.map((m, i) => `<tr>
-                      <td class="op-mem-row">${faNum(i + 1)}</td>
-                      <td>${esc(m.name)}</td>
-                      <td>${esc(m.major)}</td>
-                    </tr>`).join("")}
+                    ${memberRows}
                   </tbody>
                 </table>
               </div>
             </div>
-          </details>
+            ${officials.length ? `<div class="op-mem-panel" data-mem-panel="officials" role="tabpanel" hidden>
+              <div class="op-members-scroll">
+                <table class="op-members-tbl op-officials-tbl">
+                  <thead>
+                    <tr>
+                      <th scope="col">نام و نام خانوادگی</th>
+                      <th scope="col">مقام</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${officialRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>` : ""}
+          </div>
         </section>`);
   }
 

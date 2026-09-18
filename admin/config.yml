@@ -272,7 +272,7 @@ collections:
         widget: list
         required: false
         summary: "{{fields.name}} — {{fields.major}}"
-        hint: "ردیف جدول خودکار است و اعضا در سایت به ترتیب حروف الفبا مرتب می‌شوند."
+        hint: "ردیف جدول خودکار است و اعضا در سایت به ترتیب حروف الفبا مرتب می‌شوند. اگر برای فردی «مقام» بنویسی، در جدول مسئولین هم نمایش داده می‌شود."
         fields:
           - label: نام و نام خانوادگی
             name: name
@@ -282,6 +282,11 @@ collections:
             name: major
             widget: string
             required: true
+          - label: مقام / مسئولیت (اختیاری)
+            name: post
+            widget: string
+            required: false
+            hint: "خالی بگذار تا فقط عضو عادی باشد. برای مسئولین پُر کن (مثلاً دبیر، مسئول روابط عمومی)."
       - label: گالری تصاویر (اختیاری)
         name: gallery
         widget: list
@@ -328,7 +333,7 @@ collections:
         widget: list
         required: false
         summary: "{{fields.name}} — {{fields.major}}"
-        hint: "ردیف جدول خودکار است و اعضا در سایت به ترتیب حروف الفبا مرتب می‌شوند."
+        hint: "ردیف جدول خودکار است و اعضا در سایت به ترتیب حروف الفبا مرتب می‌شوند. اگر برای فردی «مقام» بنویسی، در جدول مسئولین هم نمایش داده می‌شود."
         fields:
           - label: نام و نام خانوادگی
             name: name
@@ -338,6 +343,11 @@ collections:
             name: major
             widget: string
             required: true
+          - label: مقام / مسئولیت (اختیاری)
+            name: post
+            widget: string
+            required: false
+            hint: "خالی بگذار تا فقط عضو عادی باشد. برای مسئولین پُر کن (مثلاً دبیر، مسئول روابط عمومی)."
       - label: گالری تصاویر (اختیاری)
         name: gallery
         widget: list
