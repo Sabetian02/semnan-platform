@@ -244,6 +244,143 @@
   initMemberTabs();
 
   /* ============================================================
+     تب بار موبایل — فقط زیر ۹۹۲px؛ سکشن‌های همان تب را نشان می‌دهد
+     (روی دسکتاپ همهٔ سکشن‌ها مثل قبل نمایش داده می‌شوند)
+     ============================================================ */
+  function initProfileTabs() {
+    var bar = document.querySelector("[data-op-tabbar]");
+    if (!bar) return;
+    var btns = Array.prototype.slice.call(bar.querySelectorAll("[data-op-tab-btn]"));
+    if (!btns.length) return;
+    var glide = bar.querySelector("[data-op-tabglide]");
+    var scroll = bar.querySelector(".op-tabbar-scroll");
+    var sections = Array.prototype.slice.call(document.querySelectorAll(".op-main [data-op-tab]"));
+    var mq = window.matchMedia("(max-width: 991px)");
+    var active = btns[0].getAttribute("data-op-tab-btn");
+
+    function positionGlide(animate) {
+      var btn = btns.filter(function (b) { return b.getAttribute("data-op-tab-btn") === active; })[0];
+      if (!glide || !btn) return;
+      if (!animate) glide.style.transition = "none";
+      glide.style.width = btn.offsetWidth + "px";
+      glide.style.transform = "translateX(" + btn.offsetLeft + "px)";
+      if (!animate) { void glide.offsetWidth; glide.style.transition = ""; }
+      if (scroll && mq.matches && scroll.scrollTo) {
+        var left = btn.offsetLeft;
+        var right = left + btn.offsetWidth;
+        if (left < scroll.scrollLeft) scroll.scrollTo({ left: Math.max(0, left - 12), behavior: "smooth" });
+        else if (right > scroll.scrollLeft + scroll.clientWidth) scroll.scrollTo({ left: right - scroll.clientWidth + 12, behavior: "smooth" });
+      }
+    }
+
+    function apply() {
+      var mobile = mq.matches;
+      sections.forEach(function (sec) {
+        sec.hidden = mobile ? sec.getAttribute("data-op-tab") !== active : false;
+      });
+      btns.forEach(function (b) {
+        var on = b.getAttribute("data-op-tab-btn") === active;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      bar.classList.toggle("is-ready", mobile);
+      if (mobile) requestAnimationFrame(function () { positionGlide(false); });
+    }
+
+    function activate(key, doScroll) {
+      active = key;
+      apply();
+      if (doScroll) {
+        var y = bar.getBoundingClientRect().top + window.pageYOffset - 71;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () { activate(b.getAttribute("data-op-tab-btn"), true); });
+    });
+
+    document.addEventListener("click", function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+      if (!a) return;
+      var id = (a.getAttribute("href") || "").slice(1);
+      if (!id) return;
+      var target = document.getElementById(id);
+      var key = target ? target.getAttribute("data-op-tab") : null;
+      if (!mq.matches || !key) return;
+      e.preventDefault();
+      activate(key, true);
+    });
+
+    if (mq.addEventListener) mq.addEventListener("change", apply);
+    else if (mq.addListener) mq.addListener(apply);
+    window.addEventListener("resize", function () { positionGlide(false); });
+    window.addEventListener("load", function () { positionGlide(false); });
+    apply();
+  }
+  initProfileTabs();
+
+  /* ============================================================
+     گالری — بزرگ‌نمایی هر تصویر با کپشن (لایت‌باکس + پیمایش)
+     ============================================================ */
+  function initGalleryLightbox() {
+    var lb = document.querySelector("[data-op-lightbox]");
+    if (!lb) return;
+    var items = Array.prototype.slice.call(document.querySelectorAll("[data-op-gal]"));
+    if (!items.length) return;
+    var img = lb.querySelector("[data-op-lb-img]");
+    var cap = lb.querySelector("[data-op-lb-cap]");
+    var prev = lb.querySelector("[data-op-lb-prev]");
+    var next = lb.querySelector("[data-op-lb-next]");
+    var closeBtn = lb.querySelector("[data-op-lb-close]");
+    var idx = 0;
+
+    function render() {
+      var real = items[idx].querySelector("img");
+      if (!real || !img) return;
+      img.src = real.currentSrc || real.src;
+      img.alt = real.alt || "";
+      var c = items[idx].getAttribute("data-cap") || "";
+      if (cap) { cap.textContent = c; cap.hidden = !c; }
+      if (prev) prev.disabled = idx === 0;
+      if (next) next.disabled = idx === items.length - 1;
+    }
+    function open(i) {
+      idx = i;
+      render();
+      lb.hidden = false;
+      document.body.style.overflow = "hidden";
+      if (closeBtn) closeBtn.focus();
+    }
+    function hideLb() {
+      lb.hidden = true;
+      document.body.style.overflow = "";
+      if (items[idx]) items[idx].focus();
+    }
+    function step(d) {
+      var n = idx + d;
+      if (n < 0 || n >= items.length) return;
+      idx = n;
+      render();
+    }
+
+    items.forEach(function (item, i) {
+      item.addEventListener("click", function () { open(i); });
+    });
+    if (closeBtn) closeBtn.addEventListener("click", hideLb);
+    if (prev) prev.addEventListener("click", function () { step(-1); });
+    if (next) next.addEventListener("click", function () { step(1); });
+    lb.addEventListener("click", function (e) { if (e.target === lb) hideLb(); });
+    document.addEventListener("keydown", function (e) {
+      if (lb.hidden) return;
+      if (e.key === "Escape") hideLb();
+      else if (e.key === "ArrowLeft") step(1);
+      else if (e.key === "ArrowRight") step(-1);
+    });
+  }
+  initGalleryLightbox();
+
+  /* ============================================================
      بخش تخفیف‌ها — تاریخ شمسی، شمارش معکوس، کپی کد
      ============================================================ */
 

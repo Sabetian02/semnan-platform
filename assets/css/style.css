@@ -1981,6 +1981,70 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-side-inline { display: none; }
 }
 
+/* --- تب بار موبایل (فقط زیر ۹۹۲px؛ جایگزین فهرست محتوا) --- */
+.op-tabbar { display: none; }
+.op-main [data-op-tab][hidden] { display: none !important; }
+@media (max-width: 991px) {
+  .op-tabbar {
+    display: block;
+    position: sticky;
+    top: 71px;
+    z-index: 900;
+    margin: 0 -2px 18px;
+    padding: 6px;
+    background: rgba(255, 255, 255, .86);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+  }
+  .op-tabbar-scroll { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .op-tabbar-scroll::-webkit-scrollbar { display: none; }
+  .op-tabbar-inner { position: relative; display: inline-flex; align-items: stretch; gap: 2px; min-width: 100%; }
+  .op-tabglide {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    border-radius: 999px;
+    background: linear-gradient(150deg, var(--navy), var(--navy-dark));
+    box-shadow: 0 6px 16px rgba(16, 42, 113, .28);
+    transition: transform .32s cubic-bezier(.4, 0, .2, 1), width .32s cubic-bezier(.4, 0, .2, 1);
+    will-change: transform, width;
+    z-index: 0;
+  }
+  .op-tabbar:not(.is-ready) .op-tabglide { opacity: 0; }
+  .op-tabbtn {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    flex: 1 0 auto;
+    padding: 10px 14px;
+    border: 0; background: transparent;
+    color: var(--muted);
+    font: inherit; font-size: .82rem; font-weight: 700; line-height: 1;
+    white-space: nowrap;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color .25s ease;
+  }
+  .op-tab-ico { width: 16px; height: 16px; }
+  .op-tab-n {
+    display: inline-grid; place-items: center;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 999px;
+    background: rgba(16, 42, 113, .08);
+    color: var(--muted);
+    font-size: .64rem; font-weight: 800;
+    transition: background .25s ease, color .25s ease;
+  }
+  .op-tabbtn.is-active { color: #fff; }
+  .op-tabbtn.is-active .op-tab-n { background: rgba(255, 255, 255, .22); color: #fff; }
+  .op-side-inline { margin-bottom: 0; }
+  .op-main > .op-sec[data-op-tab]:not([hidden]) { animation: opTabIn .3s ease both; }
+}
+@keyframes opTabIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
 /* --- بخش‌های محتوا --- */
 .op-sec {
   margin-bottom: 22px;
@@ -2257,10 +2321,82 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 
 /* گالری */
 .op-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-.op-gallery img {
+.op-gal-item {
+  position: relative; display: block; padding: 0;
+  border: 0; background: none; border-radius: var(--radius-sm);
+  overflow: hidden; cursor: zoom-in; line-height: 0;
+}
+.op-gal-item img {
   width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
   border-radius: var(--radius-sm);
   border: 1px solid var(--line);
+  transition: transform .35s ease;
+}
+.op-gal-item:hover img { transform: scale(1.05); }
+.op-gal-item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.op-gal-cap {
+  position: absolute; inset-inline: 0; bottom: 0;
+  padding: 22px 10px 8px;
+  background: linear-gradient(to top, rgba(6, 14, 36, .86), rgba(6, 14, 36, 0));
+  color: #fff; font-size: .74rem; font-weight: 600; line-height: 1.7;
+  text-align: start; pointer-events: none;
+}
+.op-gal-zoom {
+  position: absolute; top: 8px; inset-inline-end: 8px;
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(6, 14, 36, .55); color: #fff;
+  opacity: 0; transform: scale(.85);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.op-gal-zoom-ico { width: 16px; height: 16px; }
+.op-gal-item:hover .op-gal-zoom,
+.op-gal-item:focus-visible .op-gal-zoom { opacity: 1; transform: none; }
+
+/* لایت‌باکس گالری */
+.op-lightbox {
+  position: fixed; inset: 0; z-index: 1200;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 22px 14px;
+  background: rgba(4, 10, 26, .94);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: opLbIn .25s ease both;
+}
+.op-lightbox[hidden] { display: none !important; }
+.op-lb-stage {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  max-width: min(1100px, 100%); max-height: 100%; margin: 0;
+}
+.op-lb-img {
+  max-width: 100%; max-height: calc(100vh - 150px); width: auto;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+  background: #0b1220;
+}
+.op-lb-cap { max-width: 760px; color: rgba(255, 255, 255, .92); font-size: .9rem; line-height: 1.9; text-align: center; }
+.op-lb-cap[hidden] { display: none; }
+.op-lb-close, .op-lb-nav {
+  position: absolute; display: grid; place-items: center;
+  width: 44px; height: 44px;
+  border: 1px solid rgba(255, 255, 255, .22); border-radius: 50%;
+  background: rgba(255, 255, 255, .08); color: #fff; font-size: 1.1rem;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.op-lb-close:hover, .op-lb-nav:hover { background: rgba(255, 255, 255, .2); }
+.op-lb-close { top: 16px; inset-inline-end: 16px; }
+.op-lb-nav { top: 50%; transform: translateY(-50%); }
+.op-lb-prev { inset-inline-start: 14px; }
+.op-lb-next { inset-inline-end: 14px; }
+.op-lb-ico { width: 22px; height: 22px; }
+.op-lb-prev .op-lb-ico { transform: rotate(90deg); }
+.op-lb-next .op-lb-ico { transform: rotate(-90deg); }
+.op-lb-nav[disabled] { opacity: .3; cursor: default; }
+@keyframes opLbIn { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 600px) {
+  .op-lb-close, .op-lb-nav { width: 38px; height: 38px; }
+  .op-lb-img { max-height: calc(100vh - 180px); }
 }
 
 /* --- ارتباط و عضویت --- */
@@ -2355,4 +2491,9 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-more-ico { transition: none; }
   .op-mem-tab { transition: none; }
   .op-mem-panel { animation: none; }
+  .op-tabglide { transition: none; }
+  .op-tabbar.is-ready .op-tabglide { transition: none; }
+  .op-main > .op-sec[data-op-tab] { animation: none; }
+  .op-lightbox { animation: none; }
+  .op-gal-item img, .op-gal-zoom { transition: none; }
 }

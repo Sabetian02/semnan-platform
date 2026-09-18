@@ -296,10 +296,15 @@ collections:
         name: gallery
         widget: list
         required: false
-        field:
-          label: تصویر
-          name: image
-          widget: image
+        fields:
+          - label: تصویر
+            name: image
+            widget: image
+          - label: کپشن تصویر
+            name: caption
+            widget: string
+            required: false
+            hint: "توضیح کوتاه تصویر؛ در گالری زیر عکس و هنگام بزرگ‌نمایی نمایش داده می‌شود."
 
   # ================= انجمن‌های علمی =================
   - name: anjomanha
@@ -362,10 +367,15 @@ collections:
         name: gallery
         widget: list
         required: false
-        field:
-          label: تصویر
-          name: image
-          widget: image
+        fields:
+          - label: تصویر
+            name: image
+            widget: image
+          - label: کپشن تصویر
+            name: caption
+            widget: string
+            required: false
+            hint: "توضیح کوتاه تصویر؛ در گالری زیر عکس و هنگام بزرگ‌نمایی نمایش داده می‌شود."
 
   # ================= صفحه اصلی =================
   - name: home

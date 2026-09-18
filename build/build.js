@@ -224,7 +224,8 @@ const OP_ICONS = {
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.6"/><path d="M21 16l-5-5-9 9"/>',
   arrow: '<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',
-  chev: '<path d="M6 9l6 6 6-6"/>'
+  chev: '<path d="M6 9l6 6 6-6"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M11 8v6M8 11h6"/>'
 };
 const opIco = (name, cls) =>
   `<svg class="${cls || "op-ico"}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${OP_ICONS[name] || OP_ICONS.spark}</svg>`;
@@ -281,7 +282,9 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
       const db = String(b.post || "").trim() === "دبیر" ? 0 : 1;
       return da - db || String(a.name || "").localeCompare(String(b.name || ""), "fa");
     });
-  const gallery = (Array.isArray(item.gallery) ? item.gallery : []).filter(Boolean);
+  const gallery = (Array.isArray(item.gallery) ? item.gallery : [])
+    .map((g) => (g && typeof g === "object" ? g : { image: g }))
+    .filter((g) => g && String(g.image || "").trim());
   const aboutLong = String(item.desc || "").length > 420;
 
   const secHead = (ico, id, title, extra) =>
@@ -312,7 +315,12 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
               </a>`;
   };
 
-  const galleryImgs = gallery.map((g) => orgImage(g, prefix, `تصویر از ${item.short}`)).filter(Boolean);
+  const galleryImgs = gallery
+    .map((g, i) => {
+      const src = orgImage(g.image, prefix, `تصویر ${faNum(i + 1)} از ${item.short}`);
+      return src ? { src, caption: String(g.caption || "").trim() } : null;
+    })
+    .filter(Boolean);
 
   /* آمار — «رویداد/دوره/تخفیف» از اطلاعیه‌های مجموعه و «تعداد اعضا» از جدول اعضا */
   const STAT_CATEGORIES = ["رویداد", "دوره", "تخفیف"];
@@ -326,11 +334,12 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     ...STAT_CATEGORIES.map((c) => ({ n: catCounts[c], l: c })),
     { n: members.length, l: "تعداد اعضا" }
   ];
+  const statsChipsHtml = `<ul class="op-cat-chips">
+              ${statChips.map((s) => `<li class="${s.n ? "" : "is-zero"}"><b>${faNum(s.n)}</b><span>${esc(s.l)}</span></li>`).join("")}
+            </ul>`;
   const tocStats = `<div class="op-toc-stats">
             <h4>آمار</h4>
-            <ul class="op-cat-chips">
-              ${statChips.map((s) => `<li class="${s.n ? "" : "is-zero"}"><b>${faNum(s.n)}</b><span>${esc(s.l)}</span></li>`).join("")}
-            </ul>
+            ${statsChipsHtml}
           </div>`;
 
   /* فهرست محتوا — فقط بخش‌هایی که واقعاً در صفحه وجود دارند */
@@ -341,7 +350,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     galleryImgs.length ? ["#gallery", "گالری تصاویر"] : null
   ].filter(Boolean);
 
-  /* کارت فهرست محتوا + آمار — یک بار ساخته و در موبایل زیرِ «ارتباط و عضویت» و در دسکتاپ در نوار کنار استفاده می‌شود */
+  /* کارت فهرست محتوا + آمار (نوار کنار دسکتاپ) */
   const tocCard = `<div class="op-side-card">
             <h3>فهرست محتوا</h3>
             <ul class="op-toc">
@@ -350,9 +359,46 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
             ${tocStats}
           </div>`;
 
+  /* کارت آمار نسخهٔ موبایل — تب بار جایگزین فهرست محتوا شده است */
+  const statsCard = `<div class="op-side-card op-stats-card">
+            <h3>آمار</h3>
+            ${statsChipsHtml}
+          </div>`;
+
+  /* تب بار موبایل — هر تب فقط وقتی محتوای مربوطه وجود داشته باشد ساخته می‌شود */
+  const hasActivity = recentNews.length || myNews.length || courseNews.length;
+  const tabs = [
+    { key: "about", label: "درباره", icon: "info", n: 0 },
+    hasActivity ? { key: "activity", label: "اطلاعیه‌ها و فعالیت‌ها", icon: "spark", n: myNews.length } : null,
+    members.length ? { key: "members", label: "اعضا", icon: "users", n: members.length } : null,
+    galleryImgs.length ? { key: "gallery", label: "گالری تصاویر", icon: "image", n: galleryImgs.length } : null
+  ].filter(Boolean);
+
+  const tabbar = `<nav class="op-tabbar" data-op-tabbar aria-label="بخش‌های ${esc(item.short)}">
+          <div class="op-tabbar-scroll">
+            <div class="op-tabbar-inner" role="tablist" data-op-tabbar-inner>
+              <span class="op-tabglide" data-op-tabglide aria-hidden="true"></span>
+              ${tabs.map((t, i) => `<button type="button" role="tab" class="op-tabbtn${i === 0 ? " is-active" : ""}" data-op-tab-btn="${t.key}" aria-selected="${i === 0 ? "true" : "false"}">
+                ${opIco(t.icon, "op-tab-ico")}<span class="op-tab-lbl">${esc(t.label)}</span>${t.n ? `<span class="op-tab-n">${faNum(t.n)}</span>` : ""}
+              </button>`).join("")}
+            </div>
+          </div>
+        </nav>`;
+
+  /* لایت‌باکس گالری — بزرگ‌نمایی عکس به‌همراه کپشن */
+  const lightbox = `<div class="op-lightbox" data-op-lightbox hidden>
+          <button type="button" class="op-lb-close" data-op-lb-close aria-label="بستن گالری">✕</button>
+          <button type="button" class="op-lb-nav op-lb-prev" data-op-lb-prev aria-label="تصویر قبلی">${opIco("chev", "op-lb-ico")}</button>
+          <figure class="op-lb-stage">
+            <img class="op-lb-img" data-op-lb-img alt="" loading="lazy" decoding="async">
+            <figcaption class="op-lb-cap" data-op-lb-cap hidden></figcaption>
+          </figure>
+          <button type="button" class="op-lb-nav op-lb-next" data-op-lb-next aria-label="تصویر بعدی">${opIco("chev", "op-lb-ico")}</button>
+        </div>`;
+
   const sections = [];
 
-  sections.push(`<section class="op-sec" id="about" aria-labelledby="op-about-h">
+  sections.push(`<section class="op-sec" id="about" data-op-tab="about" aria-labelledby="op-about-h">
           ${secHead("info", "op-about-h", `درباره ${item.short}`)}
           <div class="op-sec-body">
             <p class="op-about-text${aboutLong ? " is-clamped" : ""}" id="op-about" data-op-about>${esc(item.desc)}</p>
@@ -361,7 +407,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
         </section>`);
 
   /* اطلاعات ارتباط و عضویت — زیرِ «درباره»، بدون دکمهٔ بازگشت به فهرست */
-  sections.push(`<section class="op-sec op-contact" id="contact" aria-labelledby="op-contact-h">
+  sections.push(`<section class="op-sec op-contact" id="contact" data-op-tab="about" aria-labelledby="op-contact-h">
           <div class="op-contact-inner">
             <div class="op-contact-txt">
               <span class="op-type">ارتباط و عضویت</span>
@@ -374,12 +420,12 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           </div>
         </section>`);
 
-  /* فهرست محتوا و آمار — در نمایش موبایل دقیقاً زیرِ «ارتباط و عضویت» */
-  sections.push(`<aside class="op-side op-side-inline" aria-label="فهرست محتوا و آمار">${tocCard}</aside>`);
+  /* آمار — در نمایش موبایل داخل تب «درباره» (تب بار جایگزین فهرست محتوا شده است) */
+  sections.push(`<aside class="op-side op-side-inline" data-op-tab="about" aria-label="آمار ${esc(item.short)}">${statsCard}</aside>`);
 
   /* فعالیت‌های ماه اخیر — فلش کارت از اطلاعیه‌های همین تشکل در بازهٔ ۳۰ روز */
   if (recentNews.length) {
-    sections.push(`<section class="op-sec" id="flash" aria-labelledby="op-flash-h">
+    sections.push(`<section class="op-sec" id="flash" data-op-tab="activity" aria-labelledby="op-flash-h">
           ${secHead("spark", "op-flash-h", `فعالیت‌های ${item.short} در ماه اخیر`, count(recentNews.length, "فعالیت"))}
           <div class="op-sec-body"><div class="op-flash-grid">
             ${recentNews.map(flashCard).join("\n            ")}
@@ -389,7 +435,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
 
   /* اطلاعیه‌های همین تشکل — آرشیوِ صفحه‌بندی‌شده (۱۵ مورد در هر صفحه؛ به‌صورت همان کادر) */
   if (myNews.length) {
-    sections.push(`<section class="op-sec op-archive" id="news" aria-labelledby="op-news-h">
+    sections.push(`<section class="op-sec op-archive" id="news" data-op-tab="activity" aria-labelledby="op-news-h">
           ${secHead("doc", "op-news-h", `اطلاعیه‌های ${item.short}`, count(myNews.length, "اطلاعیه"))}
           <div class="op-sec-body">
             <ul class="op-news" data-pgr data-pgr-size="7">
@@ -402,7 +448,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
 
   /* دوره‌ها و کارگاه‌ها — مستقیماً به اطلاعیه‌های دستهٔ «دوره» وصل است */
   if (courseNews.length) {
-    sections.push(`<section class="op-sec" id="classes" aria-labelledby="op-cls-h">
+    sections.push(`<section class="op-sec" id="classes" data-op-tab="activity" aria-labelledby="op-cls-h">
           ${secHead("book", "op-cls-h", "دوره‌ها و کارگاه‌ها", count(courseNews.length, "دوره"))}
           <div class="op-sec-body">
             <ul class="op-news" data-pgr data-pgr-size="3">
@@ -428,7 +474,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
                       <td>${esc(m.name)}</td>
                       <td><span class="op-post">${esc(m.post)}</span></td>
                     </tr>`).join("");
-    sections.push(`<section class="op-sec" id="members" aria-labelledby="op-mem-h">
+    sections.push(`<section class="op-sec" id="members" data-op-tab="members" aria-labelledby="op-mem-h">
           ${secHead("users", "op-mem-h", "فهرست اعضا", count(members.length, "نفر"))}
           <div class="op-sec-body">
             <div class="op-mem-tabs" role="tablist" aria-label="اعضا و مسئولین ${esc(item.short)}">
@@ -476,10 +522,19 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   }
 
   if (galleryImgs.length) {
-    sections.push(`<section class="op-sec" id="gallery" aria-labelledby="op-gal-h">
+    sections.push(`<section class="op-sec" id="gallery" data-op-tab="gallery" aria-labelledby="op-gal-h">
           ${secHead("image", "op-gal-h", "گالری تصاویر", count(galleryImgs.length, "تصویر"))}
-          <div class="op-sec-body"><div class="op-gallery">${galleryImgs.join("\n            ")}</div></div>
+          <div class="op-sec-body">
+            <div class="op-gallery">
+              ${galleryImgs.map((g, i) => `<button type="button" class="op-gal-item" data-op-gal aria-label="بزرگ‌نمایی تصویر ${faNum(i + 1)}"${g.caption ? ` data-cap="${escA(g.caption)}"` : ""}>
+                ${g.src}
+                ${g.caption ? `<span class="op-gal-cap">${esc(g.caption)}</span>` : ""}
+                <span class="op-gal-zoom" aria-hidden="true">${opIco("search", "op-gal-zoom-ico")}</span>
+              </button>`).join("\n              ")}
+            </div>
+          </div>
         </section>`);
+    sections.push(lightbox);
   }
 
   const body = `
@@ -511,6 +566,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     <section class="op-body">
       <div class="container op-grid">
         <div class="op-main">
+          ${tabs.length > 1 ? tabbar : ""}
           ${sections.join("\n          ")}
           <a class="back-link" href="${backHref}">${opIco("arrow", "op-back-ico")} بازگشت به فهرست ${esc(kindTitle)}</a>
         </div>
