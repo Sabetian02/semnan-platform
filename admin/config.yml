@@ -59,6 +59,30 @@ collections:
         widget: select
         options: [ "جدید", "رویداد", "فراخوان", "اطلاع‌رسانی", "دوره", "خبر" ]
         default: "خبر"
+      - label: کانون مرجع (اختیاری)
+        name: kanon
+        widget: relation
+        collection: kanonha
+        search_fields: [ "name", "short" ]
+        value_field: slug
+        display_fields: [ "name" ]
+        required: false
+        hint: >
+          اگر این اطلاعیه متعلق به یک کانون است، همان کانون را انتخاب کن.
+          به‌صورت خودکار در صفحهٔ پروفایل آن کانون و صفحهٔ اصلی سایت نمایش داده می‌شود
+          و اعلان هم می‌گیرد.
+      - label: انجمن مرجع (اختیاری)
+        name: anjoman
+        widget: relation
+        collection: anjomanha
+        search_fields: [ "name", "short" ]
+        value_field: slug
+        display_fields: [ "name" ]
+        required: false
+        hint: >
+          اگر این اطلاعیه متعلق به یک انجمن علمی است، همان انجمن را انتخاب کن.
+          به‌صورت خودکار در صفحهٔ پروفایل آن انجمن و صفحهٔ اصلی سایت نمایش داده می‌شود
+          و اعلان هم می‌گیرد.
       - label: لینک «اطلاعات بیشتر»
         name: link
         widget: string

@@ -408,7 +408,7 @@ function renderLpSidebar(o) {
 
 /* ---------- فهرست کانون‌ها و انجمن‌ها (بدون فیلتر، فقط جستجو + کارت لوگومحور) ---------- */
 /* لوگو/نشان جایگزین از build/org.js می‌آید (مشترک با صفحهٔ پروفایل) */
-const { orgLogo } = require("./org");
+const { orgLogo, newsOrg } = require("./org");
 
 function entityCard(it, base) {
   const search = [it.name, it.short, it.cat, it.desc, (it.activities || []).join(" "), (it.events || []).join(" "), (it.classes || []).join(" ")].join(" ");
@@ -514,10 +514,18 @@ const newsListCard = (n) => {
         </div>
         <h3 class="lp-title"><a href="${depth}">${esc(n.title)}</a></h3>
         <p class="lp-sum">${esc(n.summary || "")}</p>
+        <div class="lp-news-org">${newsOrgLabel(n)}</div>
         <div class="lp-foot">
           <a class="lp-link" href="${depth}">مشاهدهٔ اطلاعیه ${LP_ICON.arrow}</a>
         </div>
       </article>`;
+};
+
+/* نشان ‌تشکل مرجعِ اطلاعیه (کانون/انجمن) — لینک به پروفایل همان تشکل */
+const newsOrgLabel = (n, prefix) => {
+  const org = newsOrg(n, kanonhaList, anjomanhaList);
+  if (!org) return "";
+  return `<a class="lp-org-chip" href="${prefix || ""}${org.base}/${escA(org.slug)}.html">${esc(org.name)}</a>`;
 };
 
 /* مقدمهٔ صفحهٔ فهرست: crumbs + تیتر + توضیح + شمارنده */
@@ -900,6 +908,7 @@ function renderAnnPage(n) {
               <span class="n-chip">${esc(n.category || "خبر")}</span>
               <span class="ann-date" data-date="${esc(n.date || "")}"></span>
             </div>
+            <div class="ann-org">${newsOrgLabel(n, "../")}</div>
             <h1 class="ann-title">${esc(n.title)}</h1>
             ${bannerImg}
             <div class="ann-body">${content}</div>

@@ -1719,6 +1719,21 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   padding: 3px 12px;
   margin-bottom: 10px;
 }
+/* نشان تشکل مرجع اطلاعیه — لینک به پروفایل کانون/انجمن */
+.lp-org-chip {
+  display: inline-flex; align-items: center;
+  margin-bottom: 10px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: .73rem; font-weight: 700;
+  color: #fff;
+  background: var(--navy);
+  border: 1px solid rgba(245, 196, 0, .5);
+  transition: background .2s, transform .2s;
+}
+.lp-org-chip:hover { background: var(--navy-dark); transform: translateY(-1px); }
+.lp-news-org { margin-top: -2px; }
+.ann-org { margin-bottom: 14px; }
 .lp-title { font-size: 1.08rem; font-weight: 800; color: var(--navy-dark); line-height: 1.65; margin-bottom: 8px; }
 .lp-title a { transition: color .2s; }
 .lp-title a:hover { color: var(--navy); }
@@ -1921,9 +1936,9 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   width: 112px; height: 112px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 220, 95, .28), transparent 62%),
-    rgba(255, 255, 255, .07);
-  border: 2px solid rgba(245, 196, 0, .55);
+    radial-gradient(circle at 50% 0%, rgba(255, 220, 95, .35), transparent 64%),
+    linear-gradient(150deg, #fff, var(--cream));
+  border: 2px solid rgba(245, 196, 0, .6);
   box-shadow: 0 20px 42px -26px rgba(0, 0, 0, .65);
 }
 .op-logo-img, .op-mono { width: 62%; height: 62%; object-fit: contain; display: block; }
@@ -2007,6 +2022,30 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 }
 .op-more-ico { width: 15px; height: 15px; transition: transform .2s; }
 .op-more[aria-expanded="true"] .op-more-ico { transform: rotate(90deg); }
+
+/* اطلاعیه‌های تشکل — از بخش اطلاعیهٔ اصلی؛ دسته‌بندی همیشه هماهنگ با تنظیمات اصلی */
+.op-news { display: grid; gap: 10px; }
+.op-news-item { margin: 0; }
+.op-news-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.op-news-link:hover { transform: translateY(-2px); border-color: rgba(245, 196, 0, .7); box-shadow: var(--shadow-sm); }
+.op-news-chip {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(245, 196, 0, .2);
+  border: 1px solid rgba(245, 196, 0, .55);
+  color: var(--navy);
+  font-size: .72rem; font-weight: 800;
+}
+.op-news-txt { min-width: 0; flex: 1; color: var(--ink); font-size: .92rem; font-weight: 700; line-height: 1.8; }
+.op-news-date { flex: none; color: var(--muted); font-size: .74rem; white-space: nowrap; }
 
 /* فعالیت‌ها */
 .op-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }

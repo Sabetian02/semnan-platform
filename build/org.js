@@ -58,4 +58,22 @@ function orgImage(src, prefix, alt) {
   return `<img src="${encodeURI(prefix + rel)}" alt="${escA(alt)}" loading="lazy" decoding="async">`;
 }
 
-module.exports = { ROOT, esc, escA, LOGO_MAP, orgLogo, orgPlaceholder, orgImage };
+/* تشکل مرجعِ یک اطلاعیه (کانون/انجمن).
+   اطلاعیه‌ها از «بخش اطلاعیهٔ اصلی» می‌آیند و فیلد kanon/anjoman آن‌ها را به
+   پروفایل تشکل‌ها وصل می‌کند؛ در نتیجه دسته‌بندی‌ها همیشه همان دسته‌بندی منطبق
+   بر تنظیمات اصلی است و نیازی به کپی نیست. */
+function newsOrg(n, kanonha, anjomanha) {
+  const k = n && n.kanon;
+  if (k && Array.isArray(kanonha)) {
+    const m = kanonha.find((x) => x && x.slug === k);
+    if (m) return { slug: m.slug, name: m.name, kind: "کانون", base: "kanonha" };
+  }
+  const a = n && n.anjoman;
+  if (a && Array.isArray(anjomanha)) {
+    const m = anjomanha.find((x) => x && x.slug === a);
+    if (m) return { slug: m.slug, name: m.name, kind: "انجمن", base: "anjomanha" };
+  }
+  return null;
+}
+
+module.exports = { ROOT, esc, escA, LOGO_MAP, orgLogo, orgPlaceholder, orgImage, newsOrg };

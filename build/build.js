@@ -40,6 +40,24 @@ function loadFolder(folder) {
 const kanonha = loadFolder("kanonha");
 const anjomanha = loadFolder("anjomanha");
 
+/* اطلاعیه‌ها از «بخش اطلاعیهٔ اصلی» (content/news) — هر پروفایل خبرهای خودش را
+   از همین منبع می‌گیرد تا دسته‌بندی و محتوا همیشه زیر نظر تنظیمات اصلی بماند. */
+const allNews = fs
+  .readdirSync(path.join(CONTENT, "news"))
+  .filter((f) => f.endsWith(".json"))
+  .map((f) => {
+    const it = readJson(path.join(CONTENT, "news", f));
+    it._slug = it.slug || path.basename(f, ".json");
+    return it;
+  })
+  .filter((it) => it.active !== false)
+  .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+const newsForOrg = (slug, orgKind) =>
+  allNews.filter((n) => {
+    const key = orgKind === "anjoman" ? n.anjoman : n.kanon;
+    return key && key === slug;
+  });
+
 const esc = (s) =>
   String(s)
     .replace(/&/g, "&amp;")
@@ -52,7 +70,7 @@ const teleSafe = (t) => (t && ABS_URI.test(t) ? t : "");
 const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L6.74 13.3 2.64 12c-.88-.25-.89-.86.2-1.3L20.03 4.7c.73-.33 1.43.18 1.15 1.3l-3.7 17.42c-.25 1.16-.95 1.44-1.92.9l-5.29-3.9-2.55 2.2c-.29.28-.53.46-1.1.46l.32-4.9z"/></svg>`;
 
 /* لوگو/نشان جایگزین مشترک با صفحات فهرست */
-const { escA, orgLogo, orgImage } = require("./org");
+const { escA, orgLogo, orgImage, newsOrg } = require("./org");
 
 const navLinks = (prefix) =>
   site.nav
@@ -235,10 +253,11 @@ const faNum = (n) => String(n).replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+
 /* ---------- Profile page ----------
    قالب واحد پروفایل کانون/انجمن: هویت، معرفی، درباره، فعالیت‌ها، رویدادها،
    دوره‌ها و بخش‌های اختیاری (افتخارات/تیم/گالری) فقط وقتی داده وجود دارد. */
-function renderProfile(prefix, item, kindTitle, backHref, kindShort) {
+function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const tele = teleSafe(item.telegram);
   const joinHref = tele || TELE_URL;
   const joinLabel = tele ? "عضویت در مجموعه" : "پیگیری از کانال پلتفرم";
+  const myNews = newsForOrg(item.slug, orgKind);
 
   const acts = (item.activities || []).filter(Boolean);
   const evs = (item.events || []).filter(Boolean);
@@ -264,6 +283,27 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort) {
             ${aboutLong ? `<button class="op-more" type="button" data-op-more aria-expanded="false" aria-controls="op-about"><span data-op-more-label>ادامه مطلب</span>${opIco("arrow", "op-more-ico")}</button>` : ""}
           </div>
         </section>`);
+
+  /* اطلاعیه‌های همین تشکل — از بخش اطلاعیهٔ اصلی؛ همین‌ها در صفحهٔ اصلی سایت هم
+     نمایش داده می‌شوند و اعلان پس‌زمینه هم می‌گیرند. */
+  if (myNews.length) {
+    sections.push(`<section class="op-sec" id="news" aria-labelledby="op-news-h">
+          ${secHead("doc", "op-news-h", `اطلاعیه‌های ${item.short}`, count(myNews.length, "اطلاعیه"))}
+          <div class="op-sec-body"><ul class="op-news">
+            ${myNews
+              .map(
+                (n) => `<li class="op-news-item">
+                <a class="op-news-link" href="${prefix}ettelaieh/${escA(n._slug || "")}.html" data-search="${escA([n.title, n.summary, n.category].filter(Boolean).join(" "))}">
+                  <span class="op-news-chip">${esc(n.category || "خبر")}</span>
+                  <span class="op-news-txt">${esc(n.title)}</span>
+                  <time class="op-news-date" data-date="${escA(n.date || "")}"></time>
+                </a>
+              </li>`
+              )
+              .join("\n            ")}
+          </ul></div>
+        </section>`);
+  }
 
   if (acts.length) {
     sections.push(`<section class="op-sec" id="activities" aria-labelledby="op-act-h">
@@ -326,6 +366,26 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort) {
   const contactList = [];
   if (email) contactList.push(`<li>${opIco("mail")}<a href="mailto:${escA(email)}">${esc(email)}</a></li>`);
   if (location) contactList.push(`<li>${opIco("pin")}<span>${esc(location)}</span></li>`);
+
+  /* آمار از دسته‌بندی اطلاعیه‌های همین تشکل (دسته‌ها همان دسته‌های تنظیمات اصلی است) */
+  const catCounts = {};
+  myNews.forEach((n) => {
+    const c = String(n.category || "خبر").trim() || "خبر";
+    catCounts[c] = (catCounts[c] || 0) + 1;
+  });
+  const categoryStats =
+    Object.keys(catCounts).length > 0
+      ? `<div class="op-side-card">
+            <h3>آمار از اطلاعیه‌ها</h3>
+            <ul class="op-stats">
+              ${Object.entries(catCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8)
+                .map(([c, cnt]) => `<li><b>${faNum(cnt)}</b><span>${esc(c)}</span></li>`)
+                .join("")}
+            </ul>
+          </div>`
+      : "";
 
   sections.push(`<section class="op-sec op-contact" id="contact" aria-labelledby="op-contact-h">
           <div class="op-contact-inner">
@@ -392,6 +452,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort) {
               <li><b>${faNum(cls.length)}</b><span>دوره</span></li>
             </ul>
           </div>
+          ${categoryStats}
           <div class="op-side-card">
             <h3>مسیرهای سریع</h3>
             <ul class="op-links">
@@ -412,15 +473,15 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort) {
 /* ---------- List pages (kanonha / anjomanha) are rendered by index-build.js ---------- */
 
 /* ---------- Write all ---------- */
-function writeProfile(folder, it, kindTitle, backHref, kindShort) {
+function writeProfile(folder, it, kindTitle, backHref, kindShort, orgKind) {
   const prefix = "../";
   const file = path.join(folder, it.slug + ".html");
-  fs.writeFileSync(file, renderProfile(prefix, it, kindTitle, backHref, kindShort), "utf8");
+  fs.writeFileSync(file, renderProfile(prefix, it, kindTitle, backHref, kindShort, orgKind), "utf8");
   console.log("✔", path.relative(ROOT, file));
 }
 
-kanonha.forEach((k) => writeProfile(KANON_DIR, k, "کانون‌های فرهنگی", "../kanonha.html", "کانون فرهنگی"));
-anjomanha.forEach((a) => writeProfile(ANJOMAN_DIR, a, "انجمن‌های علمی", "../anjomanha.html", "انجمن علمی"));
+kanonha.forEach((k) => writeProfile(KANON_DIR, k, "کانون‌های فرهنگی", "../kanonha.html", "کانون فرهنگی", "kanon"));
+anjomanha.forEach((a) => writeProfile(ANJOMAN_DIR, a, "انجمن‌های علمی", "../anjomanha.html", "انجمن علمی", "anjoman"));
 
 console.log("\nتولید شد:", kanonha.length + anjomanha.length, "پروفایل");
 
