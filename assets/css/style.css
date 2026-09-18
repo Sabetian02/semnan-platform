@@ -2168,6 +2168,61 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .op-person h3 { font-size: .95rem; font-weight: 800; color: var(--ink); }
 .op-person span { font-size: .8rem; color: var(--muted); }
 
+/* فهرست اعضا — جدول کشویی پایینِ «دوره‌ها و کارگاه‌ها» */
+.op-members { border: 0; }
+.op-members-sum {
+  list-style: none;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+.op-members-sum::-webkit-details-marker { display: none; }
+.op-mem-title { font-size: 1.15rem; font-weight: 800; color: var(--navy-dark); line-height: 1.6; }
+.op-mem-count {
+  flex: none;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(16, 42, 113, .06);
+  color: var(--muted);
+  font-size: .76rem; font-weight: 700;
+}
+.op-mem-chev {
+  margin-inline-start: auto;
+  flex: none;
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(16, 42, 113, .06);
+  color: var(--navy);
+  transition: transform .2s;
+}
+.op-members[open] .op-mem-chev { transform: rotate(180deg); }
+.op-mem-chev-ico { width: 16px; height: 16px; }
+.op-members-body { margin-top: 18px; }
+.op-members-scroll {
+  max-height: 380px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.op-members-tbl { width: 100%; border-collapse: collapse; background: var(--cream); font-size: .88rem; }
+.op-members-tbl th {
+  position: sticky; top: 0;
+  padding: 10px 14px;
+  background: var(--navy);
+  color: #fff;
+  text-align: start;
+  font-size: .8rem; font-weight: 800;
+}
+.op-members-tbl td {
+  padding: 9px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+}
+.op-members-tbl tbody tr:nth-child(even) { background: rgba(16, 42, 113, .035); }
+.op-members-tbl tbody tr:hover { background: rgba(245, 196, 0, .12); }
+.op-mem-row { color: var(--muted); width: 46px; }
+
 /* گالری */
 .op-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 .op-gallery img {
@@ -2261,4 +2316,5 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-flash, .op-flash:hover { transform: none; transition: none; }
   .op-flash-img img, .op-flash:hover .op-flash-img img { transform: none; transition: none; }
   .op-more-ico { transition: none; }
+  .op-mem-chev { transition: none; }
 }

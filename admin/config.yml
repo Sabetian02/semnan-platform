@@ -263,10 +263,6 @@ collections:
         name: cat
         widget: string
         required: true
-      - label: ایموجی نماد
-        name: icon
-        widget: string
-        required: true
       - label: لوگو (اختیاری)
         name: logo
         widget: string
@@ -280,34 +276,21 @@ collections:
         name: desc
         widget: text
         required: true
-      - label: فعالیت‌ها
-        name: activities
+      - label: فهرست اعضا (جدول کشویی پایین بخش «دوره‌ها و کارگاه‌ها»)
+        name: members
         widget: list
         required: false
-        field:
-          label: مورد
-          name: item
-          widget: string
-      - label: رویدادها
-        name: events
-        widget: list
-        required: false
-        field:
-          label: مورد
-          name: item
-          widget: string
-      - label: دوره‌ها و کلاس‌ها
-        name: classes
-        widget: list
-        required: false
-        field:
-          label: مورد
-          name: item
-          widget: string
-      - label: سال تأسیس (اختیاری)
-        name: founded
-        widget: string
-        required: false
+        summary: "{{fields.name}} — {{fields.major}}"
+        hint: "ردیف جدول خودکار است؛ فقط نام و رشتهٔ تحصیلی هر عضو را وارد کن."
+        fields:
+          - label: نام و نام خانوادگی
+            name: name
+            widget: string
+            required: true
+          - label: رشته تحصیلی
+            name: major
+            widget: string
+            required: true
       - label: ایمیل رسمی (اختیاری)
         name: email
         widget: string
@@ -316,7 +299,7 @@ collections:
         name: location
         widget: string
         required: false
-      - label: اعضای تیم (اختیاری)
+      - label: اعضای تیم (کارت‌های معرفی — اختیاری)
         name: team
         widget: list
         required: false
@@ -377,10 +360,6 @@ collections:
         name: cat
         widget: string
         required: true
-      - label: ایموجی نماد
-        name: icon
-        widget: string
-        required: true
       - label: لوگو (اختیاری)
         name: logo
         widget: string
@@ -394,34 +373,21 @@ collections:
         name: desc
         widget: text
         required: true
-      - label: فعالیت‌ها
-        name: activities
+      - label: فهرست اعضا (جدول کشویی پایین بخش «دوره‌ها و کارگاه‌ها»)
+        name: members
         widget: list
         required: false
-        field:
-          label: مورد
-          name: item
-          widget: string
-      - label: رویدادها
-        name: events
-        widget: list
-        required: false
-        field:
-          label: مورد
-          name: item
-          widget: string
-      - label: دوره‌ها و کلاس‌ها
-        name: classes
-        widget: list
-        required: false
-        field:
-          label: مورد
-          name: item
-          widget: string
-      - label: سال تأسیس (اختیاری)
-        name: founded
-        widget: string
-        required: false
+        summary: "{{fields.name}} — {{fields.major}}"
+        hint: "ردیف جدول خودکار است؛ فقط نام و رشتهٔ تحصیلی هر عضو را وارد کن."
+        fields:
+          - label: نام و نام خانوادگی
+            name: name
+            widget: string
+            required: true
+          - label: رشته تحصیلی
+            name: major
+            widget: string
+            required: true
       - label: ایمیل رسمی (اختیاری)
         name: email
         widget: string
@@ -430,7 +396,7 @@ collections:
         name: location
         widget: string
         required: false
-      - label: اعضای تیم (اختیاری)
+      - label: اعضای تیم (کارت‌های معرفی — اختیاری)
         name: team
         widget: list
         required: false

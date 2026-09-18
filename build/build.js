@@ -223,7 +223,8 @@ const OP_ICONS = {
   spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.6"/><path d="M21 16l-5-5-9 9"/>',
-  arrow: '<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>'
+  arrow: '<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',
+  chev: '<path d="M6 9l6 6 6-6"/>'
 };
 const opIco = (name, cls) =>
   `<svg class="${cls || "op-ico"}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${OP_ICONS[name] || OP_ICONS.spark}</svg>`;
@@ -270,6 +271,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const courseNews = myNews.filter((n) => String(n.category || "").trim() === "دوره");
 
   const team = (Array.isArray(item.team) ? item.team : []).filter((m) => m && (m.name || m.role));
+  const members = (Array.isArray(item.members) ? item.members : []).filter((m) => m && String(m.name || m.major || "").trim());
   const awards = (Array.isArray(item.achievements) ? item.achievements : []).filter(Boolean);
   const gallery = (Array.isArray(item.gallery) ? item.gallery : []).filter(Boolean);
   const email = String(item.email || "").trim();
@@ -327,6 +329,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     recentNews.length ? ["#flash", "فعالیت‌های ماه اخیر"] : null,
     myNews.length ? ["#news", "اطلاعیه‌ها"] : null,
     courseNews.length ? ["#classes", "دوره‌ها و کارگاه‌ها"] : null,
+    members.length ? ["#members", "فهرست اعضا"] : null,
     awards.length ? ["#achievements", "افتخارات و دستاوردها"] : null,
     team.length ? ["#team", "اعضای مجموعه"] : null,
     galleryImgs.length ? ["#gallery", "گالری تصاویر"] : null
@@ -406,6 +409,41 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
               ${courseNews.map(archiveItem).join("\n              ")}
             </ul>
           </div>
+        </section>`);
+  }
+
+  /* فهرست اعضا — جدول کشویی پایینِ «دوره‌ها و کارگاه‌ها» (ردیف خودکار، نام، رشته تحصیلی) */
+  if (members.length) {
+    sections.push(`<section class="op-sec" id="members" aria-labelledby="op-mem-h">
+          <details class="op-members">
+            <summary class="op-members-sum">
+              <span class="op-sec-ico">${opIco("users")}</span>
+              <h2 id="op-mem-h" class="op-mem-title">فهرست اعضا</h2>
+              <span class="op-mem-count">${faNum(members.length)} نفر</span>
+              <span class="op-mem-chev" aria-hidden="true">${opIco("chev", "op-mem-chev-ico")}</span>
+            </summary>
+            <div class="op-sec-body op-members-body">
+              <p class="op-cls-hint">اعضای ${esc(item.short)} — برای مشاهدهٔ فهرست کامل، این بخش را باز کنید.</p>
+              <div class="op-members-scroll">
+                <table class="op-members-tbl">
+                  <thead>
+                    <tr>
+                      <th scope="col">ردیف</th>
+                      <th scope="col">نام و نام خانوادگی</th>
+                      <th scope="col">رشته تحصیلی</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${members.map((m, i) => `<tr>
+                      <td class="op-mem-row">${faNum(i + 1)}</td>
+                      <td>${esc(m.name)}</td>
+                      <td>${esc(m.major)}</td>
+                    </tr>`).join("")}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </details>
         </section>`);
   }
 
