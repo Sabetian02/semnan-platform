@@ -552,7 +552,6 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           <div class="op-hero-txt">
             <span class="op-type">${esc(kindShort)} · دانشگاه سمنان</span>
             <h1>${esc(item.name)}</h1>
-            <p class="op-tagline">${esc(item.desc)}</p>
             <div class="op-hero-actions">
               <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${teleSvg} ${esc(joinLabel)}</a>
               ${recentNews.length ? `<a class="btn btn-outline-light" href="#flash">${opIco("arrow", "op-btn-ico")} فعالیت‌های ماه اخیر</a>` : myNews.length ? `<a class="btn btn-outline-light" href="#news">${opIco("arrow", "op-btn-ico")} اطلاعیه‌ها</a>` : ""}

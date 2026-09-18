@@ -1953,13 +1953,6 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   font-size: clamp(1.5rem, 3.4vw, 2.2rem);
   font-weight: 800; line-height: 1.5; color: #fff;
 }
-.op-tagline {
-  max-width: 760px;
-  margin-bottom: 18px;
-  color: rgba(255, 255, 255, .78);
-  font-size: .95rem; line-height: 2;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
 .op-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .op-hero-actions .btn { padding: 10px 22px; font-size: .9rem; }
 .op-btn-ico { width: 16px; height: 16px; }
@@ -2473,10 +2466,19 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-flash-txt { padding: 8px 10px 10px; }
   .op-flash-txt b { font-size: .8rem; margin-bottom: 4px; }
   .op-flash-txt .op-news-date { font-size: .66rem; }
-  .op-hero-actions { width: 100%; }
+  .op-hero-actions { width: 100%; flex-wrap: nowrap; gap: 8px; }
+  .op-hero-actions .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: .8rem;
+    line-height: 1.5;
+    text-align: center;
+    white-space: normal;
+  }
 }
 @media (max-width: 400px) {
-  .op-hero-actions .btn,
   .op-contact-cta .btn { width: 100%; white-space: normal; }
   .op-sec-head { flex-wrap: wrap; }
   .op-sec-count { margin-inline-start: 0; }
