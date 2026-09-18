@@ -1,10 +1,11 @@
 {
-  "title": "کارگاه فن بیان و سخنوری",
-  "summary": "کارگاه عملی فن بیان ویژهٔ اعضای کانون در سه جلسه برگزار می‌شود. ثبت‌نام از طریق کانال.",
   "body": "## کارگاه فن بیان\n\nدر این کارگاه مهارت‌های زیر تمرین می‌شود:\n\n- تنفس صحیح و پرورش صدا\n- مدیریت استرس پیش از اجرا\n- بداهه‌گویی و حضور در برابر دوربین",
-  "category": "دوره",
-  "kanon": "govandegi-va-ecra",
+  "active": true,
+  "summary": "کارگاه عملی فن بیان ویژهٔ اعضای کانون در سه جلسه برگزار می‌شود. ثبت‌نام از طریق کانال.",
+  "image_url": "",
   "date": "2026-09-15T10:00:00.000Z",
-  "image_url": "https://picsum.photos/seed/gov-t-02/960/540",
-  "active": true
+  "kanon": "govandegi-va-ecra",
+  "title": "کارگاه فن بیان و سخنوری",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUUJFvTZsTo4xyfy0B6Zox1XF49JCa71JAm_PETzqmwA&s=10",
+  "category": "دوره"
 }
