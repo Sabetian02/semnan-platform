@@ -405,7 +405,6 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     sections.push(`<section class="op-sec" id="classes" aria-labelledby="op-cls-h">
           ${secHead("book", "op-cls-h", "دوره‌ها و کارگاه‌ها", count(courseNews.length, "دوره"))}
           <div class="op-sec-body">
-            <p class="op-cls-hint">دوره‌ها و کارگاه‌های ${esc(item.short)} مستقیماً از اطلاعیه‌های دستهٔ «دوره» همین مجموعه ساخته می‌شود؛ روی هر مورد برای جزئیات بزنید.</p>
             <ul class="op-news" data-pgr data-pgr-size="3">
               ${courseNews.map(archiveItem).join("\n              ")}
             </ul>
