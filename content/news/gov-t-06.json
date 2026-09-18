@@ -1,10 +1,11 @@
 {
-  "title": "خبر: همکاری تازه کانون با رادیو جوان",
-  "summary": "کانون گویندگی و اجرا با رادیو جوان به همکاری می‌پردازد و اعضا در برنامه‌های زنده شرکت می‌کنند.",
   "body": "## همکاری با رادیو جوان\n\nبر اساس تفاهم‌نامهٔ جدید، اعضای کانون در برنامه‌های زندهٔ رادیویی حضور پیدا می‌کنند.\n\nعلاقه‌مندان برای معرفی به رادیو با کانون در ارتباط باشند.",
-  "category": "خبر",
-  "kanon": "govandegi-va-ecra",
+  "active": true,
+  "summary": "کانون گویندگی و اجرا با رادیو جوان به همکاری می‌پردازد و اعضا در برنامه‌های زنده شرکت می‌کنند.",
+  "image_url": "",
   "date": "2026-08-21T10:00:00.000Z",
-  "image_url": "https://picsum.photos/seed/gov-t-06/960/540",
-  "active": true
+  "kanon": "govandegi-va-ecra",
+  "title": "خبر: همکاری تازه کانون با رادیو جوان",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD-rWv2A3KEeeJvOChYaTf4rxyfYjn8-oC8ImGvN5vAg_wDtv6iNDp3H7o&s=10",
+  "category": "خبر"
 }
