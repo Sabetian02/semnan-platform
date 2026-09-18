@@ -6,6 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 const P = (f) => fs.readFileSync(path.join(__dirname, "parts", f), "utf8");
+/* ROOT پروژه (پوشهٔ site) */
 const ROOT = path.join(__dirname, "..");
 const CONTENT = path.join(ROOT, "content");
 const readJson = (p) => JSON.parse(fs.readFileSync(p, "utf8"));
@@ -147,54 +148,151 @@ function renderFooterN(prefix) {
   </footer>`;
 }
 
-/* ---------- تبدیل Markdown سبک به HTML (برای متن کامل اطلاعیه‌ها) ---------- */
-function mdToHtml(src) {
-  if (!src) return "";
-  const lines = String(src).replace(/\r\n/g, "\n").split("\n");
+/* ---------- تبدیل Markdown به HTML (متن کامل اطلاعیه‌ها و دوره‌ها) ----------
+   پشتیبانی: تیتر با شناسهٔ یکتا (برای فهرست مطالب)، پاراگراف، لیست نشانه‌دار و
+   ترتیبی، نقل‌قول، جداکننده، بلوک کد، تصویر، لینک، پررنگ و ایتالیک. */
+function mdUrl(u, localPrefix) {
+  const s = String(u == null ? "" : u).trim().replace(/^<|>$/g, "");
+  if (!s || /^\s*(javascript|data|vbscript):/i.test(s)) return "";
+  /* لینک داخلی نوشته‌شده از داشبورد نسبت به ریشهٔ سایت است؛ در صفحه‌های داخل
+     پوشه باید با "../" شروع شود تا لینک شکسته نشود. */
+  if (localPrefix && /^[\w.\u0600-\u06FF-]+\.html(?:[?#].*)?$/i.test(s)) {
+    return localPrefix + s.replace(/"/g, "%22").replace(/\s/g, "%20");
+  }
+  return s.replace(/"/g, "%22").replace(/\s/g, "%20");
+}
+/* قالب‌بندی درون‌خطی — لینک/تصویر/کد جدا می‌شوند تا اسکیپ‌شدن به آن‌ها آسیب نزند */
+function inlineMd(raw, localPrefix) {
+  const stash = [];
+  const keep = (html) => {
+    stash.push(html);
+    return "\u0000" + (stash.length - 1) + "\u0000";
+  };
+  const text = (t) =>
+    esc(String(t == null ? "" : t))
+      .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+      .replace(/__([^_]+)__/g, "<b>$1</b>")
+      .replace(/(^|[\s(«])\*([^*\n]+)\*/g, "$1<i>$2</i>");
+  let s = String(raw == null ? "" : raw);
+  s = s.replace(/`([^`]+)`/g, (m, c) => keep("<code>" + esc(c) + "</code>"));
+  s = s.replace(/!\[([^\]]*)\]\(([^()\s]+)\)/g, (m, alt, url) => {
+    const u = mdUrl(url, localPrefix);
+    if (!u) return alt ? esc(alt) : "";
+    return keep(`<img class="ap-inline-img" src="${escA(u)}" alt="${escA(alt || "")}" loading="lazy" decoding="async">`);
+  });
+  s = s.replace(/\[([^\]]+)\]\(([^()\s]+)\)/g, (m, label, url) => {
+    const u = mdUrl(url, localPrefix);
+    if (!u) return text(label);
+    const ext = /^(https?:|mailto:|tel:)/i.test(u);
+    return keep(`<a href="${escA(u)}"${ext ? ' target="_blank" rel="noopener"' : ""}>${text(label)}</a>`);
+  });
+  s = text(s);
+  return s.replace(/\u0000(\d+)\u0000/g, (m, i) => stash[+i]);
+}
+
+function mdParse(src, opts) {
+  const idPrefix = (opts && opts.idPrefix) || "md-";
+  const localPrefix = (opts && opts.localPrefix) || "";
+  const md = (t) => inlineMd(t, localPrefix);
+  const toc = [];
+  if (!src) return { html: "", toc };
+  const lines = String(src).replace(/\r\n?/g, "\n").split("\n");
   let out = "";
   let para = [];
-  let list = [];
-  let inList = false;
+  let list = null;
+  let quote = [];
+  let code = null;
+  let hid = 0;
   const flushPara = () => {
     if (para.length) {
-      const txt = para.join("<br>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
-      out += "<p>" + txt + "</p>";
+      out += "<p>" + para.join("<br>") + "</p>";
       para = [];
     }
   };
   const flushList = () => {
-    if (inList) {
-      out += "<ul>" + list.map((li) => "<li>" + li.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>") + "</li>").join("") + "</ul>";
-      list = [];
-      inList = false;
+    if (list) {
+      out += "<" + list.type + ">" + list.items.map((li) => "<li>" + li + "</li>").join("") + "</" + list.type + ">";
+      list = null;
     }
   };
-  lines.forEach((raw) => {
-    const line = raw.replace(/\r$/, "");
-    const h = line.match(/^(#{1,4})\s+(.*)$/);
-    if (h) {
-      flushList(); flushPara();
-      const lvl = Math.min(h[1].length + 1, 4);
-      out += `<h${lvl}>${esc(h[2])}</h${lvl}>`;
+  const flushQuote = () => {
+    if (quote.length) {
+      out += "<blockquote>" + quote.map((q) => "<p>" + q + "</p>").join("") + "</blockquote>";
+      quote = [];
+    }
+  };
+  const flushAll = () => {
+    flushList();
+    flushQuote();
+    flushPara();
+  };
+  lines.forEach((line) => {
+    if (code !== null) {
+      if (/^\s*```/.test(line)) {
+        out += "<pre><code>" + esc(code.join("\n")) + "</code></pre>";
+        code = null;
+      } else {
+        code.push(line);
+      }
       return;
     }
-    const b = line.match(/^[-*]\s+(.*)$/);
-    if (b) {
+    if (/^\s*```/.test(line)) {
+      flushAll();
+      code = [];
+      return;
+    }
+    const h = line.match(/^(#{1,6})\s+(.*)$/);
+    if (h) {
+      flushAll();
+      const lvl = Math.min(h[1].length + 1, 4);
+      let id = "";
+      if (lvl <= 3) {
+        id = idPrefix + "h" + ++hid;
+        toc.push({ id, text: h[2].replace(/[*_`]/g, "").trim(), level: lvl });
+      }
+      out += `<h${lvl}${id ? ' id="' + id + '"' : ""}>${md(h[2])}</h${lvl}>`;
+      return;
+    }
+    if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(line)) {
+      flushAll();
+      out += '<hr class="ap-hr">';
+      return;
+    }
+    const q = line.match(/^\s*>\s?(.*)$/);
+    if (q) {
+      flushList();
       flushPara();
-      if (!inList) { inList = true; }
-      list.push(esc(b[1]));
+      quote.push(md(q[1]));
+      return;
+    }
+    const ul = line.match(/^\s*[-*+]\s+(.*)$/);
+    const ol = line.match(/^\s*\d+[.)]\s+(.*)$/);
+    if (ul || ol) {
+      flushPara();
+      flushQuote();
+      const type = ul ? "ul" : "ol";
+      if (!list || list.type !== type) {
+        flushList();
+        list = { type, items: [] };
+      }
+      list.items.push(md((ul || ol)[1]));
       return;
     }
     if (/^\s*$/.test(line)) {
-      flushList(); flushPara();
+      flushAll();
       return;
     }
     flushList();
-    para.push(esc(line));
+    flushQuote();
+    para.push(md(line));
   });
-  flushList(); flushPara();
-  return out;
+  if (code !== null) out += "<pre><code>" + esc(code.join("\n")) + "</code></pre>";
+  flushAll();
+  return { html: out, toc };
 }
+
+/* نسخهٔ سازگار با فراخوانی‌های قدیمی */
+const mdToHtml = (src) => mdParse(src).html;
 
 function loadFolder(folder, includeInactive) {
   const dir = path.join(CONTENT, folder);
@@ -504,7 +602,9 @@ const newsListCard = (n) => {
   const date = n.date
     ? `<time class="lp-date" data-date="${escA(n.date)}"></time>`
     : `<span class="lp-date">اطلاعیه</span>`;
-  const hay = [n.title, n.summary, n.category].filter(Boolean).join(" ");
+  const hay = [n.title, n.summary, n.category, n.author, ...(Array.isArray(n.tags) ? n.tags : [])]
+    .filter(Boolean)
+    .join(" ");
   return `<article class="lp-card lp-news lp-body reveal"
           data-cat="${escA(n.category || "خبر")}" data-dt="${escA(n.date || "")}" data-title="${escA(n.title)}" data-search="${escA(hay)}">
         <div class="lp-news-head">
@@ -805,8 +905,8 @@ function renderCourseListPage(courseList) {
 /* ---------- صفحهٔ یک دوره (پوشهٔ amoozesh/) ---------- */
 function renderCoursePage(c) {
   const prefix = "../";
-  const openN = open.replace('href="assets/css/style.css"', 'href="' + prefix + 'assets/css/style.css"');
-  const closeN = close.replace('src="assets/js/main.js"', 'src="' + prefix + 'assets/js/main.js"');
+  const openN = openFor(prefix);
+  const closeN = closeFor(prefix);
   const headerN = renderHeaderN(prefix);
   const footerN = renderFooterN(prefix);
 
@@ -814,7 +914,7 @@ function renderCoursePage(c) {
   const heroImg = img
     ? `<div class="ann-img"><img src="${ABS_URI.test(img) ? img : prefix + img}" alt="${esc(c.title)}" loading="lazy"></div>`
     : "";
-  const content = mdToHtml(c.body || "") || `<p>${esc(c.summary || "")}</p>`;
+  const content = mdParse(c.body || "", { idPrefix: "cr-", localPrefix: prefix }).html || `<p>${esc(c.summary || "")}</p>`;
 
   const facts = [
     c.teacher ? `<div><dt>مدرس</dt><dd>${esc(c.teacher)}</dd></div>` : "",
@@ -871,65 +971,13 @@ function renderCoursePage(c) {
   );
 }
 
-/* ---------- صفحهٔ یک اطلاعیه (پوشهٔ ettelaieh/) ---------- */
-function renderAnnPage(n) {
-  const prefix = "../";
-  const openN = open.replace('href="assets/css/style.css"', 'href="' + prefix + 'assets/css/style.css"');
-  const closeN = close.replace('src="assets/js/main.js"', 'src="' + prefix + 'assets/js/main.js"');
-  const headerN = renderHeaderN(prefix);
-  const footerN = renderFooterN(prefix);
-
-  const img = pickImage(n);
-  const bannerImg = img
-    ? `<div class="ann-img"><img src="${ABS_URI.test(img) ? img : prefix + img}" alt="${esc(n.title)}" loading="lazy"></div>`
-    : "";
-  const content = mdToHtml(n.body || "") || `<p>${esc(n.summary || "")}</p>`;
-
-  let linkBtn = "";
-  if (n.link) {
-    const ext = ABS_URI.test(n.link);
-    const local = LOCAL_LINK.test(n.link);
-    if (ext || local) {
-      const href = ext ? esc(n.link) : "../" + esc(n.link.replace(/^\.\//, ""));
-      linkBtn = `<a class="btn btn-gold" href="${href}" target="_blank" rel="noopener">مشاهده در منبع ←</a>`;
-    }
-  }
-
-  const body = [
-    `<main>
-      <section class="section ann-single">
-        <div class="container ann-open">
-          <article>
-            <div class="crumbs">
-              <a href="${prefix}index.html">خانه</a><span class="sep">/</span><a href="${prefix}ettelaieh.html">اطلاعیه‌ها</a><span class="sep">/</span>
-            </div>
-            <div class="ann-head">
-              <span class="n-chip">${esc(n.category || "خبر")}</span>
-              <span class="ann-date" data-date="${esc(n.date || "")}"></span>
-            </div>
-            <div class="ann-org">${newsOrgLabel(n, "../")}</div>
-            <h1 class="ann-title">${esc(n.title)}</h1>
-            ${bannerImg}
-            <div class="ann-body">${content}</div>
-            <div class="ann-cta">
-              <a class="btn btn-navy" href="${prefix}ettelaieh.html">→ بازگشت به اطلاعیه‌ها</a>
-              ${linkBtn}
-            </div>
-          </article>
-        </div>
-      </section>
-    </main>`
-  ];
-return assemble(
-    openN,
-    esc(n.title) + " | اطلاعیه\u200cهای پلتفرم",
-    esc(n.summary || ""),
-    headerN,
-    body,
-    footerN,
-    closeN
-  );
-}
+/* ---------- صفحهٔ یک اطلاعیه (پوشهٔ ettelaieh/) ----------
+   قالب کامل و حرفه‌ای اطلاعیه در ماژول اختصاصی ./ann-page.js ساخته می‌شود;
+   این‌جا فقط با ابزارهای مشترک همین فایل به آن وصل می‌شویم (پایین‌تر، بعد از
+   بارگذاری محتوا) تا از وابستگی حلقوی جلوگیری شود. */
+/* پیشوند‌گذاری خودکار همهٔ دارایی‌های محلی داخل قالب‌های مشترک */
+const openFor = (prefix) => open.replace(/="(assets\/[^"]+)"/g, '="' + prefix + '$1"');
+const closeFor = (prefix) => close.replace(/="(assets\/[^"]+)"/g, '="' + prefix + '$1"');
 
 /* ---------- DISCOUNTS ---------- */
 function renderDiscounts(head, discountList) {
@@ -1070,6 +1118,33 @@ const bySort = (a, b) => (a.sort || 0) - (b.sort || 0) || String(a.name || "").l
 const kanonhaList = loadFolder("kanonha").sort(bySort);
 const anjomanhaList = loadFolder("anjomanha").sort(bySort);
 
+/* ---------- قالب اطلاعیه (ann-page.js) با ابزارهای همین فایل ساخته می‌شود ---------- */
+const renderAnnPage = require("./ann-page")({
+  esc,
+  escA,
+  faNum,
+  ROOT,
+  site,
+  TELE_URL,
+  pickImage,
+  safeLink,
+  ABS_URI,
+  LOCAL_LINK,
+  renderHeaderN,
+  renderFooterN,
+  mdParse,
+  allNews: newsList,
+  kanonhaList,
+  anjomanhaList,
+  newsOrg,
+  assetVer: ASSET_VER,
+  open,
+  close,
+  openFor,
+  closeFor,
+  assemble
+}).renderAnnPage;
+
 const index = assemble(
   open,
   home.seo.title,
@@ -1199,4 +1274,53 @@ console.log("✔ صفحات دوره:", courseList.length, "فایل" + (amoRemo
   const payload = { updated: new Date().toISOString(), items };
   fs.writeFileSync(path.join(ROOT, "latest.json"), JSON.stringify(payload), "utf8");
   console.log("✔ latest.json (" + items.length + " مورد)");
+})();
+
+/* ---------- sitemap.xml و robots.txt — ایندکس شدن درست در گوگل ---------- */
+const SITE_URL = "https://semnanplatform.ir";
+const isoDay = (d) => {
+  const x = new Date(d || 0);
+  return isNaN(x.getTime()) ? "" : x.toISOString().slice(0, 10);
+};
+(function writeSitemap() {
+  const urls = [];
+  const add = (loc, lastmod, priority, changefreq) => {
+    urls.push(
+      "  <url><loc>" + SITE_URL + "/" + encodeURI(loc) + "</loc>" +
+        (lastmod ? "<lastmod>" + lastmod + "</lastmod>" : "") +
+        (changefreq ? "<changefreq>" + changefreq + "</changefreq>" : "") +
+        (priority ? "<priority>" + priority + "</priority>" : "") +
+        "</url>"
+    );
+  };
+  add("index.html", isoDay(new Date()), "1.0", "daily");
+  add("ettelaieh.html", isoDay((newsList[0] || {}).date), "0.9", "daily");
+  add("amoozesh.html", "", "0.8", "weekly");
+  add("kanonha.html", "", "0.8", "weekly");
+  add("anjomanha.html", "", "0.8", "weekly");
+  newsList.forEach((n) => add("ettelaieh/" + n._slug + ".html", isoDay(n.date), "0.7", "monthly"));
+  courseList.forEach((c) => add("amoozesh/" + c._slug + ".html", "", "0.6", "monthly"));
+  kanonhaList.forEach((k) => add("kanonha/" + k.slug + ".html", "", "0.6", "monthly"));
+  anjomanhaList.forEach((a) => add("anjomanha/" + a.slug + ".html", "", "0.6", "monthly"));
+  const xml =
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls.join("\n") +
+    "\n</urlset>\n";
+  fs.writeFileSync(path.join(ROOT, "sitemap.xml"), xml, "utf8");
+  console.log("✔ sitemap.xml (" + urls.length + " آدرس)");
+})();
+(function writeRobots() {
+  const txt = [
+    "User-agent: *",
+    "Allow: /",
+    "Disallow: /admin/",
+    "Disallow: /build/",
+    "Disallow: /worker/",
+    "",
+    "Sitemap: " + SITE_URL + "/sitemap.xml",
+    ""
+  ].join("\n");
+  fs.writeFileSync(path.join(ROOT, "robots.txt"), txt, "utf8");
+  console.log("✔ robots.txt");
 })();

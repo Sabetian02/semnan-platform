@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /build/
+Disallow: /worker/
+
+Sitemap: https://semnanplatform.ir/sitemap.xml

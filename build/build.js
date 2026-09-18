@@ -181,6 +181,8 @@ function pageSkeleton(prefix, title, bodyExtra, desc) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${esc(title)} | ${esc(site.brand_name)}</title>
   <meta name="description" content="${escA(meta)}">
+  <link rel="icon" href="${prefix}assets/images/SVG/logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#102A71">
   <link rel="stylesheet" href="${prefix}assets/css/style.css?v=${ASSET_VER}">
 </head>
 <body>

@@ -92,25 +92,866 @@ collections:
         name: link
         widget: string
         required: false
-        hint: "مثلاً amoozesh.html یا یک آدرس کامل https://"
-      - label: تصویر شاخص (آپلود از سیستم — اختیاری)
+        hint: "مثلاً amoozesh.html یا یک آدرس کامل https:// — اگر خالی بماند، دکمهٔ اصلی صفحه به کانال پلتفرم وصل می‌شود."
+      - label: تصویر شاخص / کاور (آپلود از سیستم — اختیاری)
         name: image
         widget: image
         required: false
-        hint: "از سیستم آپلود کن؛ در کارت و صفحهٔ همین اطلاعیه نمایش داده می‌شود."
+        hint: "کاور صفحهٔ اطلاعیه با ابعاد واقعی همین تصویر نمایش داده می‌شود؛ پس هر اندازه و نسبتی (افقی، مربع یا عمودی) قابل قبول است."
       - label: یا آدرس تصویر (URL — اختیاری)
         name: image_url
         widget: string
         required: false
         hint: "به‌جای آپلود می‌توانی آدرس کامل تصویر (https://…) را وارد کنی. اگر هر دو پر باشند، عکس آپلودی اولویت دارد."
+      - label: زیرنویس تصویر شاخص (اختیاری)
+        name: image_caption
+        widget: string
+        required: false
       - label: تاریخ انتشار
         name: date
         widget: datetime
         required: true
+      - label: تاریخ آخرین به‌روزرسانی (اختیاری)
+        name: updated
+        widget: datetime
+        required: false
+        hint: "اگر بعداً متن را اصلاح کردی، این‌جا تاریخ تازه را بگذار تا گوگل آن را به‌عنوان به‌روزرسانی ثبت کند."
+      # ---------------- هویت اطلاعیه ----------------
+      - label: بج روی عنوان (اختیاری)
+        name: badge
+        widget: string
+        required: false
+        hint: "متن کوتاه و فوری مثل «مهلت تا پنج‌شنبه» یا «ظرفیت محدود»."
+      - label: برچسب‌ها (اختیاری)
+        name: tags
+        widget: list
+        required: false
+        summary: "{{fields.tag}}"
+        hint: "موضوع‌های مشترک؛ در پیشنهاد «اطلاعیه‌های مرتبط» و در سئو استفاده می‌شوند."
+        field:
+          label: برچسب
+          name: tag
+          widget: string
+      - label: منتشرکننده / گردآورنده (اختیاری)
+        name: author
+        widget: string
+        required: false
+        hint: "نام فرد یا واحدی که این اطلاعیه را آماده کرده است."
+      - label: نکات کلیدی «در یک نگاه» (اختیاری)
+        name: highlights
+        widget: list
+        required: false
+        summary: "{{fields.text}}"
+        hint: "سه تا پنج نکتهٔ مهم؛ بالای صفحه در یک کادر تیک‌دار نمایش داده می‌شود."
+        field:
+          label: نکته
+          name: text
+          widget: string
+      # ---------------- رویداد ----------------
+      - label: اطلاعات رویداد (اختیاری — برای اطلاعیه‌های تاریخ‌دار)
+        name: event
+        widget: object
+        required: false
+        collapsed: true
+        hint: "پر کردن این بخش باعث می‌شود وضعیت «پیش‌رو/در حال برگزاری/پایان‌یافته»، شمارش معکوس، دکمهٔ افزودن به تقویم و داده‌های ساخت‌یافتهٔ رویداد برای گوگل ساخته شود."
+        fields:
+          - label: زمان شروع
+            name: start
+            widget: datetime
+            required: false
+          - label: زمان پایان
+            name: end
+            widget: datetime
+            required: false
+          - label: برنامهٔ تمام‌روز است
+            name: all_day
+            widget: boolean
+            required: false
+            default: false
+          - label: شکل برگزاری
+            name: mode
+            widget: select
+            required: false
+            options: [ "حضوری", "آنلاین", "ترکیبی" ]
+            default: "حضوری"
+          - label: محل برگزاری
+            name: location
+            widget: string
+            required: false
+          - label: نشانی کامل
+            name: address
+            widget: string
+            required: false
+          - label: لینک نقشه
+            name: map_url
+            widget: string
+            required: false
+            hint: "لینک گوگل‌مپ، نشان یا بلد؛ اگر قابل جاسازی باشد، نقشه داخل صفحه نمایش داده می‌شود."
+          - label: مهلت ثبت‌نام
+            name: deadline
+            widget: datetime
+            required: false
+          - label: ظرفیت
+            name: capacity
+            widget: string
+            required: false
+            hint: "مثلاً «۴۰ نفر» یا «ظرفیت محدود»"
+          - label: هزینه
+            name: fee
+            widget: string
+            required: false
+            default: "رایگان"
+          - label: لینک ثبت‌نام
+            name: registration_url
+            widget: string
+            required: false
+            hint: "لینک فرم یا صفحهٔ ثبت‌نام؛ دکمهٔ اصلی و نوار پایین موبایل به همین آدرس وصل می‌شود."
+      # ---------------- رسانه ----------------
+      - label: ویدیو (اختیاری)
+        name: video
+        widget: object
+        required: false
+        collapsed: true
+        hint: "لینک آپارات/یوتیوب/ویمئو یا فایل ویدیوی آپلودی. برای سرعت سایت، ویدیو تا کلیک کاربر بارگذاری نمی‌شود."
+        fields:
+          - label: لینک ویدیو (آپارات، یوتیوب یا ویمئو)
+            name: url
+            widget: string
+            required: false
+            hint: "مثال: https://www.aparat.com/v/abcd123"
+          - label: یا فایل ویدیو (آپلود از سیستم)
+            name: file
+            widget: file
+            required: false
+            hint: "MP4 آپلود کن؛ پخش‌کنندهٔ خود مرورگر نمایش داده می‌شود."
+          - label: تصویر پوستر (اختیاری)
+            name: poster
+            widget: image
+            required: false
+            hint: "اگر خالی بماند، تصویر شاخص اطلاعیه استفاده می‌شود."
+          - label: عنوان ویدیو
+            name: title
+            widget: string
+            required: false
+          - label: توضیح ویدیو
+            name: caption
+            widget: string
+            required: false
+      - label: گالری تصاویر (اختیاری)
+        name: gallery
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.caption}}"
+        hint: "تصاویر با ابعاد واقعی خودشان و با قابلیت بزرگ‌نمایی نمایش داده می‌شوند."
+        fields:
+          - label: تصویر
+            name: image
+            widget: image
+          - label: کپشن (اختیاری)
+            name: caption
+            widget: string
+            required: false
+      - label: فایل‌های پیوست (اختیاری)
+        name: attachments
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.title}}"
+        hint: "PDF، Word، جدول یا هر فایلی که دانشجو باید دانلود کند؛ نوع و حجم فایل خودکار محاسبه می‌شود."
+        fields:
+          - label: فایل
+            name: file
+            widget: file
+          - label: عنوان فایل
+            name: title
+            widget: string
+            required: false
+          - label: توضیح کوتاه
+            name: note
+            widget: string
+            required: false
+      # ---------------- فرم و اطلاعات ----------------
+      - label: فرم گوگل / ثبت‌نام (اختیاری)
+        name: form
+        widget: object
+        required: false
+        collapsed: true
+        hint: "اگر لینک فرم گوگل را بگذاری، خود فرم داخل صفحه جا می‌گیرد (ثبت‌نام، نظرسنجی، سفارش)."
+        fields:
+          - label: لینک فرم
+            name: url
+            widget: string
+            required: false
+            hint: "مثال: https://docs.google.com/forms/d/xxxx/viewform"
+          - label: عنوان فرم
+            name: title
+            widget: string
+            required: false
+            default: "ثبت‌نام"
+          - label: توضیح بالای فرم
+            name: note
+            widget: text
+            required: false
+          - label: ارتفاع کادر فرم (پیکسل)
+            name: height
+            widget: number
+            required: false
+            default: 900
+      - label: اطلاعات کلیدی (جدول برچسب/مقدار)
+        name: facts
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.label}} — {{fields.value}}"
+        hint: "هر جفت برچسب و مقدار یک کارت کوچک می‌شود؛ مثلاً برچسب «زمان» و مقدار «شنبه، ساعت ۱۰ صبح»."
+        fields:
+          - label: برچسب
+            name: label
+            widget: string
+          - label: مقدار
+            name: value
+            widget: string
+          - label: آیکن (اختیاری)
+            name: icon
+            widget: select
+            required: false
+            options: [ "", "calendar", "clock", "pin", "users", "tag", "money", "bell", "book", "spark", "chart", "info" ]
+      - label: برنامهٔ زمانی / جدول ساعت‌ها (اختیاری)
+        name: timeline
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.time}} — {{fields.title}}"
+        fields:
+          - label: ساعت / زمان
+            name: time
+            widget: string
+            required: false
+            hint: "مثلاً «۱۰:۰۰ تا ۱۲:۰۰» یا «روز اول»"
+          - label: عنوان
+            name: title
+            widget: string
+          - label: توضیح
+            name: desc
+            widget: text
+            required: false
+      - label: مکان (کارت نقشه)
+        name: location
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - label: نام مکان
+            name: name
+            widget: string
+            required: false
+          - label: نشانی
+            name: address
+            widget: string
+            required: false
+          - label: لینک نقشه
+            name: map_url
+            widget: string
+            required: false
+      - label: نقل‌قول (اختیاری)
+        name: quote
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - label: متن نقل‌قول
+            name: text
+            widget: text
+            required: false
+          - label: گوینده
+            name: author
+            widget: string
+            required: false
+          - label: سمت / توضیح گوینده
+            name: role
+            widget: string
+            required: false
+          - label: تصویر گوینده
+            name: avatar
+            widget: image
+            required: false
+      - label: آمار و اعداد (اختیاری)
+        name: stats
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.number}} {{fields.label}}"
+        fields:
+          - label: عدد
+            name: number
+            widget: string
+            hint: "مثلاً «۲۵۰»"
+          - label: توضیح
+            name: label
+            widget: string
+          - label: آیکن (اختیاری)
+            name: icon
+            widget: select
+            required: false
+            options: [ "", "users", "spark", "book", "award", "chart", "trophy" ]
+      - label: پرسش‌های پرتکرار (اختیاری)
+        name: faq
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.q}}"
+        hint: "به‌صورت آکاردئون باز و بسته می‌شود و برای گوگل هم به‌عنوان FAQ ثبت می‌شود."
+        fields:
+          - label: پرسش
+            name: q
+            widget: string
+          - label: پاسخ
+            name: a
+            widget: text
+      - label: هشدار / اطلاعیهٔ رنگی (اختیاری)
+        name: notice
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - label: لحن
+            name: tone
+            widget: select
+            required: false
+            options:
+              - { label: اطلاع‌رسانی, value: "info" }
+              - { label: توجه / هشدار, value: "warn" }
+              - { label: تأیید / موفقیت, value: "success" }
+              - { label: مهم / فوری, value: "danger" }
+            default: "info"
+          - label: عنوان
+            name: title
+            widget: string
+            required: false
+          - label: متن
+            name: text
+            widget: text
+            required: false
+      - label: دکمه‌های اقدام (چند دکمهٔ دلخواه)
+        name: cta
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.label}}"
+        hint: "مثلاً «ثبت‌نام»، «دانلود پوستر»، «ورود به گروه». دکمهٔ اول، دکمهٔ اصلی صفحه می‌شود."
+        fields:
+          - label: متن دکمه
+            name: label
+            widget: string
+          - label: لینک
+            name: link
+            widget: string
+            hint: "آدرس کامل https:// یا مسیر داخلی مثل amoozesh.html"
+          - label: رنگ دکمه
+            name: style
+            widget: select
+            required: false
+            options:
+              - { label: طلایی (اصلی), value: "gold" }
+              - { label: سرمه‌ای, value: "navy" }
+              - { label: تلگرام, value: "tele" }
+              - { label: ساده با قاب, value: "ghost" }
+            default: "gold"
+          - label: آیکن دکمه (اختیاری)
+            name: icon
+            widget: select
+            required: false
+            options: [ "", "telegram", "whatsapp", "download", "calendar" ]
+      - label: راه‌های ارتباطی (اختیاری)
+        name: contact
+        widget: object
+        required: false
+        collapsed: true
+        hint: "در پایان اطلاعیه به‌صورت کارت «راه‌های ارتباطی» نمایش داده می‌شود."
+        fields:
+          - label: نام واحد / مسئول
+            name: name
+            widget: string
+            required: false
+          - label: تلفن
+            name: phone
+            widget: string
+            required: false
+          - label: ایمیل
+            name: email
+            widget: string
+            required: false
+          - label: آیدی یا لینک تلگرام
+            name: telegram
+            widget: string
+            required: false
+            hint: "مثلاً https://t.me/PlatformSem یا آیدی @PlatformSem"
+      - label: منبع خبر (اختیاری)
+        name: source
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - label: نام منبع
+            name: name
+            widget: string
+            required: false
+          - label: لینک منبع
+            name: link
+            widget: string
+            required: false
+      # ---------------- چیدمان و جانمایی محتوا ----------------
+      - label: چیدمان صفحهٔ اطلاعیه
+        name: layout
+        widget: object
+        required: false
+        collapsed: false
+        hint: "شکل کلی صفحه را از این‌جا انتخاب کن؛ بعد با بخش «جانمایی محتوا» ترتیب و جای هر بخش را تعیین کن."
+        fields:
+          - label: سبک صفحه
+            name: style
+            widget: select
+            required: false
+            options:
+              - { label: هیرو سرمه‌ای + کارت (پیشنهادی), value: "hero" }
+              - { label: مجله‌ای (کاور تمام‌عرض پشت عنوان), value: "magazine" }
+              - { label: ساده و کاغذی (بدون هیرو رنگی), value: "doc" }
+            default: "hero"
+          - label: جای کاور
+            name: cover
+            widget: select
+            required: false
+            options:
+              - { label: زیر هیرو با گوشهٔ گرد (پیشنهادی), value: "hero" }
+              - { label: جدا و بدون هم‌پوشانی, value: "boxed" }
+              - { label: بنر بالای متن, value: "banner" }
+              - { label: بدون کاور, value: "none" }
+            default: "hero"
+          - label: نوار کنار صفحه
+            name: sidebar
+            widget: select
+            required: false
+            options:
+              - { label: خودکار (وقتی محتوا دارد), value: "auto" }
+              - { label: همیشه نمایش بده, value: "on" }
+              - { label: حذف کن و تمام‌عرض کن, value: "off" }
+            default: "auto"
+      - label: جانمایی محتوا (ترتیب و جای بخش‌ها)
+        name: blocks
+        widget: list
+        required: false
+        label_singular: بخش
+        collapsed: true
+        summary: "{{fields.heading}} {{type}}"
+        hint: >
+          این فهرست، اسکلت صفحهٔ اطلاعیه است. هر بخش را با «▲▼» بالا و پایین ببر تا ترتیب و
+          جای نمایشش روی صفحه عوض شود و با «جای نمایش» بین ستون اصلی و نوار کنار جابه‌جا کن.
+          اگر این فهرست را خالی بگذاری، صفحه به‌صورت خودکار از متن کامل و فیلدهای بالای
+          همین فرم ساخته می‌شود (متن کامل، نکات کلیدی، ویدیو، گالری، پیوست‌ها، فرم، پرسش‌ها و…).
+        types:
+          - label: 📝 متن (Markdown)
+            name: text
+            widget: object
+            fields:
+              - label: عنوان بخش (اختیاری)
+                name: heading
+                widget: string
+                required: false
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - label: متن (پشتیبانی از #تیتر، -لیست، **پررنگ**، [لینک](url) و ![تصویر](url))
+                name: markdown
+                widget: markdown
+          - label: ✨ نکات کلیدی
+            name: highlights
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "در یک نگاه"
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - label: نکته‌ها
+                name: items
+                widget: list
+                summary: "{{fields.text}}"
+                field:
+                  label: نکته
+                  name: text
+                  widget: string
+          - label: 📌 اطلاعات کلیدی (برچسب/مقدار)
+            name: facts
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "اطلاعات کلیدی"
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - label: ردیف‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}} — {{fields.value}}"
+                fields:
+                  - { label: برچسب, name: label, widget: string }
+                  - { label: مقدار, name: value, widget: string }
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "calendar", "clock", "pin", "users", "tag", "money", "bell", "book", "spark", "chart", "info" ]
+          - label: 🖼 تصویر با توضیح
+            name: image
+            widget: object
+            fields:
+              - label: تصویر
+                name: image
+                widget: image
+              - label: توضیح تصویر
+                name: caption
+                widget: string
+                required: false
+              - label: متن جانشین (alt)
+                name: alt
+                widget: string
+                required: false
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+          - label: 🎬 ویدیو (آپارات/یوتیوب/فایل)
+            name: video
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+              - label: لینک ویدیو
+                name: url
+                widget: string
+                required: false
+              - label: یا فایل ویدیو
+                name: file
+                widget: file
+                required: false
+              - label: پوستر (اختیاری)
+                name: poster
+                widget: image
+                required: false
+              - { label: عنوان ویدیو, name: title, widget: string, required: false }
+              - { label: توضیح ویدیو, name: caption, widget: string, required: false }
+          - label: 🖼 گالری تصاویر
+            name: gallery
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "گالری تصاویر"
+              - label: تعداد ستون
+                name: columns
+                widget: select
+                required: false
+                options:
+                  - { label: خودکار, value: "" }
+                  - { label: دو ستون, value: "two" }
+                  - { label: سه ستون, value: "three" }
+                  - { label: چهار ستون, value: "four" }
+                default: ""
+              - label: تصاویر
+                name: items
+                widget: list
+                summary: "{{fields.caption}}"
+                fields:
+                  - { label: تصویر, name: image, widget: image }
+                  - { label: کپشن, name: caption, widget: string, required: false }
+          - label: 🧭 برنامهٔ زمانی
+            name: timeline
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "برنامهٔ زمانی"
+              - label: ردیف‌ها
+                name: items
+                widget: list
+                summary: "{{fields.time}} — {{fields.title}}"
+                fields:
+                  - { label: ساعت/زمان, name: time, widget: string, required: false }
+                  - { label: عنوان, name: title, widget: string }
+                  - { label: توضیح, name: desc, widget: text, required: false }
+          - label: 📎 فایل‌های پیوست
+            name: files
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "فایل‌های پیوست"
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - label: فایل‌ها
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: فایل, name: file, widget: file }
+                  - { label: عنوان, name: title, widget: string, required: false }
+                  - { label: توضیح, name: note, widget: string, required: false }
+          - label: 📋 فرم گوگل / ثبت‌نام
+            name: form
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "ثبت‌نام"
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - { label: لینک فرم, name: url, widget: string, required: false }
+              - { label: توضیح, name: note, widget: text, required: false }
+              - { label: متن دکمه (اگر قابل جاسازی نبود), name: button_label, widget: string, required: false }
+              - label: ارتفاع کادر (پیکسل)
+                name: height
+                widget: number
+                required: false
+                default: 900
+          - label: ❓ پرسش‌های پرتکرار
+            name: faq
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "پرسش‌های پرتکرار"
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - label: پرسش‌ها
+                name: items
+                widget: list
+                summary: "{{fields.q}}"
+                fields:
+                  - { label: پرسش, name: q, widget: string }
+                  - { label: پاسخ, name: a, widget: text }
+          - label: ⚠️ هشدار / اطلاعیهٔ رنگی
+            name: notice
+            widget: object
+            fields:
+              - label: لحن
+                name: tone
+                widget: select
+                required: false
+                options:
+                  - { label: اطلاع‌رسانی, value: "info" }
+                  - { label: توجه / هشدار, value: "warn" }
+                  - { label: تأیید / موفقیت, value: "success" }
+                  - { label: مهم / فوری, value: "danger" }
+                default: "info"
+              - { label: عنوان, name: title, widget: string, required: false }
+              - { label: متن, name: text, widget: text, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+          - label: 📊 آمار و اعداد
+            name: stats
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "در یک نگاه"
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - label: اعداد
+                name: items
+                widget: list
+                summary: "{{fields.number}} {{fields.label}}"
+                fields:
+                  - { label: عدد, name: number, widget: string }
+                  - { label: توضیح, name: label, widget: string }
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "users", "spark", "book", "award", "chart", "trophy" ]
+          - label: 💬 نقل‌قول
+            name: quote
+            widget: object
+            fields:
+              - label: متن
+                name: text
+                widget: text
+              - { label: گوینده, name: author, widget: string, required: false }
+              - { label: سمت گوینده, name: role, widget: string, required: false }
+              - { label: تصویر گوینده, name: avatar, widget: image, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+          - label: 🔗 دکمه‌های اقدام
+            name: cta
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+              - { label: توضیح کوتاه, name: text, widget: text, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+              - label: دکمه‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: متن دکمه, name: label, widget: string }
+                  - { label: لینک, name: link, widget: string }
+                  - label: رنگ
+                    name: style
+                    widget: select
+                    required: false
+                    options:
+                      - { label: طلایی, value: "gold" }
+                      - { label: سرمه‌ای, value: "navy" }
+                      - { label: تلگرام, value: "tele" }
+                      - { label: ساده, value: "ghost" }
+                    default: "navy"
+          - label: 📍 مکان و نقشه
+            name: location
+            widget: object
+            fields:
+              - label: عنوان بخش
+                name: heading
+                widget: string
+                required: false
+                default: "مکان برگزاری"
+              - { label: نام مکان, name: name, widget: string, required: false }
+              - { label: نشانی, name: address, widget: string, required: false }
+              - { label: لینک نقشه, name: map_url, widget: string, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                required: false
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: نوار کنار, value: "side" }
+                default: "main"
+          - label: ➖ جداکننده
+            name: divider
+            widget: object
+            fields:
+              - { label: متن روی جداکننده (اختیاری), name: text, widget: string, required: false }
+      # ---------------- سئو و انتشار ----------------
+      - label: تنظیمات سئو و اشتراک‌گذاری (اختیاری)
+        name: seo
+        widget: object
+        required: false
+        collapsed: true
+        hint: "اگر خالی بمانی، عنوان و خلاصهٔ همین فرم استفاده می‌شود. پر کردن این بخش برای گوگل و پیش‌نمایش تلگرام توصیه می‌شود."
+        fields:
+          - label: عنوان در گوگل و تب مرورگر
+            name: title
+            widget: string
+            required: false
+            hint: "حدود ۶۰ کاراکتر؛ اگر خالی باشد عنوان اصلی استفاده می‌شود."
+          - label: توضیح متا (زیر عنوان در گوگل)
+            name: description
+            widget: text
+            required: false
+            hint: "حدود ۱۵۰ کاراکتر؛ در پیش‌نمایش لینک در تلگرام و گوگل نمایش داده می‌شود."
+          - label: تصویر اشتراک‌گذاری (OG)
+            name: image
+            widget: image
+            required: false
+            hint: "تصویر پیش‌نمایش لینک در تلگرام و شبکه‌های اجتماعی؛ اندازهٔ پیشنهادی ۱۲۰۰×۶۳۰."
+          - label: نشانی یکتای صفحه (canonical)
+            name: canonical
+            widget: string
+            required: false
+          - label: خارج کردن از نتایج گوگل (noindex)
+            name: noindex
+            widget: boolean
+            required: false
+            default: false
       - label: نمایش در سایت
         name: active
         widget: boolean
         default: true
+        hint: "روشن = منتشر شود | خاموش = پیش‌نویس و در سایت دیده نشود."
 
   # ================= تخفیف‌های دانشجویی =================
   - name: discounts

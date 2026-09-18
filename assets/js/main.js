@@ -143,6 +143,24 @@
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
       });
     }
+
+    /* فیلتر اولیه از آدرس — لینک‌هایی مثل ettelaieh.html?cat=رویداد&q=کارگاه */
+    function pickRadio(grp, value) {
+      if (!grp || !value) return;
+      var safe = String(value).replace(/"/g, "");
+      if (grp.tagName === "SELECT") { grp.value = safe; return; }
+      var el = grp.querySelector('input[value="' + safe + '"]');
+      if (el) el.checked = true;
+    }
+    (function fromUrl() {
+      var p;
+      try { p = new URLSearchParams(window.location.search); } catch (e) { return; }
+      var q = p.get("q") || p.get("search") || "";
+      if (q && search) search.value = q;
+      pickRadio(catGrp, p.get("cat") || p.get("category") || "");
+      pickRadio(sortGrp, p.get("sort") || "");
+      pickRadio(priceGrp, p.get("price") || "");
+    })();
     apply();
   }
   initListings();
