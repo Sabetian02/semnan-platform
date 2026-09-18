@@ -308,18 +308,22 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
 
   const galleryImgs = gallery.map((g) => orgImage(g, prefix, `تصویر از ${item.short}`)).filter(Boolean);
 
-  /* آمار — فقط چهار پارامتر کلیدی؛ دستهٔ بدون اطلاعیه ۰ نمایش داده می‌شود */
-  const STAT_CATEGORIES = ["رویداد", "فراخوان", "دوره", "تخفیف"];
+  /* آمار — «رویداد/دوره/تخفیف» از اطلاعیه‌های مجموعه و «تعداد اعضا» از جدول اعضا */
+  const STAT_CATEGORIES = ["رویداد", "دوره", "تخفیف"];
   const catCounts = {};
   STAT_CATEGORIES.forEach((c) => (catCounts[c] = 0));
   myNews.forEach((n) => {
     const c = String(n.category || "").trim();
     if (c in catCounts) catCounts[c] += 1;
   });
+  const statChips = [
+    ...STAT_CATEGORIES.map((c) => ({ n: catCounts[c], l: c })),
+    { n: members.length, l: "تعداد اعضا" }
+  ];
   const tocStats = `<div class="op-toc-stats">
             <h4>آمار</h4>
             <ul class="op-cat-chips">
-              ${STAT_CATEGORIES.map((c) => `<li class="${catCounts[c] ? "" : "is-zero"}"><b>${faNum(catCounts[c])}</b><span>${esc(c)}</span></li>`).join("")}
+              ${statChips.map((s) => `<li class="${s.n ? "" : "is-zero"}"><b>${faNum(s.n)}</b><span>${esc(s.l)}</span></li>`).join("")}
             </ul>
           </div>`;
 
