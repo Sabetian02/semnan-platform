@@ -2468,18 +2468,20 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-flash-txt .op-news-date { font-size: .66rem; }
   .op-hero-actions { width: 100%; flex-wrap: nowrap; gap: 8px; }
   .op-hero-actions .btn {
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-width: 0;
     justify-content: center;
-    padding: 10px 12px;
-    font-size: .8rem;
-    line-height: 1.5;
+    padding: 10px 10px;
+    font-size: .76rem;
+    line-height: 1.4;
     text-align: center;
-    white-space: normal;
+    white-space: nowrap;
   }
 }
 @media (max-width: 400px) {
   .op-contact-cta .btn { width: 100%; white-space: normal; }
+  .op-hero-actions { gap: 6px; }
+  .op-hero-actions .btn { padding: 9px 6px; font-size: .72rem; }
   .op-sec-head { flex-wrap: wrap; }
   .op-sec-count { margin-inline-start: 0; }
   .op-cat-chips { grid-template-columns: repeat(4, 1fr); gap: 5px; }
