@@ -2037,7 +2037,6 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   }
   .op-tabbtn.is-active { color: #fff; }
   .op-tabbtn.is-active .op-tab-n { background: rgba(255, 255, 255, .22); color: #fff; }
-  .op-side-inline { margin-bottom: 0; }
   .op-main > .op-sec[data-op-tab]:not([hidden]) { animation: opTabIn .3s ease both; }
 }
 @keyframes opTabIn {

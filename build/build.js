@@ -369,9 +369,9 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const hasActivity = recentNews.length || myNews.length || courseNews.length;
   const tabs = [
     { key: "about", label: "درباره", icon: "info", n: 0 },
-    hasActivity ? { key: "activity", label: "اطلاعیه‌ها و فعالیت‌ها", icon: "spark", n: myNews.length } : null,
+    hasActivity ? { key: "activity", label: "فعالیت‌ها", icon: "spark", n: myNews.length } : null,
     members.length ? { key: "members", label: "اعضا", icon: "users", n: members.length } : null,
-    galleryImgs.length ? { key: "gallery", label: "گالری تصاویر", icon: "image", n: galleryImgs.length } : null
+    galleryImgs.length ? { key: "gallery", label: "گالری", icon: "image", n: galleryImgs.length } : null
   ].filter(Boolean);
 
   const tabbar = `<nav class="op-tabbar" data-op-tabbar aria-label="بخش‌های ${esc(item.short)}">
@@ -406,6 +406,9 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           </div>
         </section>`);
 
+  /* آمار — زیرِ «درباره» و بالای «ارتباط و عضویت» (تب بار جایگزین فهرست محتوا شده است) */
+  sections.push(`<aside class="op-side op-side-inline" data-op-tab="about" aria-label="آمار ${esc(item.short)}">${statsCard}</aside>`);
+
   /* اطلاعات ارتباط و عضویت — زیرِ «درباره»، بدون دکمهٔ بازگشت به فهرست */
   sections.push(`<section class="op-sec op-contact" id="contact" data-op-tab="about" aria-labelledby="op-contact-h">
           <div class="op-contact-inner">
@@ -419,9 +422,6 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
             </div>
           </div>
         </section>`);
-
-  /* آمار — در نمایش موبایل داخل تب «درباره» (تب بار جایگزین فهرست محتوا شده است) */
-  sections.push(`<aside class="op-side op-side-inline" data-op-tab="about" aria-label="آمار ${esc(item.short)}">${statsCard}</aside>`);
 
   /* فعالیت‌های ماه اخیر — فلش کارت از اطلاعیه‌های همین تشکل در بازهٔ ۳۰ روز */
   if (recentNews.length) {
