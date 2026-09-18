@@ -1860,19 +1860,17 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .kn-logo {
   display: grid; place-items: center;
   width: 92px; height: 92px;
-  border-radius: 18px;
-  color: var(--navy);
-  background: linear-gradient(150deg, #fff, var(--cream));
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 220, 95, .32), transparent 64%),
+    linear-gradient(150deg, #fff, var(--cream));
   border: 2px solid rgba(245, 196, 0, .5);
   box-shadow: 0 16px 32px -22px rgba(0, 24, 64, .55);
   margin-bottom: 16px;
 }
 .kn-logo-img, .kn-mono { width: 60%; height: 60%; object-fit: contain; display: block; }
-.kn-logo-img.org-logo-mask {
-  object-fit: initial;
-  background-color: currentColor;
-  -webkit-mask: var(--l) center/contain no-repeat;
-  mask: var(--l) center/contain no-repeat;
+.kn-logo-img {
+  filter: brightness(0) saturate(100%) invert(11%) sepia(75%) saturate(1743%) hue-rotate(211deg) brightness(124%) contrast(106%);
 }
 .kn-cat {
   font-size: .74rem; font-weight: 700;
@@ -1939,19 +1937,15 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   flex: none;
   display: grid; place-items: center;
   width: 112px; height: 112px;
-  border-radius: 24px;
-  color: #fff;
-  background: rgba(245, 196, 0, .16);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 220, 95, .28), transparent 62%),
+    rgba(255, 255, 255, .09);
   border: 2px solid rgba(245, 196, 0, .6);
   box-shadow: 0 20px 42px -26px rgba(0, 0, 0, .65);
 }
 .op-logo-img, .op-mono { width: 62%; height: 62%; object-fit: contain; display: block; }
-.op-logo-img.org-logo-mask {
-  object-fit: initial;
-  background-color: currentColor;
-  -webkit-mask: var(--l) center/contain no-repeat;
-  mask: var(--l) center/contain no-repeat;
-}
+.op-logo-img { filter: brightness(0) invert(1); }
 .op-hero-txt { min-width: 0; }
 .op-type {
   display: inline-block;
@@ -2225,7 +2219,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .op-toc-total b { color: var(--navy); font-size: 1.08rem; }
 .op-cat-chips {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 7px;
   text-align: center;
 }
@@ -2254,7 +2248,9 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .op-contact-cta .btn { width: 100%; white-space: normal; }
   .op-sec-head { flex-wrap: wrap; }
   .op-sec-count { margin-inline-start: 0; }
-  .op-cat-chips { grid-template-columns: repeat(2, 1fr); }
+  .op-cat-chips { grid-template-columns: repeat(4, 1fr); gap: 5px; }
+  .op-cat-chips li { padding: 7px 2px; font-size: .64rem; }
+  .op-cat-chips b { font-size: .95rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .op-flash, .op-flash:hover { transform: none; transition: none; }
