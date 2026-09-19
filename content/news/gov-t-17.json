@@ -1,13 +1,5 @@
 {
-  "title": "دورهٔ تستی «صداپیشگی و اجرای رادیویی»",
-  "summary": "این یک اطلاعیهٔ تستی برای بررسی نمایش بخش «دوره‌ها و کارگاه‌ها» و صفحه‌بندی سه‌تایی در پروفایل کانون گویندگی و اجرا است.",
   "body": "## دورهٔ تستی صداپیشگی و اجرای رادیویی\n\nاین اطلاعیه صرفاً برای تست بخش «دوره‌ها و کارگاه‌ها» در پروفایل کانون گویندگی و اجرا ساخته شده است.\n\n- تمرین عملی پشت میکروفون\n- تحلیل نمونه‌های اجرای رادیویی\n- ظرفیت محدود\n\nبرای ثبت‌نام و دریافت جزئیات، کانال تلگرام کانون را دنبال کنید.",
-  "category": "دوره",
-  "kanon": "govandegi-va-ecra",
-  "image": "https://kajartcomplex.com/wp-content/uploads/2024/07/how-to-become-a-radio-or-television-announcer-1.webp",
-  "image_url": "",
-  "date": "2026-09-18T09:30:00.000Z",
-  "active": true,
   "blocks": [
     {
       "type": "text",
@@ -17,26 +9,18 @@
     },
     {
       "type": "image",
-      "place": "main",
+      "place": "side",
       "image": "https://kajartcomplex.com/wp-content/uploads/2024/07/how-to-become-a-radio-or-television-announcer-1.webp",
       "caption": "نمایی از استودیوی اجرا",
       "alt": "استودیوی رادیویی"
     },
     {
-      "type": "video",
-      "heading": "ویدیوی معرفی",
-      "place": "main",
-      "url": "https://www.aparat.com/v/x9y8z1a",
-      "title": "معرفی دورهٔ صداپیشگی",
-      "caption": "ویدیو از آپارات — منبع رسمی"
-    },
-    {
       "type": "location",
       "heading": "مکان برگزاری",
-      "place": "side",
+      "place": "main",
       "name": "دانشگاه سمنان — کانون گویندگی و اجرا",
       "address": "سمنان، دانشگاه سمنان",
-      "map_url": "https://nshn.ir/r/TEST123"
+      "map_url": "https://nshn.ir/1e_bvHLiyxiFCH"
     },
     {
       "type": "form",
@@ -45,6 +29,22 @@
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSdnVACtVjvB8zLMJPudWJSYA0o9pBa7ob9jE7RYJqOrXnTcwA/viewform?embedded=true",
       "note": "فرم زیر به‌صورت آزمایشی از طریق داشبورد جاسازی شده است.",
       "height": 520
+    },
+    {
+      "type": "video",
+      "heading": "ویدیوی معرفی",
+      "place": "main",
+      "url": "https://www.aparat.com/v/PZp1O",
+      "title": "معرفی دورهٔ صداپیشگی",
+      "caption": "ویدیو از آپارات — منبع رسمی"
     }
-  ]
+  ],
+  "active": true,
+  "summary": "این یک اطلاعیهٔ تستی برای بررسی نمایش بخش «دوره‌ها و کارگاه‌ها» و صفحه‌بندی سه‌تایی در پروفایل کانون گویندگی و اجرا است.",
+  "image_url": "",
+  "date": "2026-09-18T09:30:00.000Z",
+  "kanon": "govandegi-va-ecra",
+  "title": "دورهٔ تستی «صداپیشگی و اجرای رادیویی»",
+  "image": "https://kajartcomplex.com/wp-content/uploads/2024/07/how-to-become-a-radio-or-television-announcer-1.webp",
+  "category": "دوره"
 }
