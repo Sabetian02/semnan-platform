@@ -116,21 +116,15 @@ const fileKind = (name) => {
   return EXT_KIND[ext] || { kind: "file", label: ext ? ext.toUpperCase() : "فایل" };
 };
 
-/* ---------- ویدیو: تشخیص سرویس و ساخت آدرس جاسازی ---------- */
+/* ---------- ویدیو: فقط آپارات ---------- */
 const VIDEO_RE = {
-  aparat: /(?:aparat\.com)\/(?:v\/|video\/video\/embed\/videohash\/)([A-Za-z0-9_-]+)/i,
-  youtube:
-    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i,
-  vimeo: /vimeo\.com\/(?:video\/)?(\d+)/i
+  aparat: /(?:aparat\.com)\/(?:v\/|video\/video\/embed\/videohash\/)([A-Za-z0-9_-]+)/i
 };
 
 function videoEmbed(url) {
   const u = String(url || "").trim();
   if (!u) return null;
-  const direct = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(u);
-  if (direct) return { kind: "file", src: u, label: "ویدیو" };
-
-  let m = u.match(VIDEO_RE.aparat);
+  const m = u.match(VIDEO_RE.aparat);
   if (m) {
     return {
       kind: "embed",
@@ -139,26 +133,7 @@ function videoEmbed(url) {
       label: "آپارات"
     };
   }
-  m = u.match(VIDEO_RE.youtube);
-  if (m) {
-    return {
-      kind: "embed",
-      src: "https://www.youtube-nocookie.com/embed/" + m[1] + "?rel=0",
-      allow: "accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture",
-      label: "یوتیوب",
-      thumb: "https://i.ytimg.com/vi/" + m[1] + "/hqdefault.jpg"
-    };
-  }
-  m = u.match(VIDEO_RE.vimeo);
-  if (m) {
-    return {
-      kind: "embed",
-      src: "https://player.vimeo.com/video/" + m[1],
-      allow: "autoplay; fullscreen; picture-in-picture",
-      label: "ویمئو"
-    };
-  }
-  if (/^(https?:)/i.test(u)) return { kind: "link", src: u, label: "ویدیو" };
+  if (/^(https?:)/i.test(u)) return { kind: "link", src: u, label: "آپارات" };
   return null;
 }
 
@@ -185,24 +160,14 @@ function formEmbed(url, height) {
   return null;
 }
 
-/* ---------- نقشه: فقط دامنه‌های شناخته‌شده جاسازی می‌شوند ---------- */
+/* ---------- نقشه: فقط نشان ---------- */
 function mapEmbed(url) {
   const u = String(url || "").trim();
   if (!u) return null;
   try {
     const x = new URL(u);
     const host = x.hostname.replace(/^www\./, "");
-    const known = [
-      "google.com",
-      "maps.google.com",
-      "openstreetmap.org",
-      "neshan.org",
-      "balad.ir",
-      "map.ir",
-      "bing.com"
-    ];
-    if (known.some((d) => host === d || host.endsWith("." + d))) {
-      /* حالت embed گوگل مپ یا آدرس معمولی → هر دو معتبرند */
+    if (host === "neshan.org" || host.endsWith(".neshan.org") || host === "nshn.ir" || host.endsWith(".nshn.ir")) {
       return { src: u };
     }
   } catch (_) {}

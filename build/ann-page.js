@@ -297,7 +297,6 @@ module.exports = function createAnnRenderer(ctx) {
     if (n.notice && (n.notice.text || n.notice.title)) auto.push({ type: "notice", ...n.notice });
     if (Array.isArray(n.stats) && n.stats.length) auto.push({ type: "stats", heading: n.stats_title || "در یک نگاه آماری", items: n.stats });
     if (n.quote && n.quote.text) auto.push({ type: "quote", ...n.quote });
-    if (Array.isArray(n.cta) && n.cta.length) auto.push({ type: "cta", heading: "اقدام‌های بعدی" });
     if (n.location && (n.location.name || n.location.address || n.location.map_url)) auto.push({ type: "location", ...n.location });
     return auto;
   }
@@ -530,7 +529,7 @@ module.exports = function createAnnRenderer(ctx) {
     return b.text ? `<div class="ap-divider"><span>${esc(b.text)}</span></div>` : `<hr class="ap-hr">`;
   }
 
-  const RENDER = {
+   const RENDER = {
     highlights: (b, c) => bHighlights(b, c.prefix),
     facts: (b) => bFacts(b),
     text: (b, c) => bText(b, c.prefix, c.idPrefix, c.toc),
@@ -544,7 +543,7 @@ module.exports = function createAnnRenderer(ctx) {
     notice: (b) => bNotice(b),
     stats: (b) => bStats(b),
     quote: (b, c) => bQuote(b, c.prefix),
-    cta: (b, c) => bCta(b, c.n),
+    cta: () => "",
     location: (b) => bLocation(b),
     divider: (b) => bDivider(b)
   };
@@ -1043,12 +1042,6 @@ module.exports = function createAnnRenderer(ctx) {
 
     const head = `<header class="ap-head"><div class="container">${headInner}</div></header>`;
 
-    const tagsRow = tags.length
-      ? `<div class="ap-tags"><span class="ap-tags-l">${ico("tag", "ap-i-sm")} برچسب‌ها:</span>${tags
-          .map((t) => `<a class="ap-tag" href="${prefix}ettelaieh.html?q=${encodeURIComponent(t)}">${esc(t)}</a>`)
-          .join("")}</div>`
-      : "";
-
     const sourceRow = n.source && (n.source.name || n.source.link)
       ? `<p class="ap-source">${ico("link", "ap-i-sm")} منبع: ${
           n.source.link ? `<a href="${escA(n.source.link)}" target="_blank" rel="noopener">${esc(n.source.name || n.source.link)}</a>` : esc(n.source.name)
@@ -1088,7 +1081,6 @@ module.exports = function createAnnRenderer(ctx) {
       <div class="container ap-grid${showSide ? "" : " is-single"}">
         <article class="ap-main">
           ${mainHtml.join("\n          ")}
-          ${tagsRow}
           ${sourceRow}
           ${contactRow}
           <a class="ap-back" href="${prefix}ettelaieh.html">${ico("arrow", "ap-back-i")} بازگشت به فهرست اطلاعیه‌ها</a>

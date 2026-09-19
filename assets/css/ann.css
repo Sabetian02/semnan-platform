@@ -1262,32 +1262,26 @@
   color: var(--gold-soft);
 }
 .ap-card--kf {
-  background: linear-gradient(150deg, var(--navy-dark), var(--navy));
-  border-color: transparent;
-  color: #fff;
+  background: #fff;
+  border-color: var(--line);
+  border-block-start: 3px solid var(--gold);
 }
 .ap-card--kf .ap-card-h,
 .ap-card--kf .ap-card-i {
-  color: var(--gold-soft);
+  color: var(--navy-dark);
 }
 .ap-card--kf .ap-kf-l {
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
 }
 .ap-card--kf .ap-kf-ico {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--gold-soft);
+  background: rgba(16, 42, 113, 0.07);
+  color: var(--navy);
 }
 .ap-card--kf .ap-kf-v {
-  color: #fff;
+  color: var(--navy-dark);
 }
 .ap-card--kf .ap-kf-v a {
-  color: var(--gold-soft);
-}
-.ap-card--kf .ap-count {
-  border-block-start-color: rgba(255, 255, 255, 0.15);
-}
-.ap-card--kf .ap-count-l {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--navy);
 }
 .ap-cta-facts {
   list-style: none;
@@ -1495,66 +1489,60 @@
   justify-content: center;
 }
 
-/* کارت برگزارکننده — بزرگ‌تر و شکیل‌تر، لوگو خواناتر */
+/* کارت برگزارکننده — بزرگ، خوانا، تمیز */
 .ap-card--org {
-  padding: 18px;
-  background: linear-gradient(150deg, var(--navy-dark), var(--navy));
-  border-color: transparent;
-}
-.ap-card--org .ap-card-h {
-  color: var(--gold-soft);
-}
-.ap-card--org .ap-card-i {
-  color: var(--gold-soft);
+  padding: 20px;
+  background: #fff;
+  border-color: var(--line);
+  border-block-start: 3px solid var(--navy);
 }
 .ap-org {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   text-decoration: none;
 }
 .ap-org-logo {
   display: grid;
   place-items: center;
-  inline-size: 72px;
-  block-size: 72px;
-  border-radius: 16px;
-  background: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  inline-size: 84px;
+  block-size: 84px;
+  border-radius: 18px;
+  background: var(--ap-soft);
+  border: 1px solid var(--line);
   overflow: hidden;
   flex: 0 0 auto;
-  box-shadow: 0 8px 20px -10px rgba(0, 24, 64, 0.6);
 }
 .ap-org-img {
   inline-size: 100%;
   block-size: 100%;
   object-fit: contain;
-  padding: 6px;
+  padding: 10px;
 }
 .ap-org-mono {
-  inline-size: 52px;
-  block-size: 52px;
+  inline-size: 56px;
+  block-size: 56px;
 }
 .ap-org-txt {
   display: grid;
-  gap: 4px;
+  gap: 5px;
   min-inline-size: 0;
 }
 .ap-org-txt small {
-  font-size: 0.76rem;
-  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 .ap-org-txt b {
-  font-size: 1.08rem;
-  color: #fff;
-  line-height: 1.6;
+  font-size: 1.12rem;
+  color: var(--navy-dark);
+  line-height: 1.5;
 }
 .ap-org-txt span {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.8rem;
-  color: var(--gold-soft);
+  font-size: 0.82rem;
+  color: var(--navy);
   font-weight: 700;
 }
 
@@ -1638,57 +1626,78 @@
 }
 
 .ap-related {
-  margin-block-start: 24px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow-sm);
+  margin-block-start: 28px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  box-shadow: none;
 }
 .ap-related .ap-block-h {
-  margin: 0 0 14px;
+  margin: 0 0 18px;
+  font-size: 1.15rem;
 }
 .ap-rel-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 16px;
 }
 .ap-rel {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 16px;
   overflow: hidden;
-  background: var(--ap-soft);
+  background: #fff;
   text-decoration: none;
-  transition: transform 0.15s ease, border-color 0.15s ease;
-  padding: 12px 13px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 20px -10px rgba(16, 42, 113, 0.15);
 }
 .ap-rel:hover {
-  transform: translateY(-2px);
-  border-color: rgba(16, 42, 113, 0.2);
-  box-shadow: none;
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px -12px rgba(16, 42, 113, 0.22);
+  border-color: rgba(16, 42, 113, 0.12);
 }
-.ap-rel-img,
+.ap-rel-img {
+  display: block;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--ap-soft);
+}
+.ap-rel-img img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.ap-rel:hover .ap-rel-img img {
+  transform: scale(1.04);
+}
 .ap-rel-art {
-  display: none !important;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  color: #fff;
+  font-size: 2rem;
 }
 .ap-rel-body {
   display: grid;
-  gap: 6px;
-  padding: 0;
+  gap: 8px;
+  padding: 14px 16px 16px;
 }
 .ap-rel-chip {
   align-self: start;
   justify-self: start;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--navy);
   background: rgba(16, 42, 113, 0.07);
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 999px;
 }
 .ap-rel-t {
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   color: var(--navy-dark);
   line-height: 1.7;
   display: -webkit-box;
@@ -1697,7 +1706,7 @@
   overflow: hidden;
 }
 .ap-rel-d {
-  font-size: 0.7rem;
+  font-size: 0.73rem;
   color: var(--muted);
 }
 
@@ -1920,17 +1929,17 @@
   .ap-head {
     padding: 16px 0 22px;
   }
-  .ap-related {
-    padding: 14px;
+  .ap-rel-grid {
+    gap: 8px;
   }
-  .ap-rel {
+  .ap-rel-body {
     padding: 10px 11px;
   }
   .ap-rel-t {
     font-size: 0.78rem;
   }
-  .ap-rel-grid {
-    gap: 8px;
+  .ap-rel-chip {
+    font-size: 0.62rem;
   }
   .ap-cover-wrap {
     margin-block-start: -16px;
