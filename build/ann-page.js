@@ -626,7 +626,6 @@ module.exports = function createAnnRenderer(ctx) {
           <a class="ap-sh is-x" href="https://twitter.com/intent/tweet?url=${u}&text=${t}" target="_blank" rel="noopener" aria-label="اشتراک در ایکس">${ico("xmark", "ap-sh-i")}<span>ایکس</span></a>
           <button type="button" class="ap-sh is-copy" data-ap-copy="${escA(url)}" aria-label="کپی نشانی">${ico("copy", "ap-sh-i")}<span>کپی نشانی</span></button>
           <button type="button" class="ap-sh is-native" data-ap-native data-ap-url="${escA(url)}" data-ap-title="${escA(title)}" aria-label="اشتراک‌گذاری">${ico("share", "ap-sh-i")}<span>اشتراک‌گذاری</span></button>
-          <button type="button" class="ap-sh is-print" data-ap-print aria-label="چاپ صفحه">${ico("print", "ap-sh-i")}<span>چاپ</span></button>
         </div>
       </section>`;
   }
@@ -1021,7 +1020,13 @@ module.exports = function createAnnRenderer(ctx) {
     const coverMode = ["hero", "boxed", "banner", "none"].indexOf(String(n.layout && n.layout.cover)) >= 0 ? n.layout.cover : "hero";
     const showSide = !(n.layout && n.layout.sidebar === "off");
 
-    const heroInner = `
+    /* کاور در بالاترین بخش — مدرن و تمام‌عرض با گوشه‌های نرم */
+    const topCover =
+      coverMode !== "none"
+        ? `<div class="ap-topcover"><div class="container">${cover || `<figure class="ap-cover ap-cover--art">${heroArt(n)}</figure>`}</div></div>`
+        : "";
+
+    const headInner = `
         <nav class="ap-crumbs" aria-label="مسیر صفحه">
           <a href="${prefix}index.html">خانه</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
           <a href="${prefix}ettelaieh.html">اطلاعیه‌ها</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
@@ -1036,25 +1041,7 @@ module.exports = function createAnnRenderer(ctx) {
           ${calendarLinks(n, url)}
         </div>`;
 
-    const hero =
-      style === "doc"
-        ? `<header class="ap-hero ap-hero--doc">
-            <div class="container">${heroInner}</div>
-          </header>`
-        : `<header class="ap-hero${style === "magazine" ? " ap-hero--mag" : ""}${style === "magazine" && cover ? " has-media" : ""}">
-            ${style === "magazine" && cover ? `<div class="ap-hero-media" aria-hidden="true">${coverFigure(n, prefix, "", true)}</div>` : ""}
-            <div class="ap-hero-glow" aria-hidden="true"></div>
-            <div class="container">${heroInner}</div>
-          </header>`;
-
-    /* کاور با ابعاد طبیعی خودش؛ در قالب «مجله» روی هیرو می‌نشیند.
-       اطلاعیه‌های بدون تصویر، بنر گرافیکی برند می‌گیرند تا صفحه خالی نماند. */
-    const coverBlock =
-      style !== "magazine" && coverMode !== "none"
-        ? `<div class="ap-cover-wrap${coverMode === "banner" ? " is-banner" : ""}">
-            <div class="container">${cover || `<figure class="ap-cover ap-cover--art">${heroArt(n)}</figure>`}</div>
-          </div>`
-        : "";
+    const head = `<header class="ap-head"><div class="container">${headInner}</div></header>`;
 
     const tagsRow = tags.length
       ? `<div class="ap-tags"><span class="ap-tags-l">${ico("tag", "ap-i-sm")} برچسب‌ها:</span>${tags
@@ -1082,9 +1069,7 @@ module.exports = function createAnnRenderer(ctx) {
 
     const aside = showSide
       ? `<aside class="ap-side" aria-label="اطلاعات جانبی اطلاعیه">
-          ${sideToc(toc)}
           ${sideKeyFacts(n, org, st)}
-          ${sideCta(n, cta, st)}
           ${sideOrg(n, org)}
           ${sideShare(url, n.title || "")}
           ${sideHtml.join("\n          ")}
@@ -1097,8 +1082,8 @@ module.exports = function createAnnRenderer(ctx) {
     const body = `
   <main class="ap" data-ap-layout="${esc(style)}">
     <div class="ap-readbar" aria-hidden="true"><span data-ap-progress></span></div>
-    ${hero}
-    ${coverBlock}
+    ${topCover}
+    ${head}
     <div class="ap-body">
       <div class="container ap-grid${showSide ? "" : " is-single"}">
         <article class="ap-main">
@@ -1106,9 +1091,8 @@ module.exports = function createAnnRenderer(ctx) {
           ${tagsRow}
           ${sourceRow}
           ${contactRow}
-          ${prevNext(n)}
-          ${related(n, org, 3)}
           <a class="ap-back" href="${prefix}ettelaieh.html">${ico("arrow", "ap-back-i")} بازگشت به فهرست اطلاعیه‌ها</a>
+          ${related(n, org, 3)}
         </article>
         ${aside}
       </div>

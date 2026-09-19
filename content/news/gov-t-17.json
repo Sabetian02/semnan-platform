@@ -1,11 +1,85 @@
 {
-  "body": "## دورهٔ تستی صداپیشگی و اجرای رادیویی\n\nاین اطلاعیه صرفاً برای تست بخش «دوره‌ها و کارگاه‌ها» در پروفایل کانون گویندگی و اجرا ساخته شده است.\n\n- تمرین عملی پشت میکروفون\n- تحلیل نمونه‌های اجرای رادیویی\n- ظرفیت محدود\n\nبرای ثبت‌نام و دریافت جزئیات، کانال تلگرام کانون را دنبال کنید.",
-  "active": true,
+  "title": "دورهٔ تستی «صداپیشگی و اجرای رادیویی»",
   "summary": "این یک اطلاعیهٔ تستی برای بررسی نمایش بخش «دوره‌ها و کارگاه‌ها» و صفحه‌بندی سه‌تایی در پروفایل کانون گویندگی و اجرا است.",
+  "body": "## دورهٔ تستی صداپیشگی و اجرای رادیویی\n\nاین اطلاعیه صرفاً برای تست بخش «دوره‌ها و کارگاه‌ها» در پروفایل کانون گویندگی و اجرا ساخته شده است.\n\n- تمرین عملی پشت میکروفون\n- تحلیل نمونه‌های اجرای رادیویی\n- ظرفیت محدود\n\nبرای ثبت‌نام و دریافت جزئیات، کانال تلگرام کانون را دنبال کنید.",
+  "category": "دوره",
+  "kanon": "govandegi-va-ecra",
+  "image": "https://kajartcomplex.com/wp-content/uploads/2024/07/how-to-become-a-radio-or-television-announcer-1.webp",
   "image_url": "",
   "date": "2026-09-18T09:30:00.000Z",
-  "kanon": "govandegi-va-ecra",
-  "title": "دورهٔ تستی «صداپیشگی و اجرای رادیویی»",
-  "image": "https://kajartcomplex.com/wp-content/uploads/2024/07/how-to-become-a-radio-or-television-announcer-1.webp",
-  "category": "دوره"
+  "active": true,
+  "tags": ["صداپیشگی", "گویندگی", "کارگاه"],
+  "layout": {
+    "style": "hero",
+    "cover": "hero",
+    "sidebar": "auto"
+  },
+  "blocks": [
+    {
+      "type": "text",
+      "heading": "دربارهٔ دوره",
+      "place": "main",
+      "markdown": "## دورهٔ تستی صداپیشگی و اجرای رادیویی\n\nاین اطلاعیه صرفاً برای تست بخش «دوره‌ها و کارگاه‌ها» در پروفایل کانون گویندگی و اجرا ساخته شده است.\n\n- تمرین عملی پشت میکروفون\n- تحلیل نمونه‌های اجرای رادیویی\n- ظرفیت محدود\n\nبرای ثبت‌نام و دریافت جزئیات، کانال تلگرام کانون را دنبال کنید."
+    },
+    {
+      "type": "highlights",
+      "heading": "نکات کلیدی",
+      "place": "main",
+      "items": [
+        { "text": "تمرین عملی پشت میکروفون" },
+        { "text": "تحلیل نمونه‌های اجرای رادیویی" },
+        { "text": "ظرفیت محدود — اولویت با ثبت‌نام زودهنگام" }
+      ]
+    },
+    {
+      "type": "facts",
+      "heading": "اطلاعات کلیدی",
+      "place": "main",
+      "items": [
+        { "label": "برگزارکننده", "value": "کانون گویندگی و اجرا", "icon": "users" },
+        { "label": "زمان", "value": "به‌زودی اعلام می‌شود", "icon": "calendar" },
+        { "label": "مکان", "value": "دانشگاه سمنان", "icon": "pin" },
+        { "label": "هزینه", "value": "رایگان", "icon": "money" }
+      ]
+    },
+    {
+      "type": "video",
+      "heading": "ویدیوی معرفی",
+      "place": "main",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "title": "معرفی دورهٔ صداپیشگی",
+      "caption": "نمونه ویدیو — هر URL قابل جاسازی یا لینک است."
+    },
+    {
+      "type": "form",
+      "heading": "فرم ثبت‌نام",
+      "place": "main",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSdnVACtVjvB8zLMJPudWJSYA0o9pBa7ob9jE7RYJqOrXnTcwA/viewform?embedded=true",
+      "note": "فرم زیر به‌صورت آزمایشی جاسازی شده است.",
+      "height": 520
+    },
+    {
+      "type": "image",
+      "place": "main",
+      "image": "https://kajartcomplex.com/wp-content/uploads/2024/07/how-to-become-a-radio-or-television-announcer-1.webp",
+      "caption": "نمایی از استودیوی اجرا",
+      "alt": "استودیوی رادیویی"
+    },
+    {
+      "type": "location",
+      "place": "side",
+      "name": "دانشگاه سمنان — کانون گویندگی و اجرا",
+      "address": "سمنان، دانشگاه سمنان",
+      "map_url": "https://www.google.com/maps/search/دانشگاه+سمنان"
+    },
+    {
+      "type": "cta",
+      "heading": "اقدام بعدی",
+      "place": "side",
+      "text": "برای اطلاع از زمان دقیق و جزئیات بیشتر، کانال کانون را دنبال کنید.",
+      "items": [
+        { "label": "ورود به کانال تلگرام", "link": "https://t.me/PlatformSem", "style": "tele", "icon": "telegram" }
+      ]
+    }
+  ]
 }

@@ -56,6 +56,58 @@
   position: relative;
   z-index: 1;
 }
+/* کاور در بالاترین بخش — مدرن و تمام‌عرض */
+.ap-topcover {
+  padding: 22px 0 0;
+  background: transparent;
+}
+.ap-topcover .ap-cover,
+.ap-topcover .ap-cover--art {
+  box-shadow: 0 20px 50px -28px rgba(0, 24, 64, 0.45);
+}
+.ap-topcover .ap-cover--art {
+  border-radius: var(--radius);
+}
+/* سربرگ مدرن زیر کاور — ادیتوریال و روشن */
+.ap-head {
+  padding: 22px 0 28px;
+  background: #fff;
+  border-block-end: 1px solid var(--line);
+}
+.ap-head .ap-title {
+  color: var(--navy-dark);
+}
+.ap-head .ap-lead {
+  color: var(--muted);
+  max-width: 780px;
+}
+.ap-head .ap-crumbs {
+  color: var(--muted);
+}
+.ap-head .ap-crumbs a {
+  color: var(--navy);
+}
+.ap-head .ap-metaline {
+  color: var(--muted);
+}
+.ap-head .ap-chip.is-cat {
+  background: rgba(16, 42, 113, 0.07);
+  color: var(--navy);
+  backdrop-filter: none;
+}
+.ap-head .ap-chip.is-org {
+  border-color: var(--line);
+  color: var(--navy);
+  background: #fff;
+}
+.ap-head .ap-chip.is-org:hover {
+  background: var(--ap-soft);
+}
+.ap-head .ap-cal-btn {
+  color: var(--navy);
+  border-color: var(--line);
+  background: var(--ap-soft);
+}
 .ap-hero--doc {
   background: #fff;
   color: var(--ink);
@@ -1209,6 +1261,34 @@
 .ap-card--cta .ap-card-i {
   color: var(--gold-soft);
 }
+.ap-card--kf {
+  background: linear-gradient(150deg, var(--navy-dark), var(--navy));
+  border-color: transparent;
+  color: #fff;
+}
+.ap-card--kf .ap-card-h,
+.ap-card--kf .ap-card-i {
+  color: var(--gold-soft);
+}
+.ap-card--kf .ap-kf-l {
+  color: rgba(255, 255, 255, 0.72);
+}
+.ap-card--kf .ap-kf-ico {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--gold-soft);
+}
+.ap-card--kf .ap-kf-v {
+  color: #fff;
+}
+.ap-card--kf .ap-kf-v a {
+  color: var(--gold-soft);
+}
+.ap-card--kf .ap-count {
+  border-block-start-color: rgba(255, 255, 255, 0.15);
+}
+.ap-card--kf .ap-count-l {
+  color: rgba(255, 255, 255, 0.7);
+}
 .ap-cta-facts {
   list-style: none;
   margin: 0 0 14px;
@@ -1415,56 +1495,66 @@
   justify-content: center;
 }
 
-/* کارت برگزارکننده */
+/* کارت برگزارکننده — بزرگ‌تر و شکیل‌تر، لوگو خواناتر */
 .ap-card--org {
-  padding: 14px;
+  padding: 18px;
+  background: linear-gradient(150deg, var(--navy-dark), var(--navy));
+  border-color: transparent;
+}
+.ap-card--org .ap-card-h {
+  color: var(--gold-soft);
+}
+.ap-card--org .ap-card-i {
+  color: var(--gold-soft);
 }
 .ap-org {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   text-decoration: none;
 }
 .ap-org-logo {
   display: grid;
   place-items: center;
-  inline-size: 52px;
-  block-size: 52px;
-  border-radius: 14px;
-  background: var(--ap-soft);
-  border: 1px solid var(--line);
+  inline-size: 72px;
+  block-size: 72px;
+  border-radius: 16px;
+  background: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   overflow: hidden;
   flex: 0 0 auto;
+  box-shadow: 0 8px 20px -10px rgba(0, 24, 64, 0.6);
 }
 .ap-org-img {
   inline-size: 100%;
   block-size: 100%;
   object-fit: contain;
+  padding: 6px;
 }
 .ap-org-mono {
-  inline-size: 40px;
-  block-size: 40px;
+  inline-size: 52px;
+  block-size: 52px;
 }
 .ap-org-txt {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   min-inline-size: 0;
 }
 .ap-org-txt small {
-  font-size: 0.72rem;
-  color: var(--muted);
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.72);
 }
 .ap-org-txt b {
-  font-size: 0.95rem;
-  color: var(--navy-dark);
+  font-size: 1.08rem;
+  color: #fff;
   line-height: 1.6;
 }
 .ap-org-txt span {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.76rem;
-  color: var(--navy);
+  font-size: 0.8rem;
+  color: var(--gold-soft);
   font-weight: 700;
 }
 
@@ -1548,65 +1638,66 @@
 }
 
 .ap-related {
-  margin-block-start: 16px;
+  margin-block-start: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.ap-related .ap-block-h {
+  margin: 0 0 14px;
 }
 .ap-rel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 .ap-rel {
   display: grid;
   border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   overflow: hidden;
-  background: #fff;
+  background: var(--ap-soft);
   text-decoration: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  padding: 12px 13px;
 }
 .ap-rel:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 34px -22px rgba(0, 24, 64, 0.45);
+  transform: translateY(-2px);
+  border-color: rgba(16, 42, 113, 0.2);
+  box-shadow: none;
 }
-.ap-rel-img {
-  display: block;
-  background: var(--ap-soft);
-  overflow: hidden;
-}
-.ap-rel-img img {
-  display: block;
-  inline-size: 100%;
-  block-size: auto;
-}
+.ap-rel-img,
 .ap-rel-art {
-  display: grid;
-  place-items: center;
-  block-size: 110px;
-  font-size: 2rem;
-  background: linear-gradient(150deg, var(--navy-dark), var(--navy));
+  display: none !important;
 }
 .ap-rel-body {
   display: grid;
   gap: 6px;
-  padding: 13px 14px 15px;
+  padding: 0;
 }
 .ap-rel-chip {
   align-self: start;
   justify-self: start;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: var(--navy);
   background: rgba(16, 42, 113, 0.07);
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: 999px;
 }
 .ap-rel-t {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--navy-dark);
-  line-height: 1.75;
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .ap-rel-d {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--muted);
 }
 
@@ -1822,6 +1913,24 @@
   }
   .ap-hero {
     padding: 22px 0 34px;
+  }
+  .ap-topcover {
+    padding: 14px 0 0;
+  }
+  .ap-head {
+    padding: 16px 0 22px;
+  }
+  .ap-related {
+    padding: 14px;
+  }
+  .ap-rel {
+    padding: 10px 11px;
+  }
+  .ap-rel-t {
+    font-size: 0.78rem;
+  }
+  .ap-rel-grid {
+    gap: 8px;
   }
   .ap-cover-wrap {
     margin-block-start: -16px;
