@@ -116,24 +116,48 @@ const fileKind = (name) => {
   return EXT_KIND[ext] || { kind: "file", label: ext ? ext.toUpperCase() : "فایل" };
 };
 
-/* ---------- ویدیو: فقط آپارات ---------- */
+/* ---------- ویدیو: آپارات، یوتیوب، ویمئو، فایل مستقیم یا لینک ---------- */
 const VIDEO_RE = {
-  aparat: /(?:aparat\.com)\/(?:v\/|video\/video\/embed\/videohash\/)([A-Za-z0-9_-]+)/i
+  aparat: /(?:aparat\.com)\/(?:v\/|video\/video\/embed\/videohash\/)([A-Za-z0-9_-]+)/i,
+  youtube:
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i,
+  vimeo: /(?:vimeo\.com\/(?!video\/)|player\.vimeo\.com\/video\/)(\d+)/i
 };
+const DIRECT_VIDEO = /\.(mp4|webm|mov|ogg)(?:$|[?#])/i;
 
 function videoEmbed(url) {
   const u = String(url || "").trim();
   if (!u) return null;
-  const m = u.match(VIDEO_RE.aparat);
-  if (m) {
+  const a = u.match(VIDEO_RE.aparat);
+  if (a) {
     return {
       kind: "embed",
-      src: "https://www.aparat.com/video/video/embed/videohash/" + m[1] + "/vt/frame",
+      src: "https://www.aparat.com/video/video/embed/videohash/" + a[1] + "/vt/frame",
       allow: "autoplay; fullscreen; picture-in-picture",
       label: "آپارات"
     };
   }
-  if (/^(https?:)/i.test(u)) return { kind: "link", src: u, label: "آپارات" };
+  const y = u.match(VIDEO_RE.youtube);
+  if (y) {
+    return {
+      kind: "embed",
+      src: "https://www.youtube-nocookie.com/embed/" + y[1],
+      allow: "autoplay; fullscreen; encrypted-media; picture-in-picture",
+      label: "یوتیوب",
+      thumb: "https://i.ytimg.com/vi/" + y[1] + "/hqdefault.jpg"
+    };
+  }
+  const v = u.match(VIDEO_RE.vimeo);
+  if (v) {
+    return {
+      kind: "embed",
+      src: "https://player.vimeo.com/video/" + v[1],
+      allow: "autoplay; fullscreen; picture-in-picture",
+      label: "Vimeo"
+    };
+  }
+  if (DIRECT_VIDEO.test(u) && /^https?:/i.test(u)) return { kind: "file", src: u, label: "ویدیو" };
+  if (/^https?:/i.test(u)) return { kind: "link", src: u, label: "ویدیو" };
   return null;
 }
 
@@ -160,15 +184,32 @@ function formEmbed(url, height) {
   return null;
 }
 
-/* ---------- نقشه: فقط نشان ---------- */
+/* ---------- نقشه: نشان و گوگل‌مپ ---------- */
+function googleEmbed(u, x) {
+  if (/output=embed/.test(u)) return { src: u };
+  const q = x.searchParams.get("q");
+  if (q) return { src: "https://maps.google.com/maps?q=" + encodeURIComponent(q.trim()) + "&output=embed" };
+  const fromPath = decodeURIComponent(x.pathname.replace(/^\/(maps|place)\//, "")).trim();
+  if (fromPath) return { src: "https://maps.google.com/maps?q=" + encodeURIComponent(fromPath) + "&output=embed" };
+  return null;
+}
+
 function mapEmbed(url) {
   const u = String(url || "").trim();
   if (!u) return null;
   try {
     const x = new URL(u);
     const host = x.hostname.replace(/^www\./, "");
-    if (host === "neshan.org" || host.endsWith(".neshan.org") || host === "nshn.ir" || host.endsWith(".nshn.ir")) {
-      return { src: u };
+    if (host === "neshan.org" || host.endsWith(".neshan.org")) return { src: u, provider: "neshan" };
+    if (host === "nshn.ir" || host.endsWith(".nshn.ir")) return { src: u, provider: "neshan" };
+    const isGoogle =
+      host === "maps.google.com" ||
+      host === "google.com" ||
+      host === "google.ir" ||
+      /^[^.]*\.google\.(com|ir)$/.test(host);
+    if (isGoogle && (x.pathname.startsWith("/maps") || x.pathname.startsWith("/place") || x.searchParams.has("q"))) {
+      const e = googleEmbed(u, x);
+      if (e) return { src: e.src, provider: "google" };
     }
   } catch (_) {}
   return null;

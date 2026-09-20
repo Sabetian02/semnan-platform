@@ -384,7 +384,8 @@ module.exports = function createAnnRenderer(ctx) {
     if (v.kind === "file") {
       return `<figure class="ap-video ap-video--native">
                 <video controls preload="metadata" playsinline${poster ? ` poster="${escA(poster)}"` : ""}>
-                  <source src="${escA(v.src)}">
+                  <source src="${escA(v.src)}" type="${/\.webm/i.test(v.src) ? "video/webm" : /\.mov/i.test(v.src) ? "video/quicktime" : "video/mp4"}">
+                  مرورگر شما امکان پخش ویدیو را ندارد.
                 </video>
                 ${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ""}
               </figure>`;
@@ -536,6 +537,12 @@ module.exports = function createAnnRenderer(ctx) {
 
   function bLocation(b) {
     const map = b.map_url ? mapEmbed(b.map_url) : null;
+    const mapTag =
+      map && map.provider === "google"
+        ? `<span class="ap-map-tag">نقشهٔ گوگل</span>`
+        : map && map.provider === "neshan"
+        ? `<span class="ap-map-tag">نشان</span>`
+        : "";
     const rows = [];
     if (b.address) rows.push(`<p class="ap-loc-addr">${ico("pin", "ap-i-sm")} ${esc(b.address)}</p>`);
     return `<div class="ap-location">
@@ -543,11 +550,10 @@ module.exports = function createAnnRenderer(ctx) {
               ${rows.join("")}
               ${
                 map
-                  ?                   `<div class="ap-map"><iframe src="${escA(map.src)}" title="${escA(b.name || "نقشه")}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" frameborder="0"></iframe></div>`
-                  : b.map_url
-                  ? `<a class="ap-loc-dir" href="${escA(b.map_url)}" target="_blank" rel="noopener">${ico("map", "ap-i-sm")} مشاهدهٔ مسیر</a>`
+                  ? `<div class="ap-map"><iframe src="${escA(map.src)}" title="${escA(b.name || "نقشه")}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" frameborder="0"></iframe>${mapTag}</div>`
                   : ""
               }
+              ${b.map_url ? `<a class="ap-loc-dir" href="${escA(b.map_url)}" target="_blank" rel="noopener">${ico("map", "ap-i-sm")} مشاهدهٔ مسیر در نقشه</a>` : ""}
             </div>`;
   }
 
@@ -611,7 +617,7 @@ module.exports = function createAnnRenderer(ctx) {
       if (e.all_day) rows.push(row("calendar", "نوع", "تمام‌روز"));
       const mode = String(e.mode || "").trim();
       if (mode) rows.push(row(mode === "آنلاین" ? "monitor" : "pin", "شکل برگزاری", mode));
-      if (e.location || e.address) rows.push(row("pin", "مکان", e.location || e.address));
+      if (e.location || e.address) rows.push(row("pin", "مکان", e.location || e.address, n.location && n.location.map_url ? n.location.map_url : ""));
       if (e.deadline) rows.push(row("bell", "مهلت ثبت‌نام", faDateTime(e.deadline, false)));
       if (e.capacity) rows.push(row("users", "ظرفیت", e.capacity));
       if (e.fee) rows.push(row("money", "هزینه", e.fee));

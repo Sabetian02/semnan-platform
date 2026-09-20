@@ -2588,6 +2588,7 @@
 /* بلوک‌ها — گرمای کرمی و نوار رنگی تمام‌عرض */
 .ap-block {
   background: linear-gradient(180deg, #fff 0%, var(--ap-soft) 170%);
+  overflow: hidden;
 }
 .ap-block::before {
   inset-inline: 0;
@@ -2616,6 +2617,11 @@
 .ap-block-h::after {
   block-size: 3px;
   inset-block-end: -6px;
+  inset-inline-start: 58px;
+  inset-inline-end: auto;
+  inline-size: 72px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px -2px rgba(245, 196, 0, 0.7);
   background: linear-gradient(90deg, var(--gold), rgba(245, 196, 0, 0.35), transparent);
 }
 
@@ -2937,6 +2943,122 @@
     transform: translate(-46px, 34px) scale(1.18);
     opacity: 0.9;
   }
+}
+
+/* --- ۱۳٫۱۳) بک‌گراندهای مهیج‌تر — شفق سپیده‌دم سرمه/طلا --- */
+.ap {
+  background:
+    radial-gradient(1150px 560px at 86% -140px, rgba(245, 196, 0, 0.17), transparent 62%),
+    radial-gradient(940px 520px at 4% 2%, rgba(16, 42, 113, 0.14), transparent 58%),
+    radial-gradient(820px 500px at 50% 120%, rgba(27, 58, 139, 0.12), transparent 62%),
+    radial-gradient(closest-side at 96% 55%, rgba(245, 196, 0, 0.07), transparent 70%),
+    radial-gradient(rgba(16, 42, 113, 0.05) 1px, transparent 1.4px),
+    linear-gradient(180deg, #fdfbf2 0%, var(--cream) 42%, #f6f9ff 100%);
+  background-size: auto, auto, auto, auto, 24px 24px, auto;
+}
+.ap-topcover {
+  background:
+    radial-gradient(860px 320px at 76% -70px, rgba(245, 196, 0, 0.2), transparent 66%),
+    radial-gradient(760px 360px at 12% 0%, rgba(27, 58, 139, 0.3), transparent 60%),
+    radial-gradient(1200px 520px at 50% 140%, rgba(16, 42, 113, 0.6), transparent 72%),
+    linear-gradient(115deg, transparent 40%, rgba(245, 196, 0, 0.08) 50%, transparent 62%),
+    linear-gradient(180deg, rgba(0, 24, 64, 0.96), rgba(16, 42, 113, 0.9) 55%, rgba(8, 26, 69, 0.55) 130%);
+}
+/* درخشش عبوریِ طلایی روی کارت تیتر */
+.ap-topcover + .ap-head .container::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  inline-size: 46%;
+  background: linear-gradient(105deg, transparent, rgba(245, 196, 0, 0.08), transparent);
+  transform: translateX(-160%);
+  animation: ap-sheen 8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes ap-sheen {
+  55%, 100% {
+    transform: translateX(210%);
+  }
+}
+/* نوار چیپ‌های موبایل — باند روشن طلا/سرمه */
+.ap-toc-rail {
+  background: linear-gradient(90deg, rgba(245, 196, 0, 0.09), rgba(16, 42, 113, 0.05));
+  border: 1px solid rgba(245, 196, 0, 0.22);
+  border-radius: 18px;
+  padding-inline: 14px;
+}
+
+/* --- ۱۳٫۱۴) نقشه و مسیر --- */
+.ap-map {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--ap-shadow-card);
+  margin-block-start: 16px;
+}
+.ap-map iframe {
+  display: block;
+  inline-size: 100%;
+  block-size: 320px;
+  border: 0;
+  background: var(--ap-soft);
+}
+.ap-map-tag {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-end: 12px;
+  background: rgba(8, 26, 69, 0.78);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(245, 196, 0, 0.4);
+}
+.ap-loc-dir {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-start: 14px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-decoration: none;
+  box-shadow: 0 12px 24px -12px rgba(8, 26, 69, 0.7);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.ap-loc-dir:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -12px rgba(245, 196, 0, 0.55);
+  background: linear-gradient(135deg, var(--navy), #1b3a8b);
+}
+.ap-loc-addr {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--navy-dark);
+  font-weight: 600;
+  background: linear-gradient(90deg, rgba(245, 196, 0, 0.1), transparent);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+/* کارت نقشه در نوار کناری */
+.ap-kf a {
+  color: var(--navy);
+  font-weight: 700;
+  text-decoration-color: rgba(245, 196, 0, 0.7);
+  text-underline-offset: 4px;
+}
+.ap-kf a:hover {
+  color: var(--gold);
+  text-decoration-color: var(--gold);
 }
 
 /* ---------- ۱۱) انیمیشن‌های ورود و جلوه‌های درخشان ---------- */
