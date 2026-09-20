@@ -23,7 +23,7 @@
     radial-gradient(rgba(16, 42, 113, 0.055) 1px, transparent 1.4px),
     var(--cream);
   background-size: auto, auto, 24px 24px;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .ap-readbar {
@@ -2577,6 +2577,11 @@
 .ap-head .ap-meta-i strong {
   font-weight: 800;
 }
+.ap-head .ap-meta-i svg,
+.ap-head .ap-meta-i .ap-i-sm {
+  color: var(--gold);
+  filter: drop-shadow(0 1px 2px rgba(245, 196, 0, 0.45));
+}
 
 /* نوار روی کارت تیتر — پالت سه‌بعدی سرمه/طلا */
 .ap-topcover + .ap-head .container::before {
@@ -2888,6 +2893,9 @@
   }
   .ap-toc-rail {
     display: flex;
+    position: sticky;
+    inset-block-start: 72px;
+    z-index: 55;
   }
 }
 @media (min-width: 901px) {
@@ -2981,12 +2989,14 @@
     transform: translateX(210%);
   }
 }
-/* نوار چیپ‌های موبایل — باند روشن طلا/سرمه */
+/* نوار چیپ‌های موبایل — شیشه‌ای خنثی برای پین‌شدن بالای صفحه */
 .ap-toc-rail {
-  background: linear-gradient(90deg, rgba(245, 196, 0, 0.09), rgba(16, 42, 113, 0.05));
-  border: 1px solid rgba(245, 196, 0, 0.22);
-  border-radius: 18px;
-  padding-inline: 14px;
+  background: rgba(253, 251, 242, 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px -18px rgba(0, 24, 64, 0.4);
 }
 
 /* --- ۱۳٫۱۴) نقشه و مسیر --- */

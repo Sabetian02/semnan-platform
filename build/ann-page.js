@@ -720,11 +720,8 @@ module.exports = function createAnnRenderer(ctx) {
   }
 
   function metaLine(n) {
-    const mins = readingMinutes(n);
     return `<div class="ap-metaline">
         <span class="ap-meta-i">${ico("calendar", "ap-i-sm")} <time datetime="${escA(n.date || "")}" data-date="${escA(n.date || "")}">${esc(faDate(n.date, true))}</time></span>
-        <span class="ap-meta-sep" aria-hidden="true"></span>
-        <span class="ap-meta-i">${ico("clock", "ap-i-sm")} ${fa(mins)} دقیقه مطالعه</span>
         ${n.author ? `<span class="ap-meta-sep" aria-hidden="true"></span><span class="ap-meta-i">${ico("edit", "ap-i-sm")} ${esc(n.author)}</span>` : ""}
       </div>`;
   }
