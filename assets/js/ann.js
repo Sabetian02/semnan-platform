@@ -87,7 +87,7 @@
       var el = id ? document.getElementById(id) : null;
       return el ? { link: a, el: el } : null;
     }).filter(Boolean);
-    return { links: links, bar: bar, targets: targets };
+    return { links: links, bar: bar, nav: nav, targets: targets };
   }).filter(function (s) { return s.targets.length; });
 
   function syncToc() {
@@ -97,9 +97,14 @@
       s.targets.forEach(function (t) {
         if (t.el.getBoundingClientRect().top - offset <= 0) current = t;
       });
+      var prevActive = null;
+      s.links.forEach(function (l) {
+        if (l.classList.contains("is-active")) prevActive = l;
+      });
       s.links.forEach(function (l) {
         l.classList.toggle("is-active", l === current.link);
       });
+      if (prevActive !== current.link) centerTocRail(s.nav);
       if (s.bar) {
         var art = document.querySelector(".ap-main");
         if (art) {
@@ -108,6 +113,18 @@
         }
       }
     });
+  }
+
+  /* وسط‌چین کردن چیپ فعال در نوار چیپ‌ها؛ گزینه‌های ابتدایی در ابتدای نوار می‌مانند */
+  function centerTocRail(nav) {
+    if (!nav || typeof nav.scrollTo !== "function") return;
+    var active = nav.querySelector(".ap-toc-chip.is-active");
+    if (!active) return;
+    var max = Math.max(0, nav.scrollWidth - nav.clientWidth);
+    var left = active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2;
+    var target = Math.max(0, Math.min(left, max));
+    if (target < 8) target = 0;
+    if (Math.abs(target - nav.scrollLeft) > 2) nav.scrollTo({ left: target, behavior: "smooth" });
   }
 
   /* ---------- گالری و کاور: لایت‌باکس ---------- */
@@ -245,6 +262,15 @@
       if (!el) return;
       e.preventDefault();
       window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
+      var nav = a.closest(".ap-toc-rail");
+      if (nav && typeof nav.scrollTo === "function") {
+        var nr = nav.getBoundingClientRect();
+        var ar = a.getBoundingClientRect();
+        var max = Math.max(0, nav.scrollWidth - nav.clientWidth);
+        var left = Math.max(0, Math.min(nav.scrollLeft + ar.left - nr.left - (nr.width - ar.width) / 2, max));
+        if (left < 8) left = 0;
+        nav.scrollTo({ left: left, behavior: "smooth" });
+      }
     });
   });
 
