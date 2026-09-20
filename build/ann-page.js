@@ -545,15 +545,17 @@ module.exports = function createAnnRenderer(ctx) {
         : "";
     const rows = [];
     if (b.address) rows.push(`<p class="ap-loc-addr">${ico("pin", "ap-i-sm")} ${esc(b.address)}</p>`);
+    const mapTitle = (map && map.title) || b.name || "نقشه";
+    const dirHref = b.map_url && String(b.map_url).trim().slice(0, 7).toLowerCase() !== "<iframe" ? b.map_url : "";
     return `<div class="ap-location">
               ${b.name ? `<h3 class="ap-loc-name">${ico("map", "ap-i-sm")} ${esc(b.name)}</h3>` : ""}
               ${rows.join("")}
               ${
                 map
-                  ? `<div class="ap-map"><iframe src="${escA(map.src)}" title="${escA(b.name || "نقشه")}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" frameborder="0"></iframe>${mapTag}</div>`
+                  ? `<div class="ap-map"><iframe src="${escA(map.src)}" title="${escA(mapTitle)}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" frameborder="0"></iframe>${mapTag}</div>`
                   : ""
               }
-              ${b.map_url ? `<a class="ap-loc-dir" href="${escA(b.map_url)}" target="_blank" rel="noopener">${ico("map", "ap-i-sm")} مشاهدهٔ مسیر در نقشه</a>` : ""}
+              ${dirHref ? `<a class="ap-loc-dir" href="${escA(dirHref)}" target="_blank" rel="noopener">${ico("map", "ap-i-sm")} مشاهدهٔ مسیر در نقشه</a>` : ""}
             </div>`;
   }
 
@@ -617,7 +619,11 @@ module.exports = function createAnnRenderer(ctx) {
       if (e.all_day) rows.push(row("calendar", "نوع", "تمام‌روز"));
       const mode = String(e.mode || "").trim();
       if (mode) rows.push(row(mode === "آنلاین" ? "monitor" : "pin", "شکل برگزاری", mode));
-      if (e.location || e.address) rows.push(row("pin", "مکان", e.location || e.address, n.location && n.location.map_url ? n.location.map_url : ""));
+      if (e.location || e.address) {
+        const mu = n.location && n.location.map_url ? String(n.location.map_url).trim() : "";
+        const muHref = mu && mu.slice(0, 7).toLowerCase() !== "<iframe" ? mu : "";
+        rows.push(row("pin", "مکان", e.location || e.address, muHref));
+      }
       if (e.deadline) rows.push(row("bell", "مهلت ثبت‌نام", faDateTime(e.deadline, false)));
       if (e.capacity) rows.push(row("users", "ظرفیت", e.capacity));
       if (e.fee) rows.push(row("money", "هزینه", e.fee));

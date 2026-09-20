@@ -184,7 +184,11 @@ function formEmbed(url, height) {
   return null;
 }
 
-/* ---------- نقشه: نشان و گوگل‌مپ ---------- */
+/* ---------- نقشه: کد آیفریم، نشان یا گوگل‌مپ ---------- */
+const IFRAME_SRC = /<iframe\b[^>]*\bsrc\s*=\s*["']([^"']+)["']/i;
+const IFRAME_TITLE = /<iframe\b[^>]*\btitle\s*=\s*["']([^"']+)["']/i;
+const isIframeCode = (s) => /^<iframe\b/i.test(String(s || "").trim());
+
 function googleEmbed(u, x) {
   if (/output=embed/.test(u)) return { src: u };
   const q = x.searchParams.get("q");
@@ -197,10 +201,20 @@ function googleEmbed(u, x) {
 function mapEmbed(url) {
   const u = String(url || "").trim();
   if (!u) return null;
+  if (isIframeCode(u)) {
+    const m = u.match(IFRAME_SRC);
+    if (m && /^https?:/i.test(m[1])) {
+      return { src: m[1], provider: "custom", title: (u.match(IFRAME_TITLE) || [])[1] || "نقشه" };
+    }
+  }
   try {
     const x = new URL(u);
     const host = x.hostname.replace(/^www\./, "");
-    if (host === "neshan.org" || host.endsWith(".neshan.org")) return { src: u, provider: "neshan" };
+    if (host === "neshan.org" || host.endsWith(".neshan.org")) {
+      const place = x.pathname.match(/\/maps\/places\/([^/]+)/);
+      if (place) return { src: "https://neshan.org/maps/iframe/places/" + place[1], provider: "neshan" };
+      return { src: u, provider: "neshan" };
+    }
     if (host === "nshn.ir" || host.endsWith(".nshn.ir")) return { src: u, provider: "neshan" };
     const isGoogle =
       host === "maps.google.com" ||
