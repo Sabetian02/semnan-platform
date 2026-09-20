@@ -97,14 +97,15 @@
       s.targets.forEach(function (t) {
         if (t.el.getBoundingClientRect().top - offset <= 0) current = t;
       });
+      var isRail = s.nav && s.nav.classList.contains("ap-toc-rail");
       var prevActive = null;
       s.links.forEach(function (l) {
         if (l.classList.contains("is-active")) prevActive = l;
       });
       s.links.forEach(function (l) {
-        l.classList.toggle("is-active", l === current.link);
+        if (!isRail) l.classList.toggle("is-active", l === current.link);
       });
-      if (prevActive !== current.link) centerTocRail(s.nav);
+      if (isRail && prevActive !== current.link) centerTocRail(s.nav, current.link);
       if (s.bar) {
         var art = document.querySelector(".ap-main");
         if (art) {
@@ -115,17 +116,16 @@
     });
   }
 
-  /* وسط‌چین کردن چیپ فعال در نوار چیپ‌ها؛ گزینه‌های ابتدایی در ابتدای نوار می‌مانند.
-     عمداً فوری (بدون smooth) تا روی موبایل لغو نشود و هر بار واقعاً بچرخد. */
-  function centerTocRail(nav) {
-    if (!nav) return;
-    var active = nav.querySelector(".ap-toc-chip.is-active");
-    if (!active) return;
-    var max = Math.max(0, nav.scrollWidth - nav.clientWidth);
-    var left = active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2;
-    var target = Math.max(0, Math.min(left, max));
-    if (target < 8) target = 0;
-    if (Math.abs(target - nav.scrollLeft) > 2) nav.scrollLeft = target;
+  /* وسط‌چین کردن چیپ فعال در نوار چیپ‌ها؛ گزینه‌های ابتدایی خودکار خارج نمی‌شوند.
+     چون صفحه راست‌به‌چپ است از scrollIntoView استفاده می‌شود تا در همهٔ مرورگرها
+     و جهت‌ها درست مرکز شود (scrollLeft در RTL قابل‌اعتماد نیست). */
+  function centerTocRail(nav, link) {
+    if (!nav || !link || typeof link.scrollIntoView !== "function") return;
+    try {
+      link.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    } catch (e) {
+      link.scrollIntoView(true);
+    }
   }
 
   /* ---------- گالری و کاور: لایت‌باکس ---------- */
@@ -264,11 +264,12 @@
       e.preventDefault();
       window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
       var nav = a.closest(".ap-toc-rail");
-      if (nav) {
-        var max = Math.max(0, nav.scrollWidth - nav.clientWidth);
-        var target = Math.max(0, Math.min(a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2, max));
-        if (target < 8) target = 0;
-        nav.scrollLeft = target;
+      if (nav && typeof a.scrollIntoView === "function") {
+        try {
+          a.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        } catch (e) {
+          a.scrollIntoView(true);
+        }
       }
     });
   });
