@@ -77,37 +77,37 @@
     });
   });
 
-  /* ---------- فهرست مطالب: ردیابی بخش فعال ---------- */
-  var tocNav = document.querySelector("[data-ap-toc]");
-  var tocBar = document.querySelector("[data-ap-toc-progress]");
-  var tocLinks = tocNav
-    ? Array.prototype.slice.call(tocNav.querySelectorAll("[data-ap-toc-link]"))
-    : [];
-  var tocTargets = tocLinks
-    .map(function (a) {
+  /* ---------- فهرست مطالب: ردیابی بخش فعال (پشتیبانی از چند ریل) ---------- */
+  var tocNavs = Array.prototype.slice.call(document.querySelectorAll("[data-ap-toc]"));
+  var tocSets = tocNavs.map(function (nav) {
+    var links = Array.prototype.slice.call(nav.querySelectorAll("[data-ap-toc-link]"));
+    var bar = nav.querySelector("[data-ap-toc-progress]");
+    var targets = links.map(function (a) {
       var id = (a.getAttribute("href") || "").replace("#", "");
       var el = id ? document.getElementById(id) : null;
       return el ? { link: a, el: el } : null;
-    })
-    .filter(Boolean);
+    }).filter(Boolean);
+    return { links: links, bar: bar, targets: targets };
+  }).filter(function (s) { return s.targets.length; });
 
   function syncToc() {
-    if (!tocTargets.length) return;
-    var offset = 130;
-    var current = tocTargets[0];
-    tocTargets.forEach(function (t) {
-      if (t.el.getBoundingClientRect().top - offset <= 0) current = t;
-    });
-    tocTargets.forEach(function (t) {
-      t.link.classList.toggle("is-active", t === current);
-    });
-    if (tocBar) {
-      var article = document.querySelector(".ap-main");
-      if (article) {
-        var p = (window.scrollY - (article.offsetTop - 140)) / Math.max(1, article.offsetHeight);
-        tocBar.style.inlineSize = (Math.max(0, Math.min(1, p)) * 100).toFixed(1) + "%";
+    tocSets.forEach(function (s) {
+      var offset = 130;
+      var current = s.targets[0];
+      s.targets.forEach(function (t) {
+        if (t.el.getBoundingClientRect().top - offset <= 0) current = t;
+      });
+      s.links.forEach(function (l) {
+        l.classList.toggle("is-active", l === current.link);
+      });
+      if (s.bar) {
+        var art = document.querySelector(".ap-main");
+        if (art) {
+          var p = (window.scrollY - (art.offsetTop - 140)) / Math.max(1, art.offsetHeight);
+          s.bar.style.inlineSize = (Math.max(0, Math.min(1, p)) * 100).toFixed(1) + "%";
+        }
       }
-    }
+    });
   }
 
   /* ---------- گالری و کاور: لایت‌باکس ---------- */
@@ -239,7 +239,7 @@
   /* ---------- پیوند فهرست/جستجو با پارامتر آدرس ---------- */
   /* کاری که در صفحهٔ فهرست انجام می‌شود در main.js است؛ این‌جا فقط لنگرها را
      نرم‌تر می‌کنیم تا پرش ناگهانی نباشد. */
-  Array.prototype.forEach.call(document.querySelectorAll('.ap-toc a[href^="#"]'), function (a) {
+  Array.prototype.forEach.call(document.querySelectorAll('.ap-toc a[href^="#"], .ap-toc-rail a[href^="#"]'), function (a) {
     a.addEventListener("click", function (e) {
       var el = document.getElementById(a.getAttribute("href").slice(1));
       if (!el) return;
@@ -248,8 +248,27 @@
     });
   });
 
+  /* ---------- آشکارسازی با اسکرول (به جز کاهش‌حرکت) ---------- */
+  var reducesMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (window.IntersectionObserver && !reducesMotion) {
+    document.documentElement.classList.add("js");
+    var els = Array.prototype.slice.call(
+      document.querySelectorAll(".ap-block, .ap-rel, .ap-card, .ap-figure, .ap-video, .ap-cover")
+    );
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -6% 0px" });
+    els.forEach(function (el) { io.observe(el); });
+  }
+
   /* ---------- راه‌اندازی ---------- */
-  if (tocTargets.length || bar || topBtn) {
+  if (tocSets.length || bar || topBtn) {
     window.addEventListener("scroll", function () {
       onScroll();
       syncToc();

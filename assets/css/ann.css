@@ -2442,6 +2442,383 @@
   }
 }
 
+/* ---------- ۱۳) ریدیزاین خواندنی ناب — مقاله‌ای و سرمقاله‌ای ---------- */
+
+/* --- ۱۳٫۱) آشکارسازی با اسکرول (فقط وقتی js فعال است) --- */
+.js .ap-block:not(.is-in),
+.js .ap-rel:not(.is-in),
+.js .ap-card:not(.is-in),
+.js .ap-figure:not(.is-in),
+.js .ap-video:not(.is-in),
+.js .ap-cover:not(.is-in) {
+  opacity: 0;
+  transform: translateY(26px);
+}
+.js .ap-block,
+.js .ap-rel,
+.js .ap-card,
+.js .ap-figure,
+.js .ap-video,
+.js .ap-cover {
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(min(var(--ap-i, 0), 6) * 45ms);
+}
+.js .ap-block {
+  animation: none;
+}
+.js .ap-cover {
+  transition-duration: 0.9s;
+}
+
+/* --- ۱۳٫۲) هالهٔ طلایی زندهٔ پشت کاور --- */
+.ap-topcover::after {
+  content: "";
+  position: absolute;
+  inset-block-start: -70px;
+  inset-inline-start: 6%;
+  inline-size: 340px;
+  block-size: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 196, 0, 0.32), transparent 64%);
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: 0;
+  animation: ap-orb 11s ease-in-out infinite alternate;
+}
+.ap-topcover .container {
+  z-index: 2;
+}
+
+/* --- ۱۳٫۳) تیتر و لید سرمقاله‌ای --- */
+.ap-title {
+  letter-spacing: -0.3px;
+  text-wrap: balance;
+}
+.ap-lead {
+  font-size: clamp(1rem, 2.2vw, 1.14rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 2.05;
+  padding-inline-start: 18px;
+  border-inline-start: 3px solid rgba(245, 196, 0, 0.7);
+}
+.ap-topcover + .ap-head .container {
+  border-radius: 28px;
+  padding: 34px 38px 32px;
+  box-shadow: var(--ap-shadow-lg), 0 0 0 1px rgba(245, 196, 0, 0.1),
+    0 24px 60px -30px rgba(0, 24, 64, 0.55);
+}
+.ap-topcover + .ap-head .container::before {
+  block-size: 6px;
+  border-radius: 999px;
+  box-shadow: 0 0 18px rgba(245, 196, 0, 0.5);
+}
+
+/* --- ۱۳٫۴) شمارهٔ بخش — عدد بزرگ سرمقاله‌ای --- */
+.ap-block-num {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 24px;
+  font-size: 3.2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(245, 196, 0, 0.28);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.ap-block-h {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- ۱۳٫۵) تایپوگرافی مقاله --- */
+.ap-rich {
+  font-size: 1.02rem;
+}
+.ap-rich p {
+  margin: 0 0 18px;
+  line-height: 2.1;
+}
+.ap-rich > p:first-child {
+  font-size: 1.07rem;
+  color: #1c2942;
+}
+.ap-rich h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.16rem;
+  font-weight: 800;
+}
+.ap-rich h3::before {
+  content: "";
+  flex: none;
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  transform: rotate(45deg);
+  box-shadow: 0 4px 10px -4px rgba(245, 196, 0, 0.8);
+}
+.ap-rich ul {
+  padding-inline-start: 0;
+  margin: 0 0 18px;
+}
+.ap-rich ul li {
+  position: relative;
+  list-style: none;
+  padding-inline-start: 32px;
+  margin-block-end: 6px;
+}
+.ap-rich ul li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 2px;
+  inset-block-start: 8px;
+  inline-size: 19px;
+  block-size: 19px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  box-shadow: 0 4px 10px -4px rgba(0, 24, 64, 0.6);
+}
+.ap-rich ul li::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 8px;
+  inset-block-start: 12px;
+  inline-size: 4px;
+  block-size: 8px;
+  border: solid #fff;
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg);
+}
+.ap-rich ol {
+  padding-inline-start: 26px;
+}
+.ap-rich ol li::marker {
+  color: var(--gold);
+  font-weight: 800;
+}
+.ap-rich blockquote p {
+  margin: 0;
+}
+
+/* --- ۱۳٫۶) فهرست مطالب — رییل چسبان دسکتاپ --- */
+.ap-card--toc {
+  position: relative;
+  overflow: hidden;
+}
+.ap-toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  counter-reset: ap-toc;
+}
+.ap-toc li {
+  counter-increment: ap-toc;
+  margin: 0;
+}
+.ap-toc a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.8;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.ap-toc a::before {
+  content: counter(ap-toc, decimal-leading-zero);
+  font-size: 0.66rem;
+  font-weight: 900;
+  color: var(--gold);
+  background: rgba(245, 196, 0, 0.14);
+  border-radius: 8px;
+  inline-size: 24px;
+  block-size: 24px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.ap-toc a:hover {
+  background: rgba(245, 196, 0, 0.1);
+  transform: translateX(-4px);
+}
+.ap-toc a.is-active {
+  background: linear-gradient(135deg, rgba(16, 42, 113, 0.08), rgba(245, 196, 0, 0.16));
+  color: var(--navy-dark);
+}
+.ap-toc a.is-active::before {
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  color: var(--navy-dark);
+}
+.ap-toc-bar {
+  display: block;
+  block-size: 4px;
+  margin-block-start: 12px;
+  border-radius: 999px;
+  background: rgba(16, 42, 113, 0.1);
+  overflow: hidden;
+}
+.ap-toc-bar i {
+  display: block;
+  block-size: 100%;
+  inline-size: 0;
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+  border-radius: 999px;
+}
+
+/* --- ۱۳٫۷) چیپ‌های فهرست موبایل --- */
+.ap-toc-rail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 2px 12px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.ap-toc-rail::-webkit-scrollbar {
+  display: none;
+}
+.ap-toc-rail-label {
+  flex: none;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--navy);
+  background: rgba(245, 196, 0, 0.14);
+  border: 1px solid rgba(245, 196, 0, 0.4);
+  padding: 8px 13px;
+  border-radius: 999px;
+}
+.ap-toc-chip {
+  flex: none;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--navy);
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 6px 14px -10px rgba(0, 24, 64, 0.5);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+.ap-toc-chip:hover {
+  border-color: rgba(245, 196, 0, 0.55);
+  transform: translateY(-2px);
+}
+.ap-toc-chip.is-active {
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 20px -10px rgba(0, 24, 64, 0.5);
+}
+
+/* --- ۱۳٫۸) کارت‌های مرتبط — شبکهٔ کشف --- */
+.ap-rel-chip {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  background: linear-gradient(135deg, rgba(245, 196, 0, 0.22), rgba(245, 196, 0, 0.12));
+  border: 1px solid rgba(245, 196, 0, 0.45);
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-block-end: 8px;
+}
+.ap-rel-t {
+  transition: color 0.2s ease;
+}
+.ap-rel:hover .ap-rel-t {
+  color: var(--navy);
+}
+
+/* --- ۱۳٫۹) نوار مطالعهٔ درخشان --- */
+.ap-readbar {
+  border-radius: 0 999px 999px 0;
+}
+.ap-readbar > span {
+  background: linear-gradient(90deg, var(--navy), var(--gold), var(--gold-soft), var(--gold));
+  box-shadow: 0 0 14px rgba(245, 196, 0, 0.85);
+}
+
+/* --- ۱۳٫۱۰) چیدمان موبایل برای مؤلفه‌های جدید --- */
+@media (max-width: 900px) {
+  .ap-card--toc {
+    display: none;
+  }
+  .ap-toc-rail {
+    display: flex;
+  }
+}
+@media (min-width: 901px) {
+  .ap-toc-rail {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  .ap-block-num {
+    font-size: 2.4rem;
+    inset-inline-end: 18px;
+  }
+  .ap-topcover + .ap-head .container {
+    padding: 26px 22px 24px;
+    margin-block-start: -64px;
+  }
+  .ap-title {
+    font-size: clamp(1.35rem, 6.4vw, 1.7rem);
+  }
+}
+@media (max-width: 480px) {
+  .ap-rich h3 {
+    align-items: flex-start;
+  }
+  .ap-toc-rail-label {
+    display: none;
+  }
+}
+
+/* --- ۱۳٫۱۱) امنیت چاپ با حالت js --- */
+@media print {
+  .js .ap-block:not(.is-in),
+  .js .ap-rel:not(.is-in),
+  .js .ap-card:not(.is-in),
+  .js .ap-figure:not(.is-in),
+  .js .ap-video:not(.is-in),
+  .js .ap-cover:not(.is-in) {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .ap-toc-rail,
+  .ap-card--toc,
+  .ap-block-num {
+    display: none !important;
+  }
+}
+
+/* --- ۱۳٫۱۲) کین‌فریم هاله --- */
+@keyframes ap-orb {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate(-46px, 34px) scale(1.18);
+    opacity: 0.9;
+  }
+}
+
 /* ---------- ۱۱) انیمیشن‌های ورود و جلوه‌های درخشان ---------- */
 @keyframes ap-rise {
   from {

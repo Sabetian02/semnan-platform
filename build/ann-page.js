@@ -587,6 +587,7 @@ module.exports = function createAnnRenderer(ctx) {
     if (head) {
       const entry = { id: bId, text: head, level: 2 };
       const html = `<section id="${bId}" class="ap-block ap-block--${esc(b.type)}${b.place === "side" ? " is-side" : ""}" style="--ap-i:${i}">
+          <span class="ap-block-num" aria-hidden="true">${fa(i + 1).padStart(2, "۰")}</span>
           <h2 class="ap-block-h"><span class="ap-block-hi">${ico(BLOCK_ICON[b.type] || "spark", "ap-block-ico")}</span>${esc(head)}</h2>
           ${inner}
         </section>`;
@@ -1047,8 +1048,18 @@ module.exports = function createAnnRenderer(ctx) {
         </section>`
       : "";
 
+    const tocCard = (toc) => `
+      <section class="ap-card ap-card--toc" data-ap-toc aria-label="فهرست مطالب">
+        <h2 class="ap-card-h">${ico("spark", "ap-card-i")} فهرست مطالب</h2>
+        <ul class="ap-toc">
+          ${toc.map((t) => `<li><a href="#${t.id}" data-ap-toc-link><span class="ap-toc-arrow" aria-hidden="true"></span>${esc(t.text)}</a></li>`).join("")}
+        </ul>
+        <span class="ap-toc-bar"><i data-ap-toc-progress aria-hidden="true"></i></span>
+      </section>`;
+
     const aside = showSide
       ? `<aside class="ap-side" aria-label="اطلاعات جانبی اطلاعیه">
+          ${toc.length > 1 ? tocCard(toc) : ""}
           ${sideKeyFacts(n, org, st)}
           ${sideOrg(n, org)}
           ${sideShare(url, n.title || "")}
@@ -1065,6 +1076,10 @@ module.exports = function createAnnRenderer(ctx) {
     ${topCover}
     ${head}
     <div class="ap-body">
+      ${toc.length > 1 ? `<div class="container"><nav class="ap-toc-rail" data-ap-toc aria-label="فهرست مطالب">
+        <span class="ap-toc-rail-label">مطالب این اطلاعیه</span>
+        ${toc.map((t) => `<a href="#${t.id}" data-ap-toc-link class="ap-toc-chip">${esc(t.text)}</a>`).join("")}
+      </nav></div>` : ""}
       <div class="container ap-grid${showSide ? "" : " is-single"}">
         <article class="ap-main">
           ${mainHtml.join("\n          ")}
