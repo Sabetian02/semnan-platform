@@ -2989,6 +2989,13 @@
     transform: translateX(210%);
   }
 }
+/* در موبایل‌ها دکورهای ::after هر دو کانتینر هدر حذف می‌شوند */
+@media (max-width: 720px) {
+  .ap-topcover .container::after,
+  .ap-topcover + .ap-head .container::after {
+    display: none;
+  }
+}
 /* نوار چیپ‌های موبایل — شیشه‌ای خنثی برای پین‌شدن بالای صفحه */
 .ap-toc-rail {
   background: rgba(253, 251, 242, 0.85);
