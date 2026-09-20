@@ -14,9 +14,11 @@
   --ap-shadow-lg: 0 30px 60px -28px rgba(0, 24, 64, 0.35);
   --ap-shadow-card: 0 18px 44px -24px rgba(0, 24, 64, 0.28);
   background:
-    radial-gradient(900px 320px at 85% -40px, rgba(245, 196, 0, 0.1), transparent 65%),
-    radial-gradient(1000px 380px at 8% 0%, rgba(16, 42, 113, 0.07), transparent 60%),
+    radial-gradient(900px 320px at 85% -40px, rgba(245, 196, 0, 0.12), transparent 65%),
+    radial-gradient(1000px 380px at 8% 0%, rgba(16, 42, 113, 0.08), transparent 60%),
+    radial-gradient(rgba(16, 42, 113, 0.055) 1px, transparent 1.4px),
     var(--cream);
+  background-size: auto, auto, 24px 24px;
   overflow-x: hidden;
 }
 
@@ -29,11 +31,15 @@
   z-index: 60;
   pointer-events: none;
 }
+.ap-readbar {
+  height: 5px;
+}
 .ap-readbar > span {
   display: block;
   inline-size: 0;
   block-size: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+  background: linear-gradient(90deg, var(--navy), var(--gold), var(--gold-soft));
+  box-shadow: 0 0 12px rgba(245, 196, 0, 0.8);
   transition: inline-size 0.12s linear;
 }
 
@@ -63,15 +69,32 @@
 }
 /* کاور سینمایی در بالاترین بخش — قاب گرد، سایهٔ عمیق، سایه‌روشن پایین */
 .ap-topcover {
-  padding: 22px 0 0;
-  background: transparent;
+  padding: 26px 0 0;
+  background:
+    radial-gradient(700px 260px at 50% -60px, rgba(245, 196, 0, 0.16), transparent 70%),
+    linear-gradient(180deg, rgba(0, 24, 64, 0.9), rgba(16, 42, 113, 0.85) 55%, transparent 130%);
+  border-block-end: 1px solid rgba(245, 196, 0, 0.25);
+}
+.ap-topcover .container {
+  position: relative;
+}
+.ap-topcover .container::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -1px;
+  inset-inline: 0;
+  block-size: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-soft) 50%, var(--gold) 70%, transparent);
+  opacity: 0.9;
 }
 .ap-topcover .ap-cover-btn,
 .ap-topcover .ap-cover--art {
   position: relative;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: var(--ap-shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  outline: 2px solid rgba(245, 196, 0, 0.55);
+  outline-offset: 5px;
+  box-shadow: var(--ap-shadow-lg), 0 0 60px -18px rgba(245, 196, 0, 0.35);
   overflow: hidden;
 }
 .ap-topcover .ap-cover-btn::after {
@@ -452,14 +475,26 @@
 .ap-art {
   display: grid;
   place-items: center;
-  block-size: 190px;
+  block-size: 220px;
   background:
-    radial-gradient(260px 130px at 15% 20%, rgba(255, 220, 95, 0.35), transparent 70%),
+    radial-gradient(420px 200px at 50% 120%, rgba(245, 196, 0, 0.35), transparent 65%),
+    radial-gradient(260px 130px at 15% 20%, rgba(255, 220, 95, 0.3), transparent 70%),
+    radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1.4px),
     linear-gradient(135deg, var(--navy-dark), var(--navy) 60%, #1b3a8b);
+  background-size: auto, auto, 20px 20px, auto;
+  position: relative;
+  overflow: hidden;
+}
+.ap-art::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  block-size: 5px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-soft), var(--gold), transparent);
 }
 .ap-art-emoji {
-  font-size: 3.4rem;
-  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+  font-size: 4rem;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.45));
 }
 
 /* هیرو مجله‌ای: کاور به‌عنوان پس‌زمینهٔ هیرو */
@@ -674,6 +709,11 @@
   align-items: flex-start;
   line-height: 1.95;
   color: #2a3650;
+  background: linear-gradient(135deg, rgba(245, 196, 0, 0.1), rgba(255, 220, 95, 0.05));
+  border: 1px solid rgba(245, 196, 0, 0.3);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 18px -12px rgba(245, 196, 0, 0.5);
 }
 .ap-hl-ico {
   display: grid;
@@ -681,8 +721,9 @@
   inline-size: 25px;
   block-size: 25px;
   border-radius: 50%;
-  background: rgba(34, 197, 94, 0.12);
-  color: #15803d;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #fff;
+  box-shadow: 0 6px 12px -6px rgba(22, 163, 74, 0.7);
   flex: 0 0 auto;
   margin-block-start: 3px;
 }
@@ -848,10 +889,22 @@
   inline-size: 74px;
   block-size: 74px;
   border-radius: 50%;
-  background: rgba(245, 196, 0, 0.95);
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
   color: var(--navy-dark);
-  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(245, 196, 0, 0.22);
   transition: transform 0.25s ease;
+}
+.ap-video-play::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(245, 196, 0, 0.55);
+  animation: ap-ping 2.2s ease-out infinite;
+}
+@keyframes ap-ping {
+  0% { transform: scale(0.85); opacity: 1; }
+  100% { transform: scale(1.25); opacity: 0; }
 }
 .ap-video-btn:hover .ap-video-play {
   transform: translate(50%, -50%) scale(1.08);
@@ -1048,9 +1101,11 @@
 }
 .ap-form-frame {
   border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  border-block-start: 4px solid var(--gold);
+  border-radius: 16px;
   overflow: hidden;
   background: #fff;
+  box-shadow: var(--ap-shadow-card);
 }
 .ap-form-frame iframe {
   inline-size: 100%;
@@ -1209,15 +1264,30 @@
 /* نقل‌قول */
 .ap-quote {
   margin: 0;
-  padding: 20px 22px;
-  background: linear-gradient(150deg, rgba(16, 42, 113, 0.05), rgba(245, 196, 0, 0.08));
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--line);
+  padding: 24px 24px 22px;
+  background:
+    radial-gradient(300px 150px at 90% 0%, rgba(245, 196, 0, 0.16), transparent 65%),
+    linear-gradient(150deg, var(--navy-dark), var(--navy) 70%, #1b3a8b);
+  border-radius: 18px;
+  border: 1px solid rgba(245, 196, 0, 0.35);
+  box-shadow: var(--ap-shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   position: relative;
+  overflow: hidden;
+}
+.ap-quote::after {
+  content: "”";
+  position: absolute;
+  inset-block-start: -18px;
+  inset-inline-end: 10px;
+  font-size: 7rem;
+  line-height: 1;
+  color: rgba(245, 196, 0, 0.16);
+  font-family: serif;
+  pointer-events: none;
 }
 .ap-quote-mark {
   display: inline-flex;
-  color: var(--gold);
+  color: var(--gold-soft);
   margin-block-end: 6px;
 }
 .ap-quote-i {
@@ -1226,11 +1296,12 @@
 }
 .ap-quote blockquote {
   margin: 0;
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   line-height: 2.1;
-  color: #24304a;
+  color: #fff;
   font-weight: 600;
 }
+
 .ap-quote figcaption {
   display: flex;
   align-items: center;
@@ -1242,16 +1313,17 @@
   block-size: 42px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid var(--gold);
 }
 .ap-quote figcaption span {
   display: grid;
 }
 .ap-quote figcaption b {
-  color: var(--navy-dark);
+  color: var(--gold-soft);
   font-size: 0.92rem;
 }
 .ap-quote figcaption small {
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.78rem;
 }
 
@@ -1417,11 +1489,30 @@
 .ap-card--kf {
   background: #fff;
   border-color: var(--line);
-  border-block-start: 3px solid var(--gold);
+  padding: 0;
+  overflow: hidden;
 }
-.ap-card--kf .ap-card-h,
+.ap-card--kf .ap-card-h {
+  background:
+    radial-gradient(200px 80px at 90% 0%, rgba(245, 196, 0, 0.25), transparent 70%),
+    linear-gradient(135deg, var(--navy-dark), var(--navy));
+  color: #fff;
+  margin: 0;
+  padding: 13px 18px;
+  border-block-end: 2px solid var(--gold);
+}
+.ap-card--kf .ap-card-h::after {
+  display: none;
+}
 .ap-card--kf .ap-card-i {
-  color: var(--navy-dark);
+  color: var(--gold-soft);
+}
+.ap-card--kf .ap-kf {
+  padding: 12px 18px 18px;
+}
+.ap-card--kf .ap-count {
+  margin: 12px 18px 18px;
+  padding-block-start: 12px;
 }
 .ap-card--kf .ap-kf-l {
   color: var(--muted);
@@ -1505,9 +1596,11 @@
   text-align: center;
 }
 .ap-count-grid span {
-  background: var(--navy-dark);
+  background: linear-gradient(160deg, var(--navy-dark), var(--navy));
+  border: 1px solid rgba(245, 196, 0, 0.4);
   border-radius: 10px;
   padding: 7px 4px;
+  box-shadow: 0 8px 18px -10px rgba(0, 24, 64, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .ap-count-grid b {
   display: block;
@@ -1718,7 +1811,11 @@
 }
 .ap-related .ap-block-h {
   margin: 0 0 18px;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
+}
+.ap-related .ap-block-hi {
+  inline-size: 38px;
+  block-size: 38px;
 }
 .ap-rel-grid {
   display: grid;
@@ -2003,11 +2100,12 @@
     padding: 22px 0 34px;
   }
   .ap-topcover {
-    padding: 14px 0 0;
+    padding: 16px 0 0;
   }
   .ap-topcover .ap-cover-btn,
   .ap-topcover .ap-cover--art {
     border-radius: 16px;
+    outline-offset: 3px;
   }
   .ap-head {
     padding: 0 0 4px;
