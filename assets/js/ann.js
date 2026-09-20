@@ -97,9 +97,16 @@
       s.targets.forEach(function (t) {
         if (t.el.getBoundingClientRect().top - offset <= 0) current = t;
       });
+      var prev = null;
+      s.links.forEach(function (l) {
+        if (l.classList.contains("is-active")) prev = l;
+      });
       s.links.forEach(function (l) {
         l.classList.toggle("is-active", l === current.link);
       });
+      if (prev !== current.link && s.nav.classList.contains("ap-toc-rail")) {
+        centerTocRail(s.nav, current.link);
+      }
       if (s.bar) {
         var art = document.querySelector(".ap-main");
         if (art) {
@@ -111,12 +118,13 @@
   }
 
   /* وسط‌چین کردن چیپ فعال در نوار چیپ‌ها؛ گزینه‌های ابتدایی خودکار خارج نمی‌شوند.
-     چون صفحه راست‌به‌چپ است از scrollIntoView استفاده می‌شود تا در همهٔ مرورگرها
-     و جهت‌ها درست مرکز شود (scrollLeft در RTL قابل‌اعتماد نیست). */
+     عمداً فوری (بدون انیمیشن) و بدون لمس اسکرولِ پنجره تا با اسکرول صفحه تداخل نکند؛
+     فقط نوار چیپ‌ها را‌به‌صورت افقی جابه‌جا می‌کند و در RTL هم درست کار می‌کند. */
   function centerTocRail(nav, link) {
     if (!nav || !link || typeof link.scrollIntoView !== "function") return;
+    if (!link.offsetWidth) return;
     try {
-      link.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      link.scrollIntoView({ block: "nearest", inline: "center" });
     } catch (e) {
       link.scrollIntoView(true);
     }
@@ -256,15 +264,9 @@
       var el = document.getElementById(a.getAttribute("href").slice(1));
       if (!el) return;
       e.preventDefault();
-      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
       var nav = a.closest(".ap-toc-rail");
-      if (nav && typeof a.scrollIntoView === "function") {
-        try {
-          a.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-        } catch (e) {
-          a.scrollIntoView(true);
-        }
-      }
+      if (nav) centerTocRail(nav, a);
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
     });
   });
 
