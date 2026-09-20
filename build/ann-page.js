@@ -587,7 +587,6 @@ module.exports = function createAnnRenderer(ctx) {
     if (head) {
       const entry = { id: bId, text: head, level: 2 };
       const html = `<section id="${bId}" class="ap-block ap-block--${esc(b.type)}${b.place === "side" ? " is-side" : ""}" style="--ap-i:${i}">
-          <span class="ap-block-num" aria-hidden="true">${fa(i + 1).padStart(2, "۰")}</span>
           <h2 class="ap-block-h"><span class="ap-block-hi">${ico(BLOCK_ICON[b.type] || "spark", "ap-block-ico")}</span>${esc(head)}</h2>
           ${inner}
         </section>`;

@@ -2536,23 +2536,124 @@
   box-shadow: 0 0 18px rgba(245, 196, 0, 0.5);
 }
 
-/* --- ۱۳٫۴) شمارهٔ بخش — عدد بزرگ سرمقاله‌ای --- */
-.ap-block-num {
-  position: absolute;
-  inset-block-start: 4px;
-  inset-inline-end: 24px;
-  font-size: 3.2rem;
-  font-weight: 900;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(245, 196, 0, 0.28);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
+/* --- ۱۳٫۴) ارتقای جسورانه — پالت پُررنگ سرمه و طلا --- */
+
+/* تیتر یکه — گرادیان سرمه به آبی سلطنتی به طلا */
+.ap-head .ap-title {
+  font-size: clamp(1.7rem, 4.9vw, 3.15rem);
+  line-height: 1.32;
+  letter-spacing: -0.5px;
+  color: var(--navy-dark);
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .ap-head .ap-title {
+    background: linear-gradient(120deg, var(--navy-dark) 0%, var(--navy) 42%, #1b3a8b 72%, var(--gold) 118%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* لید جسورانه — با نوار طلا و گرمای طلایی */
+.ap-head .ap-lead {
+  font-size: 1.06rem;
+  font-weight: 500;
+  line-height: 2.1;
+  color: #253252;
+  border-inline-start: 5px solid var(--gold);
+  background: linear-gradient(90deg, rgba(245, 196, 0, 0.09), transparent 72%);
+  border-radius: 0 14px 14px 0;
+  padding-block: 4px;
+}
+
+/* کپسول‌های متا — سرمه‌ای روشن با حاشیهٔ آبی سلطنتی */
+.ap-head .ap-meta-i {
+  background: linear-gradient(135deg, #eef1fb, var(--ap-soft));
+  border: 1px solid #c9d3ea;
+  color: var(--navy-dark);
+  font-weight: 600;
+}
+.ap-head .ap-meta-i b,
+.ap-head .ap-meta-i strong {
+  font-weight: 800;
+}
+
+/* نوار روی کارت تیتر — پالت سه‌بعدی سرمه/طلا */
+.ap-topcover + .ap-head .container::before {
+  block-size: 6px;
+  background: linear-gradient(90deg, var(--navy-dark), var(--navy) 22%, var(--gold) 56%, var(--gold-soft) 82%, #1b3a8b);
+  opacity: 1;
+}
+
+/* بلوک‌ها — گرمای کرمی و نوار رنگی تمام‌عرض */
+.ap-block {
+  background: linear-gradient(180deg, #fff 0%, var(--ap-soft) 170%);
+}
+.ap-block::before {
+  inset-inline: 0;
+  border-radius: 22px 22px 0 0;
+  block-size: 5px;
+  background: linear-gradient(90deg, var(--navy-dark), var(--navy) 26%, var(--gold) 58%, var(--gold-soft) 84%, #1b3a8b);
+  opacity: 1;
 }
 .ap-block-h {
-  position: relative;
-  z-index: 1;
+  font-size: 1.34rem;
+  letter-spacing: -0.2px;
+  color: var(--navy-dark);
+}
+.ap-block-hi {
+  inline-size: 46px;
+  block-size: 46px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  color: var(--gold-soft);
+  box-shadow: 0 12px 26px -12px rgba(8, 26, 69, 0.9), inset 0 0 0 1.5px rgba(245, 196, 0, 0.4);
+}
+.ap-block-ico {
+  inline-size: 24px;
+  block-size: 24px;
+}
+.ap-block-h::after {
+  block-size: 3px;
+  inset-block-end: -6px;
+  background: linear-gradient(90deg, var(--gold), rgba(245, 196, 0, 0.35), transparent);
+}
+
+/* تایپوگرافی مقاله — تیره‌تر، شکیل‌تر */
+.ap-rich {
+  color: #1d2b4a;
+  line-height: 2.15;
+}
+.ap-rich h2 {
+  font-size: 1.34rem;
+  border-inline-start: 5px solid var(--gold);
+  background: linear-gradient(90deg, rgba(245, 196, 0, 0.12), transparent 62%);
+  padding-inline-start: 14px;
+}
+.ap-rich a {
+  color: var(--navy);
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+  text-decoration-color: rgba(245, 196, 0, 0.75);
+  text-underline-offset: 5px;
+}
+.ap-rich a:hover {
+  color: #1b3a8b;
+  text-decoration-color: var(--gold);
+}
+
+/* تیتر فهرست مطالب دسکتاپ */
+.ap-card--toc .ap-card-h {
+  color: var(--navy-dark);
+}
+.ap-toc a.is-active {
+  background: linear-gradient(135deg, rgba(16, 42, 113, 0.1), rgba(245, 196, 0, 0.18));
+  box-shadow: inset 0 0 0 1px rgba(245, 196, 0, 0.25);
+}
+.ap-toc a.is-active::before {
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  color: var(--navy-dark);
+  box-shadow: 0 4px 10px -3px rgba(245, 196, 0, 0.7);
 }
 
 /* --- ۱۳٫۵) تایپوگرافی مقاله --- */
@@ -2789,9 +2890,8 @@
   }
 }
 @media (max-width: 720px) {
-  .ap-block-num {
-    font-size: 2.4rem;
-    inset-inline-end: 18px;
+  .ap-head .ap-title {
+    font-size: clamp(1.34rem, 5.9vw, 1.8rem);
   }
   .ap-topcover + .ap-head .container {
     padding: 26px 22px 24px;
@@ -2822,8 +2922,7 @@
     transform: none !important;
   }
   .ap-toc-rail,
-  .ap-card--toc,
-  .ap-block-num {
+  .ap-card--toc {
     display: none !important;
   }
 }
