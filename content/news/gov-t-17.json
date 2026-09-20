@@ -19,7 +19,7 @@
       "place": "main",
       "name": "دانشگاه سمنان — کانون گویندگی و اجرا",
       "address": "سمنان، دانشگاه سمنان",
-      "map_url": "https://nshn.ir/1e_bvHLiyxiFCH"
+      "map_url": "https://nshn.ir/02_bQNl8eFqWtT"
     },
     {
       "type": "form",
@@ -43,8 +43,18 @@
       "place": "main",
       "text": "از طریق دکمه‌های زیر می‌توانید ثبت‌نام کنید یا دوره‌های دیگر را ببینید.",
       "items": [
-        { "label": "ثبت‌نام در دوره", "link": "https://t.me/PlatformSem", "style": "tele", "icon": "telegram" },
-        { "label": "مشاهدهٔ همهٔ دوره‌ها", "link": "amoozesh.html", "style": "white", "icon": "" }
+        {
+          "label": "ثبت‌نام در دوره",
+          "link": "https://t.me/PlatformSem",
+          "style": "tele",
+          "icon": "telegram"
+        },
+        {
+          "label": "مشاهدهٔ همهٔ دوره‌ها",
+          "link": "amoozesh.html",
+          "style": "white",
+          "icon": ""
+        }
       ]
     }
   ],
