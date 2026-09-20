@@ -11,7 +11,12 @@
   --ap-gap: 32px;
   --ap-soft: #f6f7fb;
   --ap-gold-line: rgba(245, 196, 0, 0.55);
-  background: var(--cream);
+  --ap-shadow-lg: 0 30px 60px -28px rgba(0, 24, 64, 0.35);
+  --ap-shadow-card: 0 18px 44px -24px rgba(0, 24, 64, 0.28);
+  background:
+    radial-gradient(900px 320px at 85% -40px, rgba(245, 196, 0, 0.1), transparent 65%),
+    radial-gradient(1000px 380px at 8% 0%, rgba(16, 42, 113, 0.07), transparent 60%),
+    var(--cream);
   overflow-x: hidden;
 }
 
@@ -56,33 +61,97 @@
   position: relative;
   z-index: 1;
 }
-/* کاور در بالاترین بخش — مدرن و تمام‌عرض */
+/* کاور سینمایی در بالاترین بخش — قاب گرد، سایهٔ عمیق، سایه‌روشن پایین */
 .ap-topcover {
   padding: 22px 0 0;
   background: transparent;
 }
-.ap-topcover .ap-cover,
+.ap-topcover .ap-cover-btn,
 .ap-topcover .ap-cover--art {
-  box-shadow: 0 20px 50px -28px rgba(0, 24, 64, 0.45);
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--ap-shadow-lg);
+  overflow: hidden;
 }
-.ap-topcover .ap-cover--art {
-  border-radius: var(--radius);
+.ap-topcover .ap-cover-btn::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  block-size: 34%;
+  background: linear-gradient(180deg, transparent, rgba(0, 24, 64, 0.38));
+  pointer-events: none;
 }
-/* سربرگ مدرن زیر کاور — ادیتوریال و روشن */
+.ap-topcover .ap-cover-img {
+  border-radius: 0;
+}
+/* زیرنویس کاور: قرص شیشه‌ای شناور */
+.ap-topcover .ap-cover figcaption {
+  display: table;
+  margin: -22px auto 0;
+  position: relative;
+  z-index: 2;
+  background: rgba(0, 24, 64, 0.72);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.78rem;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 24px -12px rgba(0, 24, 64, 0.6);
+}
+/* کارت تیتر هم‌پوشان روی کاور — فقط وقتی کاور هست */
 .ap-head {
-  padding: 22px 0 28px;
+  padding: 0 0 6px;
+  background: transparent;
+  border: 0;
+  position: relative;
+  z-index: 3;
+}
+.ap-topcover + .ap-head .container {
   background: #fff;
-  border-block-end: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 26px 30px 24px;
+  margin-top: -64px;
+  box-shadow: var(--ap-shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+.ap-topcover + .ap-head .container::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft), var(--gold));
 }
 .ap-head .ap-title {
   color: var(--navy-dark);
+  text-wrap: balance;
+  font-size: clamp(1.4rem, 3.6vw, 2.2rem);
 }
+/* لید به‌سبک سرمقاله: خط طلایی کنار */
 .ap-head .ap-lead {
-  color: var(--muted);
+  color: #33405c;
   max-width: 780px;
+  border-inline-start: 3px solid var(--gold);
+  padding-inline-start: 14px;
+}
+/* متا به‌صورت قرص */
+.ap-head .ap-meta-i {
+  background: var(--ap-soft);
+  border: 1px solid var(--line);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+.ap-head .ap-meta-sep {
+  display: none;
 }
 .ap-head .ap-crumbs {
   color: var(--muted);
+  font-size: 0.76rem;
 }
 .ap-head .ap-crumbs a {
   color: var(--navy);
@@ -90,10 +159,17 @@
 .ap-head .ap-metaline {
   color: var(--muted);
 }
+.ap-head .ap-chip {
+  box-shadow: 0 6px 14px -8px rgba(0, 24, 64, 0.4);
+}
 .ap-head .ap-chip.is-cat {
-  background: rgba(16, 42, 113, 0.07);
-  color: var(--navy);
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  color: #fff;
   backdrop-filter: none;
+  border-color: transparent;
+}
+.ap-head .ap-chip.is-badge {
+  box-shadow: 0 8px 18px -8px rgba(245, 196, 0, 0.8);
 }
 .ap-head .ap-chip.is-org {
   border-color: var(--line);
@@ -102,11 +178,42 @@
 }
 .ap-head .ap-chip.is-org:hover {
   background: var(--ap-soft);
+  border-color: var(--gold);
 }
 .ap-head .ap-cal-btn {
   color: var(--navy);
   border-color: var(--line);
   background: var(--ap-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.ap-head .ap-cal-btn:hover {
+  background: #fff;
+  border-color: var(--gold);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -12px rgba(0, 24, 64, 0.4);
+}
+/* دکمهٔ طلایی براق با سایه */
+.ap-actions .btn-gold,
+.ap-btns-row .btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  box-shadow: 0 12px 24px -10px rgba(245, 196, 0, 0.7);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ap-actions .btn-gold:hover,
+.ap-btns-row .btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -10px rgba(245, 196, 0, 0.8);
+}
+.ap-actions .btn-navy,
+.ap-btns-row .btn-navy {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ap-actions .btn-navy:hover,
+.ap-btns-row .btn-navy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px -12px rgba(0, 24, 64, 0.6);
 }
 .ap-hero--doc {
   background: #fff;
@@ -388,7 +495,7 @@
 
 /* ---------- ۴) بدنه و شبکه ---------- */
 .ap-body {
-  padding: 42px 0 70px;
+  padding: 34px 0 70px;
 }
 .ap-grid {
   display: grid;
@@ -409,10 +516,10 @@
 .ap-block {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 24px 26px;
+  border-radius: 20px;
+  padding: 26px 28px;
   margin-block-end: 20px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--ap-shadow-card);
 }
 .ap-block:last-child {
   margin-block-end: 0;
@@ -433,8 +540,9 @@
   inline-size: 34px;
   block-size: 34px;
   border-radius: 11px;
-  background: rgba(16, 42, 113, 0.07);
-  color: var(--navy);
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  color: var(--navy-dark);
+  box-shadow: 0 8px 16px -8px rgba(245, 196, 0, 0.8);
   flex: 0 0 auto;
 }
 .ap-block-ico {
@@ -1281,9 +1389,9 @@
 .ap-card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: 20px;
   padding: 18px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--ap-shadow-card);
 }
 .ap-card-h {
   display: flex;
@@ -1293,6 +1401,13 @@
   font-weight: 800;
   color: var(--navy-dark);
   margin: 0 0 13px;
+}
+.ap-card-h::after {
+  content: "";
+  flex: 1;
+  block-size: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(245, 196, 0, 0.7), transparent);
 }
 .ap-card-i {
   inline-size: 18px;
@@ -1335,6 +1450,13 @@
   gap: 8px;
   font-size: 0.85rem;
   line-height: 1.8;
+  padding: 5px 7px;
+  margin: 0 -7px;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+}
+.ap-kf li:hover {
+  background: rgba(16, 42, 113, 0.05);
 }
 .ap-kf-ico {
   display: grid;
@@ -1342,8 +1464,9 @@
   inline-size: 28px;
   block-size: 28px;
   border-radius: 9px;
-  background: rgba(16, 42, 113, 0.07);
-  color: var(--navy);
+  background: linear-gradient(135deg, var(--navy), #1b3a8b);
+  color: #fff;
+  box-shadow: 0 6px 12px -6px rgba(16, 42, 113, 0.6);
   flex: 0 0 auto;
 }
 .ap-kf-l {
@@ -1419,8 +1542,17 @@
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
 .ap-sh:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   border-color: rgba(16, 42, 113, 0.3);
+  box-shadow: 0 12px 22px -12px rgba(0, 24, 64, 0.35);
+}
+.ap-sh.is-tele:hover {
+  border-color: rgba(34, 158, 217, 0.55);
+  box-shadow: 0 12px 22px -12px rgba(34, 158, 217, 0.7);
+}
+.ap-sh.is-wa:hover {
+  border-color: rgba(37, 211, 102, 0.55);
+  box-shadow: 0 12px 22px -12px rgba(37, 211, 102, 0.7);
 }
 .ap-sh-i {
   inline-size: 17px;
@@ -1459,8 +1591,9 @@
   inline-size: 84px;
   block-size: 84px;
   border-radius: 18px;
-  background: var(--ap-soft);
-  border: 1px solid var(--line);
+  background: linear-gradient(135deg, #fff, var(--ap-soft));
+  border: 2px solid rgba(245, 196, 0, 0.65);
+  box-shadow: 0 12px 24px -12px rgba(245, 196, 0, 0.55);
   overflow: hidden;
   flex: 0 0 auto;
 }
@@ -1593,26 +1726,51 @@
   gap: 16px;
 }
 .ap-rel {
+  position: relative;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
   background: #fff;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   box-shadow: 0 6px 20px -10px rgba(16, 42, 113, 0.15);
+}
+/* خط طلایی بالای کارت که با هاور ظاهر می‌شود */
+.ap-rel::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+  z-index: 2;
 }
 .ap-rel:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 30px -12px rgba(16, 42, 113, 0.22);
-  border-color: rgba(16, 42, 113, 0.12);
+  box-shadow: 0 18px 36px -14px rgba(0, 24, 64, 0.3);
+  border-color: rgba(245, 196, 0, 0.5);
+}
+.ap-rel:hover::before {
+  transform: none;
 }
 .ap-rel-img {
+  position: relative;
   display: block;
   aspect-ratio: 16/9;
   overflow: hidden;
   background: var(--ap-soft);
+}
+/* سایه‌روشن سینمایی روی تصویر */
+.ap-rel-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(0, 24, 64, 0.35));
+  pointer-events: none;
 }
 .ap-rel-img img {
   inline-size: 100%;
@@ -1641,12 +1799,14 @@
   align-self: start;
   justify-self: start;
   font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--navy);
-  background: rgba(16, 42, 113, 0.07);
-  padding: 3px 9px;
+  font-weight: 800;
+  color: var(--navy-dark);
+  background: linear-gradient(135deg, rgba(245, 196, 0, 0.28), rgba(255, 220, 95, 0.35));
+  border: 1px solid rgba(245, 196, 0, 0.45);
+  padding: 3px 10px;
   border-radius: 999px;
 }
+/* زیرخط طلایی متحرک برای تیتر (راست‌به‌چپ) */
 .ap-rel-t {
   font-size: 0.92rem;
   color: var(--navy-dark);
@@ -1655,6 +1815,12 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  padding-bottom: 2px;
+  background: linear-gradient(var(--gold), var(--gold)) no-repeat 100% 100% / 0 2px;
+  transition: background-size 0.25s ease;
+}
+.ap-rel:hover .ap-rel-t {
+  background-size: 100% 2px;
 }
 .ap-rel-d {
   font-size: 0.73rem;
@@ -1839,8 +2005,29 @@
   .ap-topcover {
     padding: 14px 0 0;
   }
+  .ap-topcover .ap-cover-btn,
+  .ap-topcover .ap-cover--art {
+    border-radius: 16px;
+  }
   .ap-head {
-    padding: 16px 0 22px;
+    padding: 0 0 4px;
+  }
+  .ap-topcover + .ap-head .container {
+    border-radius: 18px;
+    padding: 20px 18px 18px;
+    margin-top: -38px;
+  }
+  .ap-head .ap-title {
+    font-size: clamp(1.25rem, 5.4vw, 1.6rem);
+    line-height: 1.55;
+  }
+  .ap-head .ap-lead {
+    font-size: 0.92rem;
+    line-height: 1.95;
+  }
+  .ap-head .ap-meta-i {
+    font-size: 0.74rem;
+    padding: 4px 10px;
   }
   .ap-rel-grid {
     gap: 8px;
@@ -1882,8 +2069,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.97);
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-block-start: 1px solid var(--line);
     box-shadow: 0 -12px 30px -20px rgba(0, 24, 64, 0.5);
     z-index: 70;
@@ -1901,6 +2090,7 @@
     font-weight: 800;
     font-size: 0.88rem;
     text-decoration: none;
+    box-shadow: 0 10px 22px -10px rgba(245, 196, 0, 0.8);
   }
   .ap-mb-btn {
     inline-size: 44px;
