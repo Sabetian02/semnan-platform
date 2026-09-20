@@ -586,13 +586,13 @@ module.exports = function createAnnRenderer(ctx) {
     const head = String(b.heading || "").trim();
     if (head) {
       const entry = { id: bId, text: head, level: 2 };
-      const html = `<section id="${bId}" class="ap-block ap-block--${esc(b.type)}${b.place === "side" ? " is-side" : ""}">
+      const html = `<section id="${bId}" class="ap-block ap-block--${esc(b.type)}${b.place === "side" ? " is-side" : ""}" style="--ap-i:${i}">
           <h2 class="ap-block-h"><span class="ap-block-hi">${ico(BLOCK_ICON[b.type] || "spark", "ap-block-ico")}</span>${esc(head)}</h2>
           ${inner}
         </section>`;
       return { html: { section: html, entry }, toc };
     }
-    const html = `<section class="ap-block ap-block--${esc(b.type)}${b.place === "side" ? " is-side" : ""}">${inner}</section>`;
+    const html = `<section class="ap-block ap-block--${esc(b.type)}${b.place === "side" ? " is-side" : ""}" style="--ap-i:${i}">${inner}</section>`;
     return { html: { section: html, entry: null }, toc };
   }
 

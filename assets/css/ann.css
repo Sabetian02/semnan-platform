@@ -279,6 +279,18 @@
   overflow: hidden;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+.ap-actions .btn-gold::after,
+.ap-btns-row .btn-gold::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: -80%;
+  inset-block: 0;
+  inline-size: 45%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: ap-shine 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
 .ap-actions .btn-gold:hover,
 .ap-btns-row .btn-gold:hover {
   transform: translateY(-2px);
@@ -396,6 +408,9 @@
   margin: 0 0 14px;
   color: #fff;
   letter-spacing: -0.2px;
+  text-shadow: 0 2px 18px rgba(245, 196, 0, 0.25), 0 4px 40px rgba(0, 24, 64, 0.6);
+  animation: ap-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: transform, opacity;
 }
 .ap-lead {
   max-width: 780px;
@@ -416,6 +431,16 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(245, 196, 0, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 16px -8px rgba(0, 24, 64, 0.5);
+}
+.ap-meta-i svg,
+.ap-meta-i .ap-i-sm {
+  color: var(--gold-soft);
 }
 .ap-meta-sep {
   inline-size: 5px;
@@ -425,6 +450,16 @@
 }
 .ap-hero--doc .ap-meta-sep {
   background: var(--line);
+}
+.ap-hero--doc .ap-meta-i {
+  background: var(--ap-soft);
+  border-color: var(--line);
+  color: var(--muted);
+  box-shadow: none;
+}
+.ap-hero--doc .ap-meta-i svg,
+.ap-hero--doc .ap-meta-i .ap-i-sm {
+  color: var(--navy);
 }
 
 .ap-actions {
@@ -610,11 +645,24 @@
   padding: 28px 30px;
   margin-block-end: 24px;
   box-shadow: var(--ap-shadow-card);
+  position: relative;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+  animation: ap-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--ap-i, 0) * 90ms);
+}
+.ap-block::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 24px;
+  block-size: 3px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-soft), var(--gold), transparent);
+  opacity: 0.85;
 }
 .ap-block:hover {
-  box-shadow: var(--ap-shadow-card), 0 12px 30px -14px rgba(245, 196, 0, 0.15);
-  transform: translateY(-2px);
+  box-shadow: var(--ap-shadow-card), 0 16px 34px -16px rgba(245, 196, 0, 0.28);
+  transform: translateY(-4px);
 }
 .ap-block:last-child {
   margin-block-end: 0;
@@ -2394,7 +2442,30 @@
   }
 }
 
-/* ---------- ۱۱) احترام به کاهش حرکت ---------- */
+/* ---------- ۱۱) انیمیشن‌های ورود و جلوه‌های درخشان ---------- */
+@keyframes ap-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ap-shine {
+  0% {
+    inset-inline-start: -80%;
+  }
+  55% {
+    inset-inline-start: 130%;
+  }
+  100% {
+    inset-inline-start: 130%;
+  }
+}
+
+/* ---------- ۱۲) احترام به کاهش حرکت ---------- */
 @media (prefers-reduced-motion: reduce) {
   .ap *,
   .ap *::before,
