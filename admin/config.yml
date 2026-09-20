@@ -358,27 +358,44 @@ collections:
                   - { label: توضیح, name: desc, widget: string }
                   - { label: لینک, name: link, widget: string }
                   - { label: متن لینک, name: link_text, widget: string }
-          - label: تبلیغات (دو بنر مشترک صفحهٔ اصلی، اطلاعیه‌ها و دوره‌ها)
-            name: ads
+
+  - name: ads
+    label: تبلیغات و بنرها
+    files:
+      - name: ads
+        label: تبلیغات سراسری
+        file: content/ads.json
+        format: json
+        fields:
+          - label: بنر ۱
+            name: slot1
             widget: object
             fields:
-              - label: بنر ۱
-                name: slot1
-                widget: object
-                fields:
-                  - { label: تصویر, name: image, widget: image }
-                  - { label: لینک, name: link, widget: string }
-                  - { label: فعال, name: active, widget: boolean, default: true }
-              - label: بنر ۲
-                name: slot2
-                widget: object
-                fields:
-                  - { label: تصویر, name: image, widget: image }
-                  - { label: لینک, name: link, widget: string }
-                  - { label: فعال, name: active, widget: boolean, default: true }
-              - label: رزرو تبلیغات
-                name: reserve
-                widget: object
-                fields:
-                  - { label: متن, name: label, widget: string }
-                  - { label: لینک, name: link, widget: string }
+              - { label: تصویر, name: image, widget: image }
+              - { label: لینک, name: link, widget: string }
+              - { label: فعال, name: active, widget: boolean, default: true }
+          - label: بنر ۲
+            name: slot2
+            widget: object
+            fields:
+              - { label: تصویر, name: image, widget: image }
+              - { label: لینک, name: link, widget: string }
+              - { label: فعال, name: active, widget: boolean, default: true }
+          - label: نمایش در صفحهٔ اصلی
+            name: show_home
+            widget: boolean
+            default: true
+          - label: نمایش در صفحات دوره‌ها (هر دوره)
+            name: show_courses
+            widget: boolean
+            default: true
+          - label: نمایش در صفحات اطلاعیه
+            name: show_announcements
+            widget: boolean
+            default: true
+          - label: رزرو تبلیغات (صفحهٔ اصلی)
+            name: reserve
+            widget: object
+            fields:
+              - { label: متن, name: label, widget: string }
+              - { label: لینک, name: link, widget: string }

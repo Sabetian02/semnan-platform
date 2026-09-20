@@ -1,0 +1,19 @@
+{
+ "slot1": {
+  "image": "https://karino.agency/wp-content/uploads/2024/04/instagram-advertising-banner-idea-3-1-1024x469.jpg",
+  "link": "https://t.me/PlatformSem",
+  "active": true
+ },
+ "slot2": {
+  "image": "https://tse2.mm.bing.net/th/id/OIP.AYY0Qk9rAX0p-7FmtAPN7QHaDe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+  "link": "https://t.me/PlatformSem",
+  "active": true
+ },
+ "reserve": {
+  "label": "رزرو تبلیغات",
+  "link": "https://t.me/PlatformSem"
+ },
+ "show_home": true,
+ "show_courses": true,
+ "show_announcements": true
+}

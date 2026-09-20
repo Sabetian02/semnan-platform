@@ -13,6 +13,7 @@ const readJson = (p) => JSON.parse(fs.readFileSync(p, "utf8"));
 const home = readJson(path.join(CONTENT, "home.json"));
 const MAX_SLIDES = 10;
 const site = readJson(path.join(CONTENT, "site.json"));
+const ads = readJson(path.join(CONTENT, "ads.json"));
 
 const esc = (s) =>
   String(s)
@@ -406,15 +407,16 @@ function renderAds(a) {
   if (!a) return "";
   const slots = adSlots(a);
   if (!slots) return "";
+  const reserve = a.reserve && a.reserve.link
+    ? `<div class="ad-reserve"><a class="btn btn-gold" href="${esc(a.reserve.link)}" target="_blank" rel="noopener">${teleSvg} ${esc(a.reserve.label || "رزرو تبلیغات")}</a></div>`
+    : "";
   return `<!-- ADS BANNERS -->
     <section class="ads" id="ads">
       <div class="container">
         <div class="ad-slots reveal">
           ${slots}
         </div>
-        <div class="ad-reserve">
-          <a class="btn btn-gold" href="${esc(a.reserve.link)}" target="_blank" rel="noopener">${teleSvg} ${esc(a.reserve.label)}</a>
-        </div>
+        ${reserve}
       </div>
     </section>`;
 }
@@ -829,7 +831,6 @@ function renderAnnListPage(newsList) {
         "اطلاعیه",
         newsList.length
       )}
-      ${renderAdsBand(home.ads)}
       <section class="lp-page">
         <div class="container" data-lp>
           <header class="lp-list-head">
@@ -881,7 +882,6 @@ function renderCourseListPage(courseList) {
         "دوره",
         list.length
       )}
-      ${renderAdsBand(home.ads)}
       ${P("_marquee.html")}
       <section class="lp-page">
         <div class="container" data-lp>
@@ -969,7 +969,7 @@ function renderCoursePage(c) {
             ${heroImg}
             <dl class="course-facts">${facts}</dl>
             <div class="ann-body">${content}</div>
-            ${renderAdsBand(home.ads)}
+            ${ads && ads.show_courses !== false ? renderAdsBand(ads) : ""}
             <div class="ann-cta">
               <a class="btn btn-gold" href="${esc(regHref)}"${regTarget}>ثبت‌نام دوره</a>
               <a class="btn btn-navy" href="${prefix}amoozesh.html">→ بازگشت به دوره‌ها</a>
@@ -1157,7 +1157,7 @@ const renderAnnPage = require("./ann-page")({
   anjomanhaList,
   newsOrg,
   assetVer: ASSET_VER,
-  ads: home.ads,
+  ads: ads,
   open,
   close,
   openFor,
@@ -1174,7 +1174,7 @@ const index = assemble(
     renderHero(home.hero),
     P("_marquee.html"),
     renderCourses(home.courses_head, courseList),
-    renderAds(home.ads),
+    renderAds(ads && ads.show_home !== false ? ads : null),
     renderNews(home.news_head, newsList),
     renderDiscounts(home.discounts_head, discountList),
     renderJoin(home.join)

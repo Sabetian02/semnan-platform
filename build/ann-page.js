@@ -89,7 +89,7 @@ module.exports = function createAnnRenderer(ctx) {
   const BRAND = site.brand_name || "پلتفرم دانشگاه سمنان";
   const now = Date.now();
 
-  /* بنرهای تبلیغاتی مشترک با صفحهٔ اصلی — از ads در content/home.json (داشبورد) */
+  /* بنرهای تبلیغاتی مشترک — از ads در content/ads.json (بخش «تبلیغات» داشبورد) */
   function adsMarkup(a) {
     if (!a) return "";
     const slots = [];
@@ -1018,7 +1018,7 @@ module.exports = function createAnnRenderer(ctx) {
     /* بنرهای تبلیغاتی مشترک با صفحهٔ اصلی:
        دسکتاپ همیشه در نوار کنار (بین فهرست مطالب و اطلاعات کلی)؛
        موبایل فقط با بلوک «تبلیغات موبایل» در جای دلخواه بین بلوک‌ها جابه‌جا می‌شود */
-    const adsSlots = adsMarkup(ads);
+    const adsSlots = ads && ads.show_announcements !== false ? adsMarkup(ads) : "";
     const annAdsSide = adsSlots ? `<div class="ap-ads ap-ads--side">${adsSlots}</div>` : "";
     const adsMain = adsSlots ? `<div class="ap-ads ap-ads--inline">${adsSlots}</div>` : "";
 
