@@ -5,6 +5,9 @@
    ========================================================================== */
 
 /* ---------- ۱) پایه ---------- */
+:root{
+  --gold:#f5c400; --gold-soft:#fff6b5; --navy:#102a71; --navy-dark:#081a45; --line:#d0d5dd
+}
 .ap {
   --ap-main: 1fr;
   --ap-side: 330px;
@@ -13,6 +16,7 @@
   --ap-gold-line: rgba(245, 196, 0, 0.55);
   --ap-shadow-lg: 0 30px 60px -28px rgba(0, 24, 64, 0.35);
   --ap-shadow-card: 0 18px 44px -24px rgba(0, 24, 64, 0.28);
+  --ap-card-hover: rgba(255,255,255,0.8);
   background:
     radial-gradient(900px 320px at 85% -40px, rgba(245, 196, 0, 0.12), transparent 65%),
     radial-gradient(1000px 380px at 8% 0%, rgba(16, 42, 113, 0.08), transparent 60%),
@@ -46,21 +50,31 @@
 /* ---------- ۲) هیرو ---------- */
 .ap-hero {
   position: relative;
-  padding: 34px 0 46px;
+  padding: 38px 0 50px;
   color: #fff;
   background:
-    radial-gradient(1000px 420px at 100% -10%, rgba(245, 196, 0, 0.22), transparent 60%),
-    linear-gradient(150deg, var(--navy-dark), var(--navy) 55%, #16357f);
+    radial-gradient(1100px 460px at 100% -20%, rgba(245, 196, 0, 0.2), transparent 55%),
+    radial-gradient(1000px 420px at 5% 0%, rgba(16, 42, 113, 0.1), transparent 55%),
+    linear-gradient(150deg, var(--navy-dark), var(--navy) 50%, #11326a);
   overflow: hidden;
+  mask-image: none;
+}
+.ap-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  z-index: -1;
+  filter: blur(20px);
 }
 .ap-hero-glow {
   position: absolute;
-  inset-block-start: -120px;
-  inset-inline-start: -80px;
-  inline-size: 420px;
-  block-size: 420px;
+  inset-block-start: -140px;
+  inset-inline-start: -100px;
+  inline-size: 480px;
+  block-size: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 220, 95, 0.16), transparent 65%);
+  background: radial-gradient(circle, rgba(255, 220, 95, 0.14), transparent 65%);
   pointer-events: none;
 }
 .ap-hero .container {
@@ -69,14 +83,28 @@
 }
 /* کاور سینمایی در بالاترین بخش — قاب گرد، سایهٔ عمیق، سایه‌روشن پایین */
 .ap-topcover {
-  padding: 26px 0 0;
+  padding: 30px 0 0;
   background:
-    radial-gradient(700px 260px at 50% -60px, rgba(245, 196, 0, 0.16), transparent 70%),
-    linear-gradient(180deg, rgba(0, 24, 64, 0.9), rgba(16, 42, 113, 0.85) 55%, transparent 130%);
-  border-block-end: 1px solid rgba(245, 196, 0, 0.25);
+    radial-gradient(800px 300px at 80% -50px, rgba(245, 196, 0, 0.14), transparent 65%),
+    radial-gradient(900px 360px at 10% 0%, rgba(16, 42, 113, 0.07), transparent 55%),
+    linear-gradient(180deg, rgba(0, 24, 64, 0.95), rgba(16, 42, 113, 0.88) 50%, transparent 120%);
+  border-block-end: 2px solid rgba(245, 196, 0, 0.35);
+  position: relative;
+}
+.ap-topcover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 30px 30px 0 0;
+  border: 2px solid rgba(245, 196, 0, 0.45);
+  border-block-start: 0;
+  z-index: 1;
+  pointer-events: none;
+  mask-image: linear-gradient(transparent, black 70%);
 }
 .ap-topcover .container {
   position: relative;
+  z-index: 2;
 }
 .ap-topcover .container::after {
   content: "";
@@ -85,24 +113,30 @@
   inset-inline: 0;
   block-size: 2px;
   background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-soft) 50%, var(--gold) 70%, transparent);
-  opacity: 0.9;
+  opacity: 0.95;
 }
 .ap-topcover .ap-cover-btn,
 .ap-topcover .ap-cover--art {
   position: relative;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  outline: 2px solid rgba(245, 196, 0, 0.55);
-  outline-offset: 5px;
-  box-shadow: var(--ap-shadow-lg), 0 0 60px -18px rgba(245, 196, 0, 0.35);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  outline: 3px solid rgba(245, 196, 0, 0.6);
+  outline-offset: 7px;
+  box-shadow: var(--ap-shadow-lg), 0 0 72px -22px rgba(245, 196, 0, 0.38);
   overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.ap-topcover .ap-cover-btn:hover,
+.ap-topcover .ap-cover--art:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ap-shadow-lg), 0 0 80px -20px rgba(245, 196, 0, 0.45), 0 12px 30px -10px rgba(0, 24, 64, 0.3);
 }
 .ap-topcover .ap-cover-btn::after {
   content: "";
   position: absolute;
   inset: auto 0 0 0;
-  block-size: 34%;
-  background: linear-gradient(180deg, transparent, rgba(0, 24, 64, 0.38));
+  block-size: 38%;
+  background: linear-gradient(180deg, transparent, rgba(0, 24, 64, 0.4));
   pointer-events: none;
 }
 .ap-topcover .ap-cover-img {
@@ -125,7 +159,7 @@
 }
 /* کارت تیتر هم‌پوشان روی کاور — فقط وقتی کاور هست */
 .ap-head {
-  padding: 0 0 6px;
+  padding: 0 0 10px;
   background: transparent;
   border: 0;
   position: relative;
@@ -134,10 +168,10 @@
 .ap-topcover + .ap-head .container {
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 26px 30px 24px;
-  margin-top: -64px;
-  box-shadow: var(--ap-shadow-lg);
+  border-radius: 26px;
+  padding: 32px 36px 30px;
+  margin-top: -78px;
+  box-shadow: var(--ap-shadow-lg), 0 0 0 1px rgba(245, 196, 0, 0.07);
   position: relative;
   overflow: hidden;
 }
@@ -146,53 +180,73 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline: 0;
-  block-size: 4px;
+  block-size: 5px;
   background: linear-gradient(90deg, var(--gold), var(--gold-soft), var(--gold));
+  opacity: 0.85;
 }
 .ap-head .ap-title {
   color: var(--navy-dark);
   text-wrap: balance;
-  font-size: clamp(1.4rem, 3.6vw, 2.2rem);
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.4;
+  margin: 0 0 8px;
 }
-/* لید به‌سبک سرمقاله: خط طلایی کنار */
 .ap-head .ap-lead {
   color: #33405c;
-  max-width: 780px;
-  border-inline-start: 3px solid var(--gold);
-  padding-inline-start: 14px;
+  max-width: 840px;
+  border-inline-start: 4px solid var(--gold);
+  padding-inline-start: 18px;
+  font-size: 0.98rem;
+  line-height: 2;
+  margin: 0 0 14px;
 }
-/* متا به‌صورت قرص */
 .ap-head .ap-meta-i {
   background: var(--ap-soft);
   border: 1px solid var(--line);
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
 }
 .ap-head .ap-meta-sep {
-  display: none;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  margin: 0 6px;
+  flex-shrink: 0;
 }
 .ap-head .ap-crumbs {
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
 }
 .ap-head .ap-crumbs a {
   color: var(--navy);
+  font-weight: 700;
+}
+.ap-head .ap-crumbs a:hover {
+  color: var(--gold);
 }
 .ap-head .ap-metaline {
   color: var(--muted);
+  font-size: 0.84rem;
 }
 .ap-head .ap-chip {
-  box-shadow: 0 6px 14px -8px rgba(0, 24, 64, 0.4);
+  box-shadow: 0 6px 16px -8px rgba(0, 24, 64, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .ap-head .ap-chip.is-cat {
   background: linear-gradient(135deg, var(--navy-dark), var(--navy));
   color: #fff;
-  backdrop-filter: none;
+  backdrop-filter: blur(6px);
   border-color: transparent;
 }
+.ap-head .ap-chip.is-cat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(0, 24, 64, 0.5);
+}
 .ap-head .ap-chip.is-badge {
-  box-shadow: 0 8px 18px -8px rgba(245, 196, 0, 0.8);
+  box-shadow: 0 8px 22px -12px rgba(245, 196, 0, 0.9);
 }
 .ap-head .ap-chip.is-org {
   border-color: var(--line);
@@ -202,6 +256,7 @@
 .ap-head .ap-chip.is-org:hover {
   background: var(--ap-soft);
   border-color: var(--gold);
+  transform: translateY(-1px);
 }
 .ap-head .ap-cal-btn {
   color: var(--navy);
@@ -213,7 +268,7 @@
   background: #fff;
   border-color: var(--gold);
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px -12px rgba(0, 24, 64, 0.4);
+  box-shadow: 0 10px 22px -12px rgba(0, 24, 64, 0.4);
 }
 /* دکمهٔ طلایی براق با سایه */
 .ap-actions .btn-gold,
@@ -551,10 +606,15 @@
 .ap-block {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 26px 28px;
-  margin-block-end: 20px;
+  border-radius: 22px;
+  padding: 28px 30px;
+  margin-block-end: 24px;
   box-shadow: var(--ap-shadow-card);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.ap-block:hover {
+  box-shadow: var(--ap-shadow-card), 0 12px 30px -14px rgba(245, 196, 0, 0.15);
+  transform: translateY(-2px);
 }
 .ap-block:last-child {
   margin-block-end: 0;
@@ -562,34 +622,47 @@
 .ap-block-h {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.16rem;
+  gap: 12px;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--navy-dark);
-  margin: 0 0 16px;
-  line-height: 1.6;
+  margin: 0 0 20px;
+  line-height: 1.5;
+  position: relative;
+}
+.ap-block-h::after {
+  content: "";
+  flex: 1;
+  block-size: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  position: absolute;
+  inset-block-end: -4px;
+  inset-inline: 0;
 }
 .ap-block-hi {
   display: grid;
   place-items: center;
-  inline-size: 34px;
-  block-size: 34px;
-  border-radius: 11px;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 12px;
   background: linear-gradient(135deg, var(--gold), var(--gold-soft));
   color: var(--navy-dark);
-  box-shadow: 0 8px 16px -8px rgba(245, 196, 0, 0.8);
+  box-shadow: 0 8px 18px -8px rgba(245, 196, 0, 0.8);
   flex: 0 0 auto;
 }
 .ap-block-ico {
-  inline-size: 18px;
-  block-size: 18px;
+  inline-size: 20px;
+  block-size: 20px;
 }
-/* نوار طلایی زیر عنوان بلوک برای حس ادیتوریال */
+/* نوار طلایی زیر عنوان بلوک */
 .ap-block-h::after {
   content: "";
   flex: 1;
-  block-size: 1px;
-  background: linear-gradient(90deg, var(--ap-gold-line), transparent);
+  block-size: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  position: absolute;
+  inset-block-end: -4px;
+  inset-inline: 0;
 }
 
 /* متن غنی */
@@ -1803,56 +1876,74 @@
 }
 
 .ap-related {
-  margin-block-start: 28px;
+  margin-block-start: 32px;
   background: transparent;
   border: 0;
   padding: 0;
   box-shadow: none;
 }
 .ap-related .ap-block-h {
-  margin: 0 0 18px;
-  font-size: 1.2rem;
+  margin: 0 0 22px;
+  font-size: 1.28rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .ap-related .ap-block-hi {
-  inline-size: 38px;
-  block-size: 38px;
+  inline-size: 40px;
+  block-size: 40px;
 }
 .ap-rel-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 20px;
 }
 .ap-rel {
   position: relative;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   background: #fff;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  box-shadow: 0 6px 20px -10px rgba(16, 42, 113, 0.15);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.2s ease;
+  box-shadow: 0 8px 28px -12px rgba(16, 42, 113, 0.2);
 }
-/* خط طلایی بالای کارت که با هاور ظاهر می‌شود */
+.ap-rel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(245, 196, 0, 0.08), transparent 50%, rgba(245, 196, 0, 0.08));
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
 .ap-rel::before {
   content: "";
   position: absolute;
   inset-block-start: 0;
   inset-inline: 0;
-  block-size: 3px;
+  block-size: 4px;
   background: linear-gradient(90deg, var(--gold), var(--gold-soft));
   transform: scaleX(0);
-  transition: transform 0.25s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 2;
 }
 .ap-rel:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 36px -14px rgba(0, 24, 64, 0.3);
-  border-color: rgba(245, 196, 0, 0.5);
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 24px 48px -14px rgba(0, 24, 64, 0.35), 0 0 0 1px rgba(245, 196, 0, 0.15);
+  border-color: rgba(245, 196, 0, 0.4);
 }
 .ap-rel:hover::before {
-  transform: none;
+  transform: scaleX(1);
+}
+.ap-rel:hover::after {
+  opacity: 1;
 }
 .ap-rel-img {
   position: relative;
@@ -1860,6 +1951,54 @@
   aspect-ratio: 16/9;
   overflow: hidden;
   background: var(--ap-soft);
+}
+.ap-rel-img img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ap-rel:hover .ap-rel-img img {
+  transform: scale(1.08);
+}
+.ap-rel-body {
+  display: grid;
+  gap: 6px;
+  padding: 18px 20px 16px;
+}
+.ap-rel-chip {
+  align-self: start;
+  justify-self: start;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  background: linear-gradient(135deg, rgba(245, 196, 0, 0.3), rgba(255, 220, 95, 0.4));
+  border: 1px solid rgba(245, 196, 0, 0.5);
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ap-rel-t {
+  font-size: 0.92rem;
+  color: var(--navy-dark);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 4px;
+  padding-bottom: 2px;
+  background: linear-gradient(var(--gold), var(--gold)) no-repeat 100% 100% / 0 2px;
+  transition: background-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ap-rel:hover .ap-rel-t {
+  background-size: 100% 2px;
+}
+.ap-rel-d {
+  font-size: 0.72rem;
+  color: var(--muted);
 }
 /* سایه‌روشن سینمایی روی تصویر */
 .ap-rel-img::after {
@@ -1919,11 +2058,6 @@
 .ap-rel:hover .ap-rel-t {
   background-size: 100% 2px;
 }
-.ap-rel-d {
-  font-size: 0.73rem;
-  color: var(--muted);
-}
-
 .ap-back {
   display: inline-flex;
   align-items: center;
