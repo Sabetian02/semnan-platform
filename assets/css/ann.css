@@ -2494,6 +2494,27 @@
 .ap-title {
   letter-spacing: -0.3px;
   text-wrap: balance;
+  position: relative;
+  font-size: clamp(1.75rem, 4.6vw, 3rem);
+  line-height: 1.45;
+}
+.ap-title::after {
+  content: "";
+  display: block;
+  inline-size: 96px;
+  block-size: 5px;
+  border-radius: 999px;
+  margin-block-start: 14px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft), transparent);
+  box-shadow: 0 2px 12px -3px rgba(245, 196, 0, 0.7);
+}
+.ap-topcover .ap-cover-btn .ap-cover-img,
+.ap-cover--art .ap-cover-img {
+  transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ap-topcover .ap-cover-btn:hover .ap-cover-img,
+.ap-cover--art:hover .ap-cover-img {
+  transform: scale(1.04);
 }
 .ap-lead {
   font-size: clamp(1rem, 2.2vw, 1.14rem);
