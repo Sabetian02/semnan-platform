@@ -1011,9 +1011,24 @@ module.exports = function createAnnRenderer(ctx) {
     const toc = [];
 
     /* بلوک‌های بدنه و نوار کنار، به ترتیبی که در داشبورد چیده شده‌اند */
+    /* بنرهای تبلیغاتی مشترک با صفحهٔ اصلی:
+       دسکتاپ همیشه در نوار کنار (بین فهرست مطالب و اطلاعات کلی)؛
+       موبایل فقط با بلوک «تبلیغات موبایل» در جای دلخواه بین بلوک‌ها جابه‌جا می‌شود */
+    const adsSlots = adsMarkup(ads);
+    const annAdsSide = adsSlots ? `<div class="ap-ads ap-ads--side">${adsSlots}</div>` : "";
+    const adsMain = adsSlots ? `<div class="ap-ads ap-ads--inline">${adsSlots}</div>` : "";
+
     const mainHtml = [];
     const sideHtml = [];
+    let adPlaced = false;
     blocks.forEach((b, i) => {
+      if (b.type === "ads") {
+        if (adsMain && !adPlaced) {
+          mainHtml.push(adsMain);
+          adPlaced = true;
+        }
+        return;
+      }
       const r = renderBlock(b, i, { prefix, n, cover: pickImage(n) });
       if (typeof r.html === "object" && r.html) {
         if (b.place === "side") sideHtml.push(r.html.section);
@@ -1024,6 +1039,8 @@ module.exports = function createAnnRenderer(ctx) {
       }
       if (r.toc && r.toc.length) toc.push(...r.toc);
     });
+    /* اگر بلوک تبلیغات نداشت، پیش‌فرض موبایل: ابتدای ستون اصلی */
+    if (adsMain && !adPlaced) mainHtml.unshift(adsMain);
 
     const cover = coverFigure(n, prefix);
     const style = ["hero", "magazine", "doc"].indexOf(String(n.layout && n.layout.style)) >= 0 ? n.layout.style : "hero";
@@ -1036,12 +1053,8 @@ module.exports = function createAnnRenderer(ctx) {
         ? `<div class="ap-topcover"><div class="container">${cover || `<figure class="ap-cover ap-cover--art">${heroArt(n)}</figure>`}</div></div>`
         : "";
 
-    /* بنرهای تبلیغاتی مشترک با صفحهٔ اصلی: موبایل بالای کاور، دسکتاپ در نوار کنار */
-    const adsSlots = adsMarkup(ads);
-    const annAdsTop = adsSlots ? `<div class="ap-ads ap-ads--top">${adsSlots}</div>` : "";
-    const annAdsSide = adsSlots ? `<div class="ap-ads ap-ads--side">${adsSlots}</div>` : "";
-
-    /* ردیف اقدام فقط وقتی لینک واقعی هست — وگرنه هیچ دکمه‌ای (از جمله تلگرام) نمایش داده نمی‌شود */
+    /* موقعیت موبایل تبلیغات از روی بلوک «ads» در جریان بلوک‌ها تعیین می‌شود؛
+       دسکتاپ همیشه از بنر نوار کنار (annAdsSide) استفاده می‌کند */
     const calLinks = calendarLinks(n, url);
     const headInner = `
         <nav class="ap-crumbs" aria-label="مسیر صفحه">
@@ -1104,7 +1117,6 @@ module.exports = function createAnnRenderer(ctx) {
     const body = `
   <main class="ap" data-ap-layout="${esc(style)}">
     <div class="ap-readbar" aria-hidden="true"><span data-ap-progress></span></div>
-    ${annAdsTop}
     ${topCover}
     ${head}
     <div class="ap-body">

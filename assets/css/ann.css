@@ -3150,20 +3150,18 @@
 .ap-ads--side + .ap-block,
 .ap-ads--side + .ap-card { margin-block-start: 18px; }
 
-/* بالای کاور (موبایل) — در دسکتاپ مخفی */
-.ap-ads--top {
-  display: none;
+/* جاسازی موبایل — موقعیت فقط از بلوک «تبلیغات موبایل» در داشبورد می‌آید؛ دو بنر کنار هم، کم‌حجم */
+.ap-ads--inline {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-block: 6px 22px;
+}
+@media (min-width: 901px) {
+  .ap-ads--inline { display: none; }
+}
+@media (max-width: 340px) {
+  .ap-ads--inline { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
   .ap-ads--side { display: none; }
-  .ap-ads--top {
-    display: grid;
-    width: 100%;
-    max-width: min(1120px, 92vw);
-    margin-inline: auto;
-    padding: 18px 0 4px;
-  }
-}
-@media (max-width: 600px) {
-  .ap-ads--top { grid-template-columns: 1fr; max-width: 520px; }
 }

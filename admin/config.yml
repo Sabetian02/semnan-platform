@@ -197,6 +197,11 @@ collections:
                     widget: select
                     required: false
                     options: [ "", "telegram", "whatsapp", "download", "calendar" ]
+          - label: 🎯 تبلیغات موبایل (فقط جابه‌جایی)
+            name: ads
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "این بلوک فقط جای نمایش تبلیغات در موبایل را مشخص می‌کند؛ در کامپیوتر تبلیغات همیشه در ستون کنار بین «فهرست مطالب» و «اطلاعات کلی» است." }
       - label: انتشار
         name: active
         widget: boolean
