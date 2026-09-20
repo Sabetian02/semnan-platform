@@ -97,15 +97,9 @@
       s.targets.forEach(function (t) {
         if (t.el.getBoundingClientRect().top - offset <= 0) current = t;
       });
-      var isRail = s.nav && s.nav.classList.contains("ap-toc-rail");
-      var prevActive = null;
       s.links.forEach(function (l) {
-        if (l.classList.contains("is-active")) prevActive = l;
+        l.classList.toggle("is-active", l === current.link);
       });
-      s.links.forEach(function (l) {
-        if (!isRail) l.classList.toggle("is-active", l === current.link);
-      });
-      if (isRail && prevActive !== current.link) centerTocRail(s.nav, current.link);
       if (s.bar) {
         var art = document.querySelector(".ap-main");
         if (art) {

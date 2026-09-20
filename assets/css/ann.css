@@ -2837,9 +2837,9 @@
   white-space: nowrap;
   font-size: 0.8rem;
   font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
-  border: 1px solid rgba(8, 26, 69, 0.9);
+  color: var(--navy);
+  background: #fff;
+  border: 1px solid var(--line);
   padding: 8px 14px;
   border-radius: 999px;
   box-shadow: 0 6px 14px -10px rgba(0, 24, 64, 0.5);
@@ -2847,9 +2847,15 @@
     transform 0.2s ease, box-shadow 0.2s ease;
 }
 .ap-toc-chip:hover {
-  border-color: rgba(245, 196, 0, 0.7);
-  box-shadow: 0 8px 18px -12px rgba(245, 196, 0, 0.6);
+  border-color: rgba(245, 196, 0, 0.55);
   transform: translateY(-2px);
+}
+.ap-toc-chip.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  border-color: rgba(8, 26, 69, 0.9);
+  box-shadow: 0 8px 18px -12px rgba(8, 26, 69, 0.55);
+  transform: translateY(-1px);
 }
 
 /* --- ۱۳٫۸) کارت‌های مرتبط — شبکهٔ کشف --- */
