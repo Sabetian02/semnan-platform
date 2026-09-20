@@ -3112,3 +3112,58 @@
     animation: none !important;
   }
 }
+
+/* ---------- ۱۳) بنرهای تبلیغاتی مشترک با صفحهٔ اصلی (ads در home.json) ---------- */
+.ap-ads {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.ap-ad {
+  display: block;
+  aspect-ratio: 388 / 100;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: var(--ap-shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.ap-ad:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 196, 0, 0.55);
+  box-shadow: var(--ap-shadow-lg);
+}
+.ap-ad-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* نوار کنار (دسکتاپ): بین کارت فهرست مطالب و کارت اطلاعات کلی — ستونی */
+.ap-ads--side {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  margin-block: 18px 8px;
+}
+.ap-ads--side + .ap-block,
+.ap-ads--side + .ap-card { margin-block-start: 18px; }
+
+/* بالای کاور (موبایل) — در دسکتاپ مخفی */
+.ap-ads--top {
+  display: none;
+}
+@media (max-width: 900px) {
+  .ap-ads--side { display: none; }
+  .ap-ads--top {
+    display: grid;
+    width: 100%;
+    max-width: min(1120px, 92vw);
+    margin-inline: auto;
+    padding: 18px 0 4px;
+  }
+}
+@media (max-width: 600px) {
+  .ap-ads--top { grid-template-columns: 1fr; max-width: 520px; }
+}

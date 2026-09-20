@@ -387,7 +387,7 @@ function renderHero(h) {
 }
 
 /* ---------- ADS ---------- */
-function renderAds(a) {
+function adSlots(a) {
   const slots = [];
   if (a.slot1 && a.slot1.active !== false) {
     slots.push(`<a class="ad-slot" href="${esc(a.slot1.link)}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۱">
@@ -399,17 +399,33 @@ function renderAds(a) {
             <img class="ad-slot-img" src="${esc(a.slot2.image)}" alt="فضای تبلیغاتی شمارهٔ ۲" loading="lazy">
           </a>`);
   }
-  if (!slots.length) return "";
+  return slots.join("\n          ");
+}
+
+function renderAds(a) {
+  if (!a) return "";
+  const slots = adSlots(a);
+  if (!slots) return "";
   return `<!-- ADS BANNERS -->
     <section class="ads" id="ads">
       <div class="container">
         <div class="ad-slots reveal">
-          ${slots.join("\n          ")}
+          ${slots}
         </div>
         <div class="ad-reserve">
           <a class="btn btn-gold" href="${esc(a.reserve.link)}" target="_blank" rel="noopener">${teleSvg} ${esc(a.reserve.label)}</a>
         </div>
       </div>
+    </section>`;
+}
+
+/* همان بنرهای صفحهٔ اصلی، بدون بخش رزرو — برای صفحات دوره‌ها و اطلاعیه‌ها */
+function renderAdsBand(a) {
+  const slots = adSlots(a);
+  if (!slots) return "";
+  return `<!-- ADS BANNERS (shared) -->
+    <section class="ads ads--compact">
+      <div class="container"><div class="ad-slots reveal">${slots}</div></div>
     </section>`;
 }
 
@@ -813,6 +829,7 @@ function renderAnnListPage(newsList) {
         "اطلاعیه",
         newsList.length
       )}
+      ${renderAdsBand(home.ads)}
       <section class="lp-page">
         <div class="container" data-lp>
           <header class="lp-list-head">
@@ -864,6 +881,7 @@ function renderCourseListPage(courseList) {
         "دوره",
         list.length
       )}
+      ${renderAdsBand(home.ads)}
       ${P("_marquee.html")}
       <section class="lp-page">
         <div class="container" data-lp>
@@ -951,6 +969,7 @@ function renderCoursePage(c) {
             ${heroImg}
             <dl class="course-facts">${facts}</dl>
             <div class="ann-body">${content}</div>
+            ${renderAdsBand(home.ads)}
             <div class="ann-cta">
               <a class="btn btn-gold" href="${esc(regHref)}"${regTarget}>ثبت‌نام دوره</a>
               <a class="btn btn-navy" href="${prefix}amoozesh.html">→ بازگشت به دوره‌ها</a>
@@ -1138,6 +1157,7 @@ const renderAnnPage = require("./ann-page")({
   anjomanhaList,
   newsOrg,
   assetVer: ASSET_VER,
+  ads: home.ads,
   open,
   close,
   openFor,

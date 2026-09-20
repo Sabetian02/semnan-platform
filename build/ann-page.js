@@ -82,11 +82,28 @@ module.exports = function createAnnRenderer(ctx) {
     kanonhaList = [],
     anjomanhaList = [],
     newsOrg,
-    assetVer = ""
+    assetVer = "",
+    ads = null
   } = ctx;
 
   const BRAND = site.brand_name || "پلتفرم دانشگاه سمنان";
   const now = Date.now();
+
+  /* بنرهای تبلیغاتی مشترک با صفحهٔ اصلی — از ads در content/home.json (داشبورد) */
+  function adsMarkup(a) {
+    if (!a) return "";
+    const slots = [];
+    const s1 = a.slot1;
+    const s2 = a.slot2;
+    if (s1 && s1.image && s1.active !== false) {
+      slots.push(`<a class="ap-ad" href="${escA(s1.link || "#")}" target="_blank" rel="noopener"><img class="ap-ad-img" src="${escA(s1.image)}" alt="" loading="lazy"></a>`);
+    }
+    if (s2 && s2.image && s2.active !== false) {
+      slots.push(`<a class="ap-ad" href="${escA(s2.link || "#")}" target="_blank" rel="noopener"><img class="ap-ad-img" src="${escA(s2.image)}" alt="" loading="lazy"></a>`);
+    }
+    if (!slots.length) return "";
+    return slots.join("\n        ");
+  }
 
   /* =============== ابزارهای تاریخ — همه بر پایهٔ وقت تهران =============== */
   function tehranParts(iso) {
@@ -1019,6 +1036,11 @@ module.exports = function createAnnRenderer(ctx) {
         ? `<div class="ap-topcover"><div class="container">${cover || `<figure class="ap-cover ap-cover--art">${heroArt(n)}</figure>`}</div></div>`
         : "";
 
+    /* بنرهای تبلیغاتی مشترک با صفحهٔ اصلی: موبایل بالای کاور، دسکتاپ در نوار کنار */
+    const adsSlots = adsMarkup(ads);
+    const annAdsTop = adsSlots ? `<div class="ap-ads ap-ads--top">${adsSlots}</div>` : "";
+    const annAdsSide = adsSlots ? `<div class="ap-ads ap-ads--side">${adsSlots}</div>` : "";
+
     /* ردیف اقدام فقط وقتی لینک واقعی هست — وگرنه هیچ دکمه‌ای (از جمله تلگرام) نمایش داده نمی‌شود */
     const calLinks = calendarLinks(n, url);
     const headInner = `
@@ -1068,6 +1090,7 @@ module.exports = function createAnnRenderer(ctx) {
     const aside = showSide
       ? `<aside class="ap-side" aria-label="اطلاعات جانبی اطلاعیه">
           ${toc.length > 1 ? tocCard(toc) : ""}
+          ${annAdsSide}
           ${sideKeyFacts(n, org, st)}
           ${sideOrg(n, org)}
           ${sideShare(url, n.title || "")}
@@ -1081,6 +1104,7 @@ module.exports = function createAnnRenderer(ctx) {
     const body = `
   <main class="ap" data-ap-layout="${esc(style)}">
     <div class="ap-readbar" aria-hidden="true"><span data-ap-progress></span></div>
+    ${annAdsTop}
     ${topCover}
     ${head}
     <div class="ap-body">
