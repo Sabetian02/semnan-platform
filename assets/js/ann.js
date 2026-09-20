@@ -1,5 +1,5 @@
 /* پلتفرم دانشگاه سمنان — رفتار صفحهٔ اطلاعیه (ettelaieh/*)
-   نوار مطالعه، فهرست مطالب چسبان، گالری، ویدیو، شمارش معکوس، اشتراک‌گذاری */
+   نوار مطالعه، گالری، ویدیو، شمارش معکوس، اشتراک‌گذاری */
 (function () {
   "use strict";
 
@@ -209,12 +209,6 @@
       }
     });
   });
-  Array.prototype.forEach.call(document.querySelectorAll("[data-ap-print]"), function (b) {
-    b.addEventListener("click", function () {
-      window.print();
-    });
-  });
-
   /* ---------- شمارش معکوس رویداد ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-ap-countdown]"), function (box) {
     var until = Date.parse(box.getAttribute("data-until") || "");

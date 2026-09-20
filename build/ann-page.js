@@ -71,7 +71,6 @@ module.exports = function createAnnRenderer(ctx) {
     faNum,
     ROOT,
     site,
-    TELE_URL,
     pickImage,
     safeLink,
     ABS_URI,
@@ -251,7 +250,8 @@ module.exports = function createAnnRenderer(ctx) {
     if (now <= end) return { key: "live", label: "در حال برگزاری", start, end };
     return { key: "past", label: "پایان‌یافته", start, end };
   }
-  /* دکمهٔ اصلی صفحه: اول CTAهای دستی، بعد ثبت‌نام رویداد، بعد لینک اطلاعیه، در آخر کانال */
+  /* دکمهٔ اصلی صفحه: فقط وقتی لینک واقعی هست (CTA دستی، ثبت‌نام رویداد یا لینک اطلاعیه).
+     بدون لینک، دکمه‌ای رندر نمی‌شود — دکمهٔ پیگیری کانال تلگرام حذف شده است. */
   function primaryCta(n) {
     const list = ctaList(n);
     if (list.length) return list[0];
@@ -260,7 +260,7 @@ module.exports = function createAnnRenderer(ctx) {
     if (reg) return { label: "ثبت‌نام و شرکت در رویداد", href: reg, style: "gold", external: ABS_URI.test(reg), ico: "" };
     const l = ctaHref(n.link);
     if (l) return { label: "مشاهده در منبع", href: l, style: "gold", external: ABS_URI.test(l), ico: "" };
-    return { label: "پیگیری در کانال پلتفرم", href: TELE_URL, style: "gold", external: true, ico: "telegram" };
+    return null;
   }
   function btn(c, cls) {
     const icon =
@@ -305,7 +305,8 @@ module.exports = function createAnnRenderer(ctx) {
   const BLOCK_ICON = {
     highlights: "spark", text: "list", facts: "info", video: "play", gallery: "image",
     files: "file", timeline: "clock", form: "edit", faq: "help", notice: "warn",
-    stats: "chart", quote: "quote", cta: "bolt", location: "pin", image: "image", divider: "minus"
+    stats: "chart", quote: "quote", cta: "bolt", location: "pin", image: "image", divider: "minus",
+    buttons: "bolt"
   };
 
   function bHighlights(b, prefix) {
@@ -508,6 +509,31 @@ module.exports = function createAnnRenderer(ctx) {
             </div>`;
   }
 
+  /* بلوک «دکمه‌ها»: دکمه‌های لینک‌دار قابل‌تنظیم از داشبورد —
+     رنگ‌ها از پالت سایت (طلایی، سرمه‌ای، تلگرام، ساده) + سفید */
+  const BTN_STYLES = ["gold", "navy", "tele", "ghost", "white", "light"];
+  function bButtons(b) {
+    const items = (Array.isArray(b.items) ? b.items : [])
+      .map((it) => {
+        const href = ctaHref(it && it.link);
+        const label = String((it && it.label) || "").trim();
+        if (!href || !label) return null;
+        return {
+          label,
+          href,
+          style: BTN_STYLES.indexOf(it.style) >= 0 ? it.style : "navy",
+          external: ABS_URI.test(href),
+          ico: it.icon || ""
+        };
+      })
+      .filter(Boolean);
+    if (!items.length) return "";
+    return `<div class="ap-btns">
+              ${b.text ? `<p class="ap-btns-text">${esc(b.text)}</p>` : ""}
+              <div class="ap-btns-row">${items.map((c) => btn(c)).join("")}</div>
+            </div>`;
+  }
+
   function bLocation(b) {
     const map = b.map_url ? mapEmbed(b.map_url) : null;
     const rows = [];
@@ -517,7 +543,7 @@ module.exports = function createAnnRenderer(ctx) {
               ${rows.join("")}
               ${
                 map
-                  ? `<div class="ap-map"><iframe src="${escA(map.src)}" title="${escA(b.name || "نقشه")}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" frameborder="0"></iframe></div>`
+                  ?                   `<div class="ap-map"><iframe src="${escA(map.src)}" title="${escA(b.name || "نقشه")}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" frameborder="0"></iframe></div>`
                   : b.map_url
                   ? `<a class="ap-loc-dir" href="${escA(b.map_url)}" target="_blank" rel="noopener">${ico("map", "ap-i-sm")} مشاهدهٔ مسیر</a>`
                   : ""
@@ -544,6 +570,7 @@ module.exports = function createAnnRenderer(ctx) {
     stats: (b) => bStats(b),
     quote: (b, c) => bQuote(b, c.prefix),
     cta: () => "",
+    buttons: (b) => bButtons(b),
     location: (b) => bLocation(b),
     divider: (b) => bDivider(b)
   };
@@ -629,20 +656,6 @@ module.exports = function createAnnRenderer(ctx) {
       </section>`;
   }
 
-  function sideCta(n, cta, st) {
-    const e = ev(n);
-    const extra = [];
-    if (e && e.deadline) extra.push(`<li>${ico("bell", "ap-i-sm")} مهلت ثبت‌نام: <b>${faDate(e.deadline, false)}</b></li>`);
-    if (e && e.fee) extra.push(`<li>${ico("money", "ap-i-sm")} هزینه: <b>${esc(e.fee)}</b></li>`);
-    if (st && st.key === "soon") extra.push(`<li>${ico("clock", "ap-i-sm")} شروع: <b>${faDate(e.start, false)}</b></li>`);
-    return `<section class="ap-card ap-card--cta">
-        <h2 class="ap-card-h">${ico("bolt", "ap-card-i")} ${st && st.key === "past" ? "اطلاعات این برنامه" : "اقدام سریع"}</h2>
-        ${extra.length ? `<ul class="ap-cta-facts">${extra.join("")}</ul>` : ""}
-        ${btn(cta, "ap-cta-btn")}
-        ${TELE_URL ? `<a class="ap-tele-link" href="${escA(TELE_URL)}" target="_blank" rel="noopener">${icoFill("telegram", "ap-i-sm")} خبرهای فوری در کانال پلتفرم</a>` : ""}
-      </section>`;
-  }
-
   function sideOrg(n, org) {
     if (!org) return "";
     const logo = org.item && org.item.slug ? orgLogo(org.item, "../", "ap-org-img", "ap-org-mono") : "";
@@ -652,17 +665,6 @@ module.exports = function createAnnRenderer(ctx) {
           <span class="ap-org-txt"><small>${esc(org.kind)} برگزارکننده</small><b>${esc(org.name)}</b><span>مشاهدهٔ پروفایل و فعالیت‌ها ${ico("chev", "ap-i-xs")}</span></span>
         </a>
       </section>`;
-  }
-
-  function sideToc(toc) {
-    if (!toc.length) return "";
-    return `<nav class="ap-card ap-card--toc" data-ap-toc aria-labelledby="ap-toc-h">
-        <h2 class="ap-card-h" id="ap-toc-h">${ico("list", "ap-card-i")} فهرست مطالب</h2>
-        <ol class="ap-toc">
-          ${toc.map((t) => `<li class="lvl-${t.level}"><a href="#${escA(t.id)}" data-ap-toc-link>${esc(t.text)}</a></li>`).join("")}
-        </ol>
-        <div class="ap-toc-bar" aria-hidden="true"><span data-ap-toc-progress></span></div>
-      </nav>`;
   }
 
   /* =============== کاور و هیرو =============== */
@@ -813,23 +815,6 @@ module.exports = function createAnnRenderer(ctx) {
             .join("")}
         </div>
       </section>`;
-  }
-
-  function prevNext(n) {
-    const sorted = allNews.slice().sort((a, b) => ms(a.date) - ms(b.date));
-    const idx = sorted.findIndex((x) => x._slug === n._slug);
-    if (idx < 0) return "";
-    const prev = sorted[idx - 1];
-    const next = sorted[idx + 1];
-    if (!prev && !next) return "";
-    const cell = (x, dir) =>
-      x
-        ? `<a class="ap-pn is-${dir}" href="${escA(encodeURI(x._slug) + ".html")}">
-              <span class="ap-pn-dir">${dir === "next" ? "اطلاعیهٔ جدیدتر" : "اطلاعیهٔ قدیمی‌تر"} ${ico("chev", "ap-pn-i")}</span>
-              <b>${esc(x.title || "")}</b>
-            </a>`
-        : "";
-    return `<nav class="ap-pn-row" aria-label="اطلاعیهٔ قبلی و بعدی">${cell(next, "next")}${cell(prev, "prev")}</nav>`;
   }
 
   /* =============== متادیتای سئو: OG، توییتر و JSON-LD =============== */
@@ -1025,6 +1010,8 @@ module.exports = function createAnnRenderer(ctx) {
         ? `<div class="ap-topcover"><div class="container">${cover || `<figure class="ap-cover ap-cover--art">${heroArt(n)}</figure>`}</div></div>`
         : "";
 
+    /* ردیف اقدام فقط وقتی لینک واقعی هست — وگرنه هیچ دکمه‌ای (از جمله تلگرام) نمایش داده نمی‌شود */
+    const calLinks = calendarLinks(n, url);
     const headInner = `
         <nav class="ap-crumbs" aria-label="مسیر صفحه">
           <a href="${prefix}index.html">خانه</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
@@ -1035,10 +1022,10 @@ module.exports = function createAnnRenderer(ctx) {
         <h1 class="ap-title">${esc(n.title || "")}</h1>
         ${n.summary ? `<p class="ap-lead">${esc(n.summary)}</p>` : ""}
         ${metaLine(n)}
-        <div class="ap-actions">
-          ${btn(cta)}
-          ${calendarLinks(n, url)}
-        </div>`;
+        ${cta || calLinks ? `<div class="ap-actions">
+          ${cta ? btn(cta) : ""}
+          ${calLinks}
+        </div>` : ""}`;
 
     const head = `<header class="ap-head"><div class="container">${headInner}</div></header>`;
 
@@ -1090,7 +1077,7 @@ module.exports = function createAnnRenderer(ctx) {
       </div>
     </div>
     <div class="ap-mobilebar">
-      <a class="ap-mb-cta" href="${escA(cta.href)}"${cta.external ? ' target="_blank" rel="noopener"' : ""}>${ico(cta.ico === "telegram" ? "bell" : "bolt", "ap-i-sm")} ${esc(cta.label)}</a>
+      ${cta ? `<a class="ap-mb-cta" href="${escA(cta.href)}"${cta.external ? ' target="_blank" rel="noopener"' : ""}>${ico(cta.ico === "telegram" ? "bell" : "bolt", "ap-i-sm")} ${esc(cta.label)}</a>` : ""}
       <button type="button" class="ap-mb-btn" data-ap-native data-ap-url="${escA(url)}" data-ap-title="${escA(n.title || "")}" aria-label="اشتراک‌گذاری">${ico("share", "ap-i-sm")}</button>
       <button type="button" class="ap-mb-btn" data-ap-copy="${escA(url)}" aria-label="کپی نشانی">${ico("copy", "ap-i-sm")}</button>
       <button type="button" class="ap-mb-btn" data-ap-top aria-label="بازگشت به بالا">${ico("top", "ap-i-sm")}</button>

@@ -1163,6 +1163,52 @@
   gap: 10px;
 }
 
+/* بلوک «دکمه‌ها» — لینک‌های قابل‌تنظیم از داشبورد */
+.ap-btns {
+  display: grid;
+  gap: 12px;
+}
+.ap-btns-text {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.95;
+  font-size: 0.92rem;
+}
+.ap-btns-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.ap-btns-row .btn,
+.ap-actions .btn {
+  min-block-size: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.7;
+}
+/* دکمهٔ سفید روی کارت سفید باید قاب داشته باشد تا دیده شود */
+.ap-btns-row .btn-white,
+.ap-actions .btn-white {
+  border: 1.5px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+.ap-btns-row .btn-white:hover,
+.ap-actions .btn-white:hover {
+  border-color: var(--gold);
+}
+@media (max-width: 480px) {
+  .ap-btns-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ap-btns-row .btn {
+    inline-size: 100%;
+  }
+}
+
 /* مکان و نقشه */
 .ap-location {
   display: grid;
@@ -1188,6 +1234,8 @@
   border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid var(--line);
+  background: var(--ap-soft);
+  min-block-size: 200px;
 }
 .ap-map iframe {
   display: block;
@@ -1251,16 +1299,6 @@
   block-size: 18px;
   color: var(--navy);
 }
-.ap-card--cta {
-  background: linear-gradient(150deg, var(--navy-dark), var(--navy));
-  border-color: transparent;
-}
-.ap-card--cta .ap-card-h {
-  color: #fff;
-}
-.ap-card--cta .ap-card-i {
-  color: var(--gold-soft);
-}
 .ap-card--kf {
   background: #fff;
   border-color: var(--line);
@@ -1283,90 +1321,6 @@
 .ap-card--kf .ap-kf-v a {
   color: var(--navy);
 }
-.ap-cta-facts {
-  list-style: none;
-  margin: 0 0 14px;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.85rem;
-}
-.ap-cta-facts li {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  line-height: 1.8;
-}
-.ap-cta-facts b {
-  color: var(--gold-soft);
-}
-.ap-cta-btn {
-  inline-size: 100%;
-  justify-content: center;
-}
-.ap-tele-link {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-block-start: 12px;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-.ap-tele-link:hover {
-  color: var(--gold-soft);
-}
-
-/* فهرست مطالب */
-.ap-toc {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 2px;
-  counter-reset: ap-toc;
-}
-.ap-toc a {
-  display: block;
-  padding: 8px 11px;
-  border-radius: 9px;
-  font-size: 0.88rem;
-  color: #3b4762;
-  line-height: 1.8;
-  border-inline-start: 2px solid transparent;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-.ap-toc li.lvl-3 a {
-  padding-inline-start: 24px;
-  font-size: 0.83rem;
-  color: var(--muted);
-}
-.ap-toc a:hover {
-  background: rgba(16, 42, 113, 0.05);
-  color: var(--navy);
-}
-.ap-toc a.is-active {
-  background: rgba(245, 196, 0, 0.16);
-  border-inline-start-color: var(--gold);
-  color: var(--navy-dark);
-  font-weight: 800;
-}
-.ap-toc-bar {
-  margin-block-start: 12px;
-  block-size: 3px;
-  border-radius: 999px;
-  background: rgba(16, 42, 113, 0.1);
-  overflow: hidden;
-}
-.ap-toc-bar span {
-  display: block;
-  inline-size: 0;
-  block-size: 100%;
-  background: linear-gradient(90deg, var(--navy), var(--gold));
-  transition: inline-size 0.2s ease;
-}
-
 /* اطلاعات کلی */
 .ap-kf {
   list-style: none;
@@ -1484,10 +1438,7 @@
 .ap-sh.is-native {
   display: none;
 }
-.ap-sh.is-print {
-  grid-column: span 2;
-  justify-content: center;
-}
+
 
 /* کارت برگزارکننده — بزرگ، خوانا، تمیز */
 .ap-card--org {
@@ -1710,52 +1661,6 @@
   color: var(--muted);
 }
 
-.ap-pn-row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-block-start: 22px;
-}
-.ap-pn {
-  display: grid;
-  gap: 7px;
-  padding: 15px 17px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: #fff;
-  text-decoration: none;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-}
-.ap-pn:hover {
-  border-color: rgba(16, 42, 113, 0.3);
-  transform: translateY(-2px);
-}
-.ap-pn.is-prev {
-  text-align: end;
-}
-.ap-pn-dir {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: var(--muted);
-}
-.ap-pn.is-prev .ap-pn-dir {
-  justify-content: flex-end;
-}
-.ap-pn.is-prev .ap-pn-i {
-  transform: rotate(180deg);
-}
-.ap-pn-i {
-  inline-size: 14px;
-  block-size: 14px;
-}
-.ap-pn b {
-  font-size: 0.92rem;
-  color: var(--navy-dark);
-  line-height: 1.8;
-}
 .ap-back {
   display: inline-flex;
   align-items: center;
@@ -1876,6 +1781,18 @@
 .ap-mobilebar {
   display: none;
 }
+/* وقتی دکمهٔ اقدام نیست (حذف پیگیری تلگرام)، دکمه‌های باقی‌مانده وسط‌چین می‌شوند */
+.ap-mobilebar:not(:has(.ap-mb-cta)) {
+  justify-content: center;
+}
+/* دسترس‌پذیری: فوکوس صفحه‌کلید همیشه دیده شود */
+.ap a:focus-visible,
+.ap button:focus-visible,
+.ap summary:focus-visible {
+  outline: 3px solid rgba(245, 196, 0, 0.85);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
 .ap-toast[hidden] {
   display: none;
 }
@@ -1905,15 +1822,11 @@
     position: static;
     inset-block-start: auto;
   }
-  .ap-side > .ap-card--share,
-  .ap-side > .ap-card--cta {
+  .ap-side > .ap-card--share {
     order: -1;
   }
   .ap-share {
     grid-template-columns: repeat(3, 1fr);
-  }
-  .ap-sh.is-print {
-    grid-column: auto;
   }
 }
 @media (max-width: 720px) {
@@ -1939,7 +1852,7 @@
     font-size: 0.78rem;
   }
   .ap-rel-chip {
-    font-size: 0.62rem;
+    display: none;
   }
   .ap-cover-wrap {
     margin-block-start: -16px;
@@ -1952,9 +1865,6 @@
   .ap-gallery.is-three,
   .ap-gallery.is-four {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .ap-pn-row {
-    grid-template-columns: minmax(0, 1fr);
   }
   .ap-facts {
     grid-template-columns: minmax(0, 1fr);
@@ -2029,7 +1939,6 @@
   .ap-lightbox,
   .ap-readbar,
   .ap-related,
-  .ap-pn-row,
   .ap-actions,
   .ap-back {
     display: none !important;
@@ -2060,5 +1969,15 @@
   .ap-cover-img {
     max-block-size: 60vh !important;
     object-fit: contain !important;
+  }
+}
+
+/* ---------- ۱۱) احترام به کاهش حرکت ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ap *,
+  .ap *::before,
+  .ap *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }

@@ -46,11 +46,6 @@ collections:
         name: summary
         widget: text
         required: true
-      - label: متن اصلی
-        name: body
-        widget: markdown
-        required: false
-        hint: "متن اطلاعیه — با # تیتر و - لیست"
       - label: دسته
         name: category
         widget: select
@@ -92,7 +87,7 @@ collections:
         label_singular: بلوک
         collapsed: true
         summary: "{{fields.heading}} — {{type}}"
-        hint: "هر بلوک را با ▲▼ جابجا کن و با «جای نمایش» بین ستون اصلی و کنار جابجا کن. اگر خالی باشد فقط متن اصلی نمایش داده می‌شود."
+        hint: "هر بلوک را با ▲▼ جابجا کن و با «جای نمایش» بین ستون اصلی و کنار جابجا کن. اگر خالی باشد فقط خلاصه نمایش داده می‌شود."
         types:
           - label: 📝 متن
             name: text
@@ -143,7 +138,7 @@ collections:
               - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مکان برگزاری" }
               - { label: نام مکان, name: name, widget: string, required: false }
               - { label: نشانی, name: address, widget: string, required: false }
-              - { label: لینک نشان, name: map_url, widget: string, required: false, hint: "فقط لینک نشان — مثل https://nshn.ir/…" }
+              - { label: لینک نشان, name: map_url, widget: string, required: false, hint: "از اپ نشان «اشتراک‌گذاری» بزن و لینک را این‌جا بگذار (nshn.ir یا neshan.org) — نقشه داخل صفحه نمایش داده می‌شود" }
               - label: جای نمایش
                 name: place
                 widget: select
@@ -166,6 +161,42 @@ collections:
                   - { label: ستون اصلی, value: "main" }
                   - { label: کنار, value: "side" }
                 default: "main"
+          - label: 🔘 دکمه‌ها
+            name: buttons
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: توضیح کوتاه, name: text, widget: text, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+              - label: دکمه‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: متن دکمه, name: label, widget: string }
+                  - { label: لینک, name: link, widget: string, hint: "https://… یا مسیر داخلی مثل amoozesh.html" }
+                  - label: رنگ
+                    name: style
+                    widget: select
+                    required: false
+                    options:
+                      - { label: طلایی, value: "gold" }
+                      - { label: سرمه‌ای, value: "navy" }
+                      - { label: آبی تلگرام, value: "tele" }
+                      - { label: ساده با قاب, value: "ghost" }
+                      - { label: سفید, value: "white" }
+                    default: "navy"
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "telegram", "whatsapp", "download", "calendar" ]
       - label: انتشار
         name: active
         widget: boolean
