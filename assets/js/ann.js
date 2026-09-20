@@ -115,16 +115,17 @@
     });
   }
 
-  /* وسط‌چین کردن چیپ فعال در نوار چیپ‌ها؛ گزینه‌های ابتدایی در ابتدای نوار می‌مانند */
+  /* وسط‌چین کردن چیپ فعال در نوار چیپ‌ها؛ گزینه‌های ابتدایی در ابتدای نوار می‌مانند.
+     عمداً فوری (بدون smooth) تا روی موبایل لغو نشود و هر بار واقعاً بچرخد. */
   function centerTocRail(nav) {
-    if (!nav || typeof nav.scrollTo !== "function") return;
+    if (!nav) return;
     var active = nav.querySelector(".ap-toc-chip.is-active");
     if (!active) return;
     var max = Math.max(0, nav.scrollWidth - nav.clientWidth);
     var left = active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2;
     var target = Math.max(0, Math.min(left, max));
     if (target < 8) target = 0;
-    if (Math.abs(target - nav.scrollLeft) > 2) nav.scrollTo({ left: target, behavior: "smooth" });
+    if (Math.abs(target - nav.scrollLeft) > 2) nav.scrollLeft = target;
   }
 
   /* ---------- گالری و کاور: لایت‌باکس ---------- */
@@ -263,13 +264,11 @@
       e.preventDefault();
       window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
       var nav = a.closest(".ap-toc-rail");
-      if (nav && typeof nav.scrollTo === "function") {
-        var nr = nav.getBoundingClientRect();
-        var ar = a.getBoundingClientRect();
+      if (nav) {
         var max = Math.max(0, nav.scrollWidth - nav.clientWidth);
-        var left = Math.max(0, Math.min(nav.scrollLeft + ar.left - nr.left - (nr.width - ar.width) / 2, max));
-        if (left < 8) left = 0;
-        nav.scrollTo({ left: left, behavior: "smooth" });
+        var target = Math.max(0, Math.min(a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2, max));
+        if (target < 8) target = 0;
+        nav.scrollLeft = target;
       }
     });
   });
