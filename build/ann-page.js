@@ -1084,10 +1084,10 @@ module.exports = function createAnnRenderer(ctx) {
     ${topCover}
     ${head}
     <div class="ap-body">
-      ${toc.length > 1 ? `<div class="container"><nav class="ap-toc-rail" data-ap-toc aria-label="فهرست مطالب">
+      ${toc.length > 1 ? `<nav class="ap-toc-rail" data-ap-toc aria-label="فهرست مطالب">
         <span class="ap-toc-rail-label">مطالب این اطلاعیه</span>
         ${toc.map((t) => `<a href="#${t.id}" data-ap-toc-link class="ap-toc-chip">${esc(t.text)}</a>`).join("")}
-      </nav></div>` : ""}
+      </nav>` : ""}
       <div class="container ap-grid${showSide ? "" : " is-single"}">
         <article class="ap-main">
           ${mainHtml.join("\n          ")}
