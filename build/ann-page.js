@@ -296,8 +296,12 @@ module.exports = function createAnnRenderer(ctx) {
 
   /* =============== متن کامل: تبدیل به HTML + فهرست مطالب =============== */
   function toBlocks(n) {
-    const explicit = (Array.isArray(n.blocks) ? n.blocks : []).filter((b) => b && b.type);
-    if (explicit.length) return explicit;
+    const raw = (Array.isArray(n.blocks) ? n.blocks : []).filter((b) => b && b.type);
+    const real = raw.filter((b) => b.type !== "ads");
+    /* بلوک «ads» فقط جای نمایش موبایل را مشخص می‌کند؛ اگر هیچ بلوک محتوایی وجود
+       نداشته باشد یعنی صفحه با فیلدهای تختِ قدیمی ساخته شده (یا فقط بلوک پیش‌فرض
+       تبلیغات را دارد) و باید حالت خودکار حفظ شود تا محتوا ناپدید نشود. */
+    if (real.length) return raw;
     /* ترتیب پیش‌فرض بر پایهٔ فیلدهای تختِ قدیمی + فیلدهای تازه */
     const auto = [];
     if (Array.isArray(n.highlights) && n.highlights.length) auto.push({ type: "highlights", heading: "در یک نگاه", items: n.highlights });

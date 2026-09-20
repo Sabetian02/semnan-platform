@@ -88,6 +88,8 @@ collections:
         collapsed: true
         summary: "{{fields.heading}} — {{type}}"
         hint: "هر بلوک را با ▲▼ جابجا کن و با «جای نمایش» بین ستون اصلی و کنار جابجا کن. اگر خالی باشد فقط خلاصه نمایش داده می‌شود."
+        default:
+          - type: ads
         types:
           - label: 📝 متن
             name: text

@@ -3150,17 +3150,14 @@
 .ap-ads--side + .ap-block,
 .ap-ads--side + .ap-card { margin-block-start: 18px; }
 
-/* جاسازی موبایل — موقعیت فقط از بلوک «تبلیغات موبایل» در داشبورد می‌آید؛ دو بنر کنار هم، کم‌حجم */
+/* جاسازی موبایل — موقعیت فقط از بلوک «تبلیغات موبایل» در داشبورد می‌آید؛ زیر هم و کمی بزرگ‌تر */
 .ap-ads--inline {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-block: 6px 22px;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-block: 8px 24px;
 }
 @media (min-width: 901px) {
   .ap-ads--inline { display: none; }
-}
-@media (max-width: 340px) {
-  .ap-ads--inline { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
   .ap-ads--side { display: none; }
