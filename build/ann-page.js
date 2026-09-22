@@ -1533,13 +1533,9 @@ module.exports = function createAnnRenderer(ctx) {
 
     const detbarCells = [];
     const det = (icon, label, val) => (val ? `<span class="cp-det"><span class="cp-det-ico">${ico(icon)}</span><span><b>${esc(label)}</b><i>${esc(val)}</i></span></span>` : "");
-    detbarCells.push(det("users", "مدرس", c.teacher));
-    detbarCells.push(det("calendar", "شروع دوره", c.start_label));
     detbarCells.push(det("clock", "مدت / جلسات", c.duration_label || c.lessons));
-    detbarCells.push(det("monitor", "محل برگزاری", c.platform_label));
-    detbarCells.push(det("spark", "برگزارکننده", c.organizer));
-    detbarCells.push(det("tag", "کد دوره", c.code));
     detbarCells.push(det("money", "هزینه", price));
+    detbarCells.push(det("users", "مدرس", c.teacher));
 
     const artBg = c.cover_a || c.cover_b ? ` style="--cp-a:${escA(c.cover_a || "#001840")};--cp-b:${escA(c.cover_b || "#102A71")}"` : "";
     const img = pickImage(c);
