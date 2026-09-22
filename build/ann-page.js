@@ -1322,7 +1322,7 @@ module.exports = function createAnnRenderer(ctx) {
   }
 
   function courseRelatedCard(c) {
-    const href = "amoozesh/" + c._slug + ".html";
+    const href = c._slug + ".html";
     const img = pickImage(c);
     const media = img
       ? `<span class="cp-rel-media"><img src="${escA(srcUrl(img, "../"))}" alt="" loading="lazy"></span>`
