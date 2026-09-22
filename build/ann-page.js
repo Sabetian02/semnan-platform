@@ -693,10 +693,10 @@ module.exports = function createAnnRenderer(ctx) {
   }
 
   /* کارت مدرس: عکس یا حرف اول نام + سمت + معرفی + لینک */
-  function bTeacher(b, prefix) {
+  function bTeacher(b, prefix, course) {
     const name = String(b.name || "").trim();
     if (!name) return "";
-    const img = b.image ? safeMedia(b.image) : "";
+    const img = b.image ? safeMedia(b.image) : (course && course.teacher_image ? safeMedia(course.teacher_image) : "");
     const avatar = img
       ? `<img class="cp-tch-avatar" src="${srcUrl(img, prefix)}" alt="${escA(name)}" loading="lazy">`
       : `<span class="cp-tch-avatar is-initial">${esc([...(name)].slice(0, 1)[0])}</span>`;
@@ -719,7 +719,7 @@ module.exports = function createAnnRenderer(ctx) {
     audience: (b) => bAudience(b),
     tabs: (b, c) => bTabs(b, c.prefix, c.idPrefix),
     prices: (b, c) => bPrices(b, c.prefix),
-    teacher: (b, c) => bTeacher(b, c.prefix),
+    teacher: (b, c) => bTeacher(b, c.prefix, c.n),
     text: (b, c) => bText(b, c.prefix, c.idPrefix, c.toc),
     image: (b, c) => bImage(b, c.prefix),
     gallery: (b, c) => bGallery(b, c.prefix, c.idPrefix.replace(/[^a-z0-9-]/gi, "") || "gal"),
