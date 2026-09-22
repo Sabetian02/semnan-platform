@@ -10,7 +10,7 @@
     "active": true
   },
   "reserve": {
-    "label": "???????? ??????????????",
+    "label": "رزرو تبلیغات",
     "link": "https://t.me/PlatformSem"
   },
   "show_home": true,
@@ -18,6 +18,6 @@
   "show_announcements": true,
   "banner_size": {
     "width": 388,
-    "height": 100
+    "height": 70
   }
 }
