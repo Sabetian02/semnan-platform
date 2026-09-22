@@ -3171,6 +3171,22 @@
 
 /* هیرو دوستونهٔ دوره — الهام از صفحهٔ وبینار ایسمینار: اطلاعات + تصویر بنددار کوچک */
 .cp-head { padding-block: 18px 0; }
+/* هدر دوره روی پس‌زمینهٔ روشن — متن و آیکون‌ها را تیره/مشخص می‌کنیم */
+.cp-head .ap-crumbs { color: #6b79a0; }
+.cp-head .ap-crumbs a { color: var(--navy); }
+.cp-head .ap-crumbs a:hover { color: var(--navy-dark); }
+.cp-head .ap-crumb-sep { opacity: 0.45; }
+.cp-head .ap-chip.is-cat,
+.cp-head .ap-chip.is-status.is-past {
+  background: rgba(16, 42, 113, 0.07);
+  color: var(--navy);
+  border-color: rgba(16, 42, 113, 0.16);
+  backdrop-filter: none;
+}
+.cp-head .ap-chip.is-org { border-color: rgba(16, 42, 113, 0.3); color: var(--navy); }
+.cp-head .ap-chip.is-org:hover { background: rgba(16, 42, 113, 0.06); }
+.cp-head .ap-chip.is-status.is-soon { color: #177a3c; background: rgba(34, 197, 94, 0.14); border-color: rgba(34, 197, 94, 0.45); }
+.cp-head .ap-chip.is-status.is-live { color: #8a6c00; background: rgba(245, 196, 0, 0.16); border-color: rgba(214, 158, 0, 0.5); }
 .cp-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
@@ -3219,25 +3235,53 @@
 }
 .cp-hero-media-tag svg { color: var(--gold); }
 
-/* نوار جزئیات دوره (مثل کد/شروع/مدت/مکان در وبینار) */
-.cp-detbar {
-  background: linear-gradient(160deg, #0d2466, #081a45);
-  border-block: 1px solid rgba(245, 196, 0, 0.3);
-  box-shadow: 0 22px 50px -34px rgba(8, 26, 69, 0.9);
+/* نوار جزئیات دوره (مثل کد/شروع/مدت/مکان در وبینار) — کارت روشن و مرتب */
+.cp-detbar { padding-block: 10px; }
+.cp-detbar-in {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--ap-shadow-card);
+  padding: 4px;
+  overflow: hidden;
 }
-.cp-detbar-in { display: flex; flex-wrap: wrap; }
 .cp-det {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 16px 22px;
+  gap: 12px;
+  padding: 12px 18px;
   flex: 1 1 200px;
-  border-inline-start: 1px solid rgba(255, 255, 255, 0.08);
+  min-inline-size: 0;
+  border-inline-start: 1px dashed rgba(16, 42, 113, 0.14);
+  transition: background 0.2s ease;
 }
 .cp-det:first-child { border-inline-start: 0; }
-.cp-det svg { color: var(--gold); flex: 0 0 auto; }
-.cp-det b { display: block; color: #9fb0d8; font-size: 0.72rem; font-weight: 500; }
-.cp-det i { display: block; color: #fff; font-style: normal; font-size: 0.9rem; font-weight: 600; margin-top: 2px; }
+.cp-det:hover { background: rgba(16, 42, 113, 0.035); }
+.cp-det-ico {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(245, 196, 0, 0.18);
+  border: 1px solid rgba(214, 158, 0, 0.35);
+  color: var(--navy);
+}
+.cp-det-ico svg { width: 20px; height: 20px; }
+.cp-det > span:last-child { min-inline-size: 0; }
+.cp-det b { display: block; color: #6b7a9f; font-size: 0.72rem; font-weight: 600; }
+.cp-det i {
+  display: block;
+  color: var(--navy-dark);
+  font-style: normal;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
 
 /* تب‌ها (بدون JS) */
 .cp-tabs { margin-block: 6px 0; }
@@ -3375,9 +3419,9 @@
   .cp-tabbar { display: none; }
 }
 
-.cp-title { max-width: 780px; }
+.cp-title { max-width: 780px; color: var(--navy-dark); }
 .cp-subtitle {
-  color: #e8ecf8;
+  color: #43527a;
   font-size: 1.05rem;
   font-weight: 600;
   margin: 10px 0 6px;
@@ -3392,14 +3436,14 @@
 .cp-meta-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #dfe4f5;
+  gap: 7px;
+  color: #59688c;
   font-size: 0.87rem;
 }
-.cp-meta-item svg { color: var(--gold); }
-.cp-meta-item b { color: #fff; font-weight: 600; }
+.cp-meta-item svg { color: var(--navy); width: 17px; height: 17px; flex: 0 0 auto; }
+.cp-meta-item b { color: var(--navy-dark); font-weight: 700; }
 .cp-hero-back,
-.cp-hero-back:hover { color: #cdd5ec; }
+.cp-hero-back:hover { color: var(--navy); }
 
 /* کارت بلیت/ثبت‌نام (نوار کنار) */
 .cp-ticket {
