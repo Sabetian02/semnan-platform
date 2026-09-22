@@ -92,14 +92,18 @@ module.exports = function createAnnRenderer(ctx) {
   /* بنرهای تبلیغاتی مشترک — از ads در content/ads.json (بخش «تبلیغات» داشبورد) */
   function adsMarkup(a) {
     if (!a) return "";
+    const bs = a.banner_size;
+    const w = Number(bs && bs.width) || 388;
+    const h = Number(bs && bs.height) || 100;
+    const ratio = w > 0 && h > 0 ? `aspect-ratio: ${w} / ${h}` : "";
     const slots = [];
     const s1 = a.slot1;
     const s2 = a.slot2;
     if (s1 && s1.image && s1.active !== false) {
-      slots.push(`<a class="ap-ad" href="${escA(s1.link || "#")}" target="_blank" rel="noopener"><img class="ap-ad-img" src="${escA(s1.image)}" alt="" loading="lazy"></a>`);
+      slots.push(`<a class="ap-ad"${ratio ? ` style="${ratio}"` : ""} href="${escA(s1.link || "#")}" target="_blank" rel="noopener"><img class="ap-ad-img" src="${escA(s1.image)}" alt="" loading="lazy"></a>`);
     }
     if (s2 && s2.image && s2.active !== false) {
-      slots.push(`<a class="ap-ad" href="${escA(s2.link || "#")}" target="_blank" rel="noopener"><img class="ap-ad-img" src="${escA(s2.image)}" alt="" loading="lazy"></a>`);
+      slots.push(`<a class="ap-ad"${ratio ? ` style="${ratio}"` : ""} href="${escA(s2.link || "#")}" target="_blank" rel="noopener"><img class="ap-ad-img" src="${escA(s2.image)}" alt="" loading="lazy"></a>`);
     }
     if (!slots.length) return "";
     return slots.join("\n        ");

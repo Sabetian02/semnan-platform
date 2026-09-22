@@ -393,6 +393,13 @@ collections:
             name: show_announcements
             widget: boolean
             default: true
+          - label: ابعاد بنرها (نسبت نمایش)
+            name: banner_size
+            hint: "ابعاد فعلی: ۳۸۸ × ۱۰۰ پیکسل — با تغییر این دو عدد، نسبت بنرها در همهٔ بخش‌های سایت عوض می‌شود."
+            widget: object
+            fields:
+              - { label: عرض بنر (پیکسل), name: width, widget: number, min: 60, default: 388 }
+              - { label: ارتفاع بنر (پیکسل), name: height, widget: number, min: 12, default: 100 }
           - label: رزرو تبلیغات (صفحهٔ اصلی)
             name: reserve
             widget: object

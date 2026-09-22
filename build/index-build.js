@@ -388,15 +388,22 @@ function renderHero(h) {
 }
 
 /* ---------- ADS ---------- */
+const ADS_RATIO = (a) => {
+  const w = Number(a && a.banner_size && a.banner_size.width) || 388;
+  const h = Number(a && a.banner_size && a.banner_size.height) || 100;
+  if (w <= 0 || h <= 0) return "aspect-ratio: 388 / 100";
+  return `aspect-ratio: ${w} / ${h}`;
+};
 function adSlots(a) {
   const slots = [];
+  const ratio = ADS_RATIO(a);
   if (a.slot1 && a.slot1.active !== false) {
-    slots.push(`<a class="ad-slot" href="${esc(a.slot1.link)}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۱">
+    slots.push(`<a class="ad-slot" style="${ratio}" href="${esc(a.slot1.link)}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۱">
             <img class="ad-slot-img" src="${esc(a.slot1.image)}" alt="فضای تبلیغاتی شمارهٔ ۱" loading="lazy">
           </a>`);
   }
   if (a.slot2 && a.slot2.active !== false) {
-    slots.push(`<a class="ad-slot" href="${esc(a.slot2.link)}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۲">
+    slots.push(`<a class="ad-slot" style="${ratio}" href="${esc(a.slot2.link)}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۲">
             <img class="ad-slot-img" src="${esc(a.slot2.image)}" alt="فضای تبلیغاتی شمارهٔ ۲" loading="lazy">
           </a>`);
   }
