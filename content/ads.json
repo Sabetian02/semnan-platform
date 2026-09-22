@@ -10,8 +10,9 @@
     "active": true
   },
   "reserve": {
-    "label": "رزرو تبلیغات",
-    "link": "https://t.me/PlatformSem"
+    "label": "???????? ??????????????",
+    "link": "https://t.me/PlatformSem",
+    "icon": "telegram"
   },
   "show_home": true,
   "show_courses": true,

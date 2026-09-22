@@ -414,9 +414,7 @@ function renderAds(a) {
   if (!a) return "";
   const slots = adSlots(a);
   if (!slots) return "";
-  const reserve = a.reserve && a.reserve.link
-    ? `<div class="ad-reserve"><a class="btn btn-gold" href="${esc(a.reserve.link)}" target="_blank" rel="noopener">${teleSvg} ${esc(a.reserve.label || "رزرو تبلیغات")}</a></div>`
-    : "";
+  const reserve = renderAdReserve(a);
   return `<!-- ADS BANNERS -->
     <section class="ads" id="ads">
       <div class="container">
@@ -436,6 +434,22 @@ function renderAdsBand(a) {
     <section class="ads ads--compact">
       <div class="container"><div class="ad-slots reveal">${slots}</div></div>
     </section>`;
+}
+
+/* دکمهٔ «رزرو تبلیغات» — آیکون آن از داشبورد قابل انتخاب است (تلگرام / بدون / SVG سفارشی) */
+function renderAdReserve(a) {
+  if (!a || !a.reserve || !a.reserve.link) return "";
+  const r = a.reserve;
+  let icon = "";
+  if (r.icon && r.icon !== "none") {
+    icon =
+      r.icon === "custom" && r.icon_svg
+        ? `<img class="ad-reserve-icon" src="${escA(r.icon_svg)}" alt="">`
+        : teleSvg;
+  }
+  return `<div class="ad-reserve">
+      <a class="btn btn-gold" href="${esc(r.link)}" target="_blank" rel="noopener">${icon}${esc(r.label || "رزرو تبلیغات")}</a>
+    </div>`;
 }
 
 

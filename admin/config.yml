@@ -406,3 +406,14 @@ collections:
             fields:
               - { label: متن, name: label, widget: string }
               - { label: لینک, name: link, widget: string }
+              - label: نماد دکمه
+                name: icon
+                widget: select
+                options:
+                  - { label: تلگرام, value: telegram }
+                  - { label: بدون آیکون, value: none }
+                  - { label: فایل SVG سفارشی, value: custom }
+                default: telegram
+              - label: فایل آیکون (SVG) — فقط وقتی گزینهٔ بالا «فایل SVG سفارشی» باشد
+                name: icon_svg
+                widget: image

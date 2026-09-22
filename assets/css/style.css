@@ -464,6 +464,7 @@ img { max-width: 100%; display: block; }
   justify-content: center;
   margin-top: 30px;
 }
+.ad-reserve-icon { width: 17px; height: 17px; object-fit: contain; }
 
 /* بنرهای مشترک با صفحهٔ اصلی در صفحات دوره‌ها و اطلاعیه‌ها — بدون بخش رزرو، کم‌حجم */
 .ads--compact {
