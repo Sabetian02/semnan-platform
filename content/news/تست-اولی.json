@@ -1,0 +1,41 @@
+{
+  "blocks": [
+    {
+      "type": "ads"
+    },
+    {
+      "type": "image",
+      "place": "main",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVa1epjlPBRGBYJjqKAUav3ZFRVOWu3sx2LhrWV_I4AA&s=10"
+    },
+    {
+      "type": "buttons",
+      "place": "main",
+      "heading": "رسید",
+      "text": "پرداخت انی",
+      "items": [
+        {
+          "style": "tele",
+          "label": "رسید 2",
+          "link": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVa1epjlPBRGBYJjqKAUav3ZFRVOWu3sx2LhrWV_I4AA&s=10",
+          "icon": "telegram"
+        }
+      ]
+    },
+    {
+      "type": "location",
+      "heading": "مکان برگزاری",
+      "place": "main",
+      "name": "ی",
+      "address": "ی"
+    }
+  ],
+  "active": true,
+  "summary": "تبلیغات دوره یکتا نت برای رسیدن به اهداف",
+  "anjoman": "mohandesi-shimi",
+  "date": "2026-09-22T14:37:00.000+03:30",
+  "kanon": "karafarini-anoo",
+  "title": "تست اولی",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVa1epjlPBRGBYJjqKAUav3ZFRVOWu3sx2LhrWV_I4AA&s=10",
+  "category": "دوره"
+}
