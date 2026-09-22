@@ -1108,6 +1108,8 @@ img { max-width: 100%; display: block; }
   display: flex; align-items: center; justify-content: center;
   flex: 0 0 auto;
 }
+.avatar-group .avatar--img { object-fit: cover; }
+
 .cs-teacher-name { font-size: 12px; font-weight: 700; color: var(--muted); margin-inline-start: 8px; }
 .main-page-slide-show-price-btn-container {
   flex-direction: row;

@@ -773,6 +773,7 @@ const courseSlide = (c, idx) => {
   const detail = "amoozesh/" + c._slug + ".html";
   const name = c.teacher || "مدرس دوره";
   const initial = esc(name.trim().charAt(0));
+  const tphoto = imageOrNull(c.teacher_image);
   const lessons = c.lessons ? `<span class="cs-lessons-mini">▸ ${esc(c.lessons)}</span>` : "";
   const img = pickImage(c);
   const cover = img
@@ -794,7 +795,7 @@ const courseSlide = (c, idx) => {
                 <div class="main-page-slide-show-detials-container">
                   <div class="avatarBox avatarBox-lg">
                     <div class="avatar-group is-webinar rtl">
-                      <span class="avatar" aria-hidden="true">${initial}</span>
+                      ${tphoto ? `<img class="avatar avatar--img" src="${escA(tphoto)}" alt="${escA(name)}" loading="lazy">` : `<span class="avatar" aria-hidden="true">${initial}</span>`}
                       <span class="cs-teacher-name">${name}</span>
                     </div>
                   </div>
