@@ -1508,35 +1508,11 @@ module.exports = function createAnnRenderer(ctx) {
     const prefix = "../";
     const slug = encodeURI(c._slug || "");
     const url = absUrl("amoozesh/" + slug + ".html");
-    const blocks = courseAutoBlocks(c);
     const toc = [];
 
     const adsSlots = ads && ads.show_courses !== false ? adsMarkup(ads) : "";
     const courseAdsSide = adsSlots ? `<div class="ap-ads ap-ads--side">${adsSlots}</div>` : "";
     const adsMain = adsSlots ? `<div class="ap-ads ap-ads--inline">${adsSlots}</div>` : "";
-
-    const mainHtml = [];
-    const sideHtml = [];
-    let adPlaced = false;
-    blocks.forEach((b, i) => {
-      if (b.type === "ads") {
-        if (adsMain && !adPlaced) {
-          mainHtml.push(adsMain);
-          adPlaced = true;
-        }
-        return;
-      }
-      const r = renderBlock(b, i, { prefix, n: c, cover: pickImage(c) });
-      if (typeof r.html === "object" && r.html) {
-        if (b.place === "side") sideHtml.push(r.html.section);
-        else mainHtml.push(r.html.section);
-        if (r.html.entry) toc.push(r.html.entry);
-      } else if (typeof r.html === "string" && r.html) {
-        (b.place === "side" ? sideHtml : mainHtml).push(r.html);
-      }
-      if (r.toc && r.toc.length) toc.push(...r.toc);
-    });
-    if (adsMain && !adPlaced) mainHtml.push(adsMain);
 
     const register = courseRegister(c);
     const price = String(c.price || "رایگان").trim();
@@ -1640,13 +1616,68 @@ module.exports = function createAnnRenderer(ctx) {
         <ul class="ap-kf">${courseFactRows(c)}</ul>
       </section>`;
 
+    /* ---------- چیدمان بلوک‌محور دو ستونه ----------
+       ستون اصلی از blocks_main و نوار کنار از blocks_side ساخته می‌شود.
+       بلوک‌های سیستمی (s-*) اجزای ثابت نوار کنار را به‌همراه بلوک‌های محتوایی
+       در همان لیست قرار می‌دهند تا ترتیب آن‌ها از داشبورد قابل جانمایی باشد. */
+    const SYSTEM = { ticket, toc: () => (toc.length > 1 ? tocCard(toc) : ""), ads: courseAdsSide, facts: factsCard, teacher: courseTeacherCard(c, prefix), share: sideShare(url, c.title || "") };
+    const defaultSide = () => [{ type: "s-ticket" }, { type: "s-toc" }, { type: "s-ads" }, { type: "s-facts" }, { type: "s-teacher" }, { type: "s-share" }];
+
+    const legacy = (Array.isArray(c.blocks) ? c.blocks : []).filter((b) => b && b.type);
+    const hasNew = Array.isArray(c.blocks_main) || Array.isArray(c.blocks_side);
+    let mainRaw, sideRaw;
+    if (hasNew) {
+      mainRaw = (Array.isArray(c.blocks_main) ? c.blocks_main : []).filter((b) => b && b.type);
+      const side = (Array.isArray(c.blocks_side) ? c.blocks_side : []).filter((b) => b && b.type);
+      sideRaw = side.length ? side : defaultSide();
+    } else if (legacy.some((b) => b.type !== "ads")) {
+      const sideTeacher = legacy.some((b) => b.type === "teacher" && b.place === "side");
+      mainRaw = legacy.filter((b) => b.type !== "ads" && b.place !== "side");
+      const def = defaultSide().filter((s) => !(sideTeacher && s.type === "s-teacher"));
+      sideRaw = [...def, ...legacy.filter((b) => b.place === "side" && b.type !== "ads")];
+    } else {
+      mainRaw = courseAutoBlocks(c);
+      sideRaw = defaultSide();
+    }
+
+    const mainTokens = [];
+    const sideTokens = [];
+    let adPlaced = false;
+    let bid = 0;
+    const emit = (b, target) => {
+      if (b.type === "ads") {
+        if (target === "main") {
+          if (adsMain && !adPlaced) {
+            mainTokens.push(adsMain);
+            adPlaced = true;
+          }
+        } else if (courseAdsSide) sideTokens.push(courseAdsSide);
+        return;
+      }
+      if (b.type.indexOf("s-") === 0 && Object.prototype.hasOwnProperty.call(SYSTEM, b.type.slice(2))) {
+        const markup = b.type === "s-toc" ? { toc: true } : SYSTEM[b.type.slice(2)];
+        if (markup === "" || markup === null || markup === undefined) return;
+        (target === "side" ? sideTokens : mainTokens).push(markup);
+        return;
+      }
+      const r = renderBlock({ ...b, place: target }, bid++, { prefix, n: c, cover: pickImage(c), toc });
+      if (typeof r.html === "object" && r.html) {
+        (target === "side" ? sideTokens : mainTokens).push(r.html.section);
+        if (r.html.entry) toc.push(r.html.entry);
+      } else if (typeof r.html === "string" && r.html) {
+        (target === "side" ? sideTokens : mainTokens).push(r.html);
+      }
+      if (r.toc && r.toc.length) toc.push(...r.toc);
+    };
+    mainRaw.forEach((b) => emit(b, "main"));
+    sideRaw.forEach((b) => emit(b, "side"));
+    if (adsMain && !adPlaced) mainTokens.push(adsMain);
+
+    const resolve = (t) => (typeof t === "object" && t && t.toc ? (toc.length > 1 ? tocCard(toc) : "") : t);
+    const mainHtml = mainTokens.map(resolve).filter(Boolean);
+    const sideHtml = sideTokens.map(resolve).filter(Boolean);
+
     const aside = `<aside class="ap-side" aria-label="اطلاعات جانبی دوره">
-          ${ticket}
-          ${toc.length > 1 ? tocCard(toc) : ""}
-          ${courseAdsSide}
-          ${factsCard}
-          ${courseTeacherCard(c, prefix)}
-          ${sideShare(url, c.title || "")}
           ${sideHtml.join("\n          ")}
         </aside>`;
 

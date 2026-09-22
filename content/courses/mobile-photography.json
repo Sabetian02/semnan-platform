@@ -23,10 +23,30 @@
   "sort": 8,
   "active": true,
   "faq": [],
-  "blocks": [
+  "icon": "📱",
+  "blocks_main": [
     {
       "type": "ads"
     }
   ],
-  "icon": "📱"
+  "blocks_side": [
+    {
+      "type": "s-ticket"
+    },
+    {
+      "type": "s-toc"
+    },
+    {
+      "type": "s-ads"
+    },
+    {
+      "type": "s-facts"
+    },
+    {
+      "type": "s-teacher"
+    },
+    {
+      "type": "s-share"
+    }
+  ]
 }

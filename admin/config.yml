@@ -279,157 +279,54 @@ collections:
         fields:
           - { label: پرسش, name: q, widget: string }
           - { label: پاسخ, name: a, widget: text }
-      - label: بلوک‌های محتوا
-        name: blocks
+      - label: بلوک‌های ستون اصلی
+        name: blocks_main
         widget: list
         required: false
-        label_singular: بلوک
+        label_singular: بلوک اصلی
         collapsed: true
         summary: "{{fields.heading}} — {{type}}"
-        hint: "هر بلوک را با ▲▼ جابجا کن و با «جای نمایش» بین ستون اصلی و کنار جابجا کن. بلوک «سرفصل‌ها» زمان‌بندی درس‌هاست، «مخاطبین» دو ستونِ برای چه کسی است/نیست، «مدرس» کارت مدرس در نوار کنار."
+        hint: "محتوای ستون اصلی (متن دوره) را در این لیست با ▲▼ بچین. هر آیتم یک بلوک مستقل است."
         default:
-          - type: ads
-          - type: schedule
-            heading: "سرفصل‌های دوره"
-            items:
-              - title: "جلسهٔ اول: آشنایی با مبانی"
-                duration: "۱ ساعت"
-                note: "معرفی دوره و منابع"
+          - type: text
+            heading: دربارهٔ دوره
+            markdown: "توضیح کوتاهی دربارهٔ دوره بنویسید."
         types:
           - label: 📝 متن
             name: text
             widget: object
             fields:
               - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
               - { label: متن, name: markdown, widget: markdown }
-          - label: 🎓 سرفصل‌ها و زمان‌بندی
-            name: schedule
+          - label: ⭐ در یک نگاه
+            name: highlights
             widget: object
             fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "سرفصل‌های دوره" }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
-              - label: جلسه‌ها
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "در یک نگاه" }
+              - label: موارد
                 name: items
                 widget: list
-                summary: "{{fields.title}}"
+                summary: "{{fields.text}}"
                 fields:
-                  - { label: عنوان جلسه, name: title, widget: string }
-                  - { label: زمان برگزاری, name: time, widget: string, required: false, hint: "مثل «شنبه‌ها ۱۰:۰۰»" }
-                  - { label: مدت, name: duration, widget: string, required: false, hint: "مثل «۱ ساعت»" }
-                  - { label: توضیح کوتاه, name: note, widget: text, required: false }
-          - label: 🎯 مخاطبین دوره
-            name: audience
+                  - { label: مورد, name: text, widget: string }
+          - label: 🧾 اطلاعات (ردیفی)
+            name: facts
             widget: object
             fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "این دوره برای چه کسانی است؟" }
-              - { label: عنوان سمت مثبت, name: good_title, widget: string, required: false, default: "این دوره برای چه کسانی است؟" }
-              - { label: مناسب برای, name: suitable, widget: list, summary: "{{fields}}" }
-              - { label: عنوان سمت منفی, name: bad_title, widget: string, required: false, default: "این دوره برای چه کسانی نیست؟" }
-              - { label: نامناسب برای, name: unsuitable, widget: list, summary: "{{fields}}" }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
-          - label: 🗂 تب‌ها (مثل وبینار)
-            name: tabs
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, hint: "خالی بگذار تا تب‌ها بدون عنوان اضافه نمایش داده شوند" }
-              - label: تب‌ها
-                name: tabs
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: ردیف‌ها
+                name: items
                 widget: list
-                summary: "{{fields.tab}}"
+                summary: "{{fields.label}} — {{fields.value}}"
+                collapsed: true
                 fields:
-                  - { label: نام تب, name: tab, widget: string }
+                  - { label: عنوان, name: label, widget: string, required: false }
+                  - { label: مقدار, name: value, widget: string, required: false }
                   - label: آیکن
                     name: icon
                     widget: select
                     required: false
-                    options: [ "", "spark", "check", "clock", "users", "help", "shield", "layers" ]
-                  - { label: متن تب, name: markdown, widget: markdown }
-          - label: 🎟 بلیت‌ها / قیمت‌ها (مثل وبینار)
-            name: prices
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "گزینه‌های ثبت‌نام" }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
-              - label: بلیت‌ها
-                name: items
-                widget: list
-                summary: "{{fields.name}}"
-                fields:
-                  - { label: نام بلیت, name: name, widget: string }
-                  - { label: قیمت, name: price, widget: string, hint: "مثل «رایگان» یا «۴۵۰ هزار تومان»" }
-                  - label: پیشنهاد اصلی
-                    name: hot
-                    widget: boolean
-                    required: false
-                    default: false
-                  - { label: متن دکمه, name: cta, widget: string, required: false, default: "ثبت‌نام" }
-                  - { label: لینک, name: link, widget: string, required: false, hint: "https://… یا مسیر داخلی؛ خالی = بدون دکمه" }
-                  - label: امکانات
-                    name: features
-                    widget: list
-                    summary: "{{fields}}"
-          - label: 👤 مدرس
-            name: teacher
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مدرس دوره" }
-              - { label: نام, name: name, widget: string }
-              - { label: سمت, name: role, widget: string, required: false }
-              - { label: عکس, name: image, widget: image, required: false }
-              - { label: معرفی کوتاه, name: bio, widget: text, required: false }
-              - { label: لینک, name: link, widget: string, required: false, hint: "https://…" }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "side"
-          - label: 📊 اطلاعات کلیدی
-            name: facts
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "اطلاعات کلیدی دوره" }
-              - label: ردیف‌ها
-                name: items
-                widget: list
-                summary: "{{fields.label}}"
-                fields:
-                  - { label: عنوان, name: label, widget: string }
-                  - { label: مقدار, name: value, widget: string }
-                  - { label: لینک, name: link, widget: string, required: false }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
+                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
           - label: 🖼 عکس
             name: image
             widget: object
@@ -437,96 +334,200 @@ collections:
               - { label: تصویر, name: image, widget: image }
               - { label: کپشن, name: caption, widget: string, required: false }
               - { label: alt, name: alt, widget: string, required: false }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
-          - label: 🖼 گالری
+          - label: 🗂 گالری
             name: gallery
             widget: object
             fields:
               - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - { label: تصاویر, name: images, widget: list, field: { label: تصویر, name: image, widget: image } }
-              - label: جای نمایش
-                name: place
+              - label: تعداد ستون
+                name: columns
                 widget: select
+                required: false
                 options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
-          - label: 🎬 ویدیو (آپارات)
+                  - { label: خودکار, value: "" }
+                  - { label: ۲ ستون, value: "two" }
+                  - { label: ۳ ستون, value: "three" }
+                  - { label: ۴ ستون, value: "four" }
+                default: ""
+              - label: تصاویر
+                name: items
+                widget: list
+                summary: "{{fields.caption}}"
+                fields:
+                  - { label: تصویر, name: image, widget: image }
+                  - { label: کپشن, name: caption, widget: string, required: false }
+          - label: 🎬 ویدیو (آپارات یا فایل)
             name: video
             widget: object
             fields:
               - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - { label: لینک آپارات, name: url, widget: string, required: false, hint: "مثل https://www.aparat.com/v/abc123 — فقط آپارات" }
+              - { label: لینک آپارات, name: url, widget: string, required: false, hint: "مثل https://www.aparat.com/v/abc123" }
+              - { label: یا فایل ویدیو, name: file, widget: file, required: false }
               - { label: عنوان ویدیو, name: title, widget: string, required: false }
               - { label: توضیح, name: caption, widget: string, required: false }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
-          - label: 🕗 فایل‌ها و پیوست‌ها
-            name: files
+              - { label: پوستر, name: poster, widget: image, required: false }
+          - label: ⏱ زمان‌بندی / سرفصل جلسات
+            name: schedule
             widget: object
             fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "فایل‌ها" }
-              - { label: راهنما, name: note, widget: text, required: false }
-              - { label: پیوست‌ها, name: items, widget: list, fields: [ { label: متن, name: label, widget: string }, { label: فایل, name: link, widget: file } ] }
-          - label: ❓ پرسش و پاسخ
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "برنامهٔ دوره" }
+              - label: جلسات
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: عنوان جلسه, name: title, widget: string, required: false }
+                  - { label: زمان, name: time, widget: string, required: false, hint: "مثل «۱۵ مهر، ۱۸:۰۰»" }
+                  - { label: مدت, name: duration, widget: string, required: false, hint: "مثل «۲ ساعت»" }
+                  - { label: توضیح, name: note, widget: text, required: false }
+          - label: 🎯 مخاطبین دوره
+            name: audience
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مخاطبین دوره" }
+              - { label: عنوان ستون مناسب, name: good_title, widget: string, required: false, default: "این دوره برای چه کسانی است؟" }
+              - { label: عنوان ستون نامناسب, name: bad_title, widget: string, required: false, default: "این دوره برای چه کسانی نیست؟" }
+              - label: مناسب برای
+                name: suitable
+                widget: list
+                summary: "{{fields.text}}"
+                fields:
+                  - { label: مورد, name: text, widget: string }
+              - label: نامناسب برای
+                name: unsuitable
+                widget: list
+                summary: "{{fields.text}}"
+                fields:
+                  - { label: مورد, name: text, widget: string }
+          - label: 🗂 تب‌ها
+            name: tabs
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: تب‌ها
+                name: tabs
+                widget: list
+                summary: "{{fields.tab}}"
+                fields:
+                  - { label: عنوان تب, name: tab, widget: string }
+                  - label: آیکن تب
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
+                  - { label: محتوای تب (متن), name: markdown, widget: markdown }
+          - label: 💰 بلیت‌ها / قیمت‌ها
+            name: prices
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "بلیت‌های دوره" }
+              - label: بلیت‌ها
+                name: items
+                widget: list
+                summary: "{{fields.name}} — {{fields.price}}"
+                fields:
+                  - { label: نام بلیت, name: name, widget: string, hint: "مثل «حضور آنلاین»" }
+                  - { label: قیمت, name: price, widget: string, hint: "مثل «۴۹۰ هزار تومان»" }
+                  - label: امکانات
+                    name: features
+                    widget: list
+                    summary: "{{fields.text}}"
+                    fields:
+                      - { label: مورد, name: text, widget: string }
+                  - { label: ویژه (پیشنهاد), name: hot, widget: boolean, default: false }
+                  - { label: لینک ثبت‌نام, name: link, widget: string, required: false, hint: "https://… یا مسیر داخلی" }
+                  - { label: متن دکمه, name: cta, widget: string, required: false, default: "ثبت‌نام" }
+          - label: 👤 کارت مدرس (بلوک)
+            name: teacher
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: تیتر کوچک, name: kicker, widget: string, required: false, default: "مدرس دوره" }
+              - { label: نام, name: name, widget: string, required: true }
+              - { label: سمت, name: role, widget: string, required: false }
+              - { label: معرفی کوتاه, name: bio, widget: text, required: false }
+              - { label: عکس, name: image, widget: image, required: false }
+              - { label: لینک, name: link, widget: string, required: false }
+          - label: 👥 سوالات متداول (بلوک)
             name: faq
             widget: object
             fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "پرسش‌های پرتکرار" }
-              - label: پرسش‌ها
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "سوالات متداول" }
+              - label: سوالات
                 name: items
                 widget: list
                 summary: "{{fields.q}}"
                 fields:
-                  - { label: پرسش, name: q, widget: string }
+                  - { label: سوال, name: q, widget: string }
                   - { label: پاسخ, name: a, widget: text }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
-          - label: 💡 نکته
+          - label: 📣 اعلان
             name: notice
             widget: object
             fields:
-              - { label: عنوان, name: title, widget: string, required: false }
-              - { label: متن, name: text, widget: text }
-              - label: رنگ
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: نوع
                 name: tone
                 widget: select
-                required: false
+                default: info
                 options:
-                  - { label: آبی (اطلاع), value: "info" }
-                  - { label: سبز (موفق), value: "success" }
-                  - { label: زرد (هشدار), value: "warn" }
-                  - { label: قرمز (خطا), value: "danger" }
-                default: "info"
-          - label: 🔢 آمار
+                  - { label: اطلاع‌رسانی, value: "info" }
+                  - { label: هشدار, value: "warn" }
+                  - { label: موفقیت, value: "success" }
+                  - { label: خطر, value: "danger" }
+              - { label: عنوان اعلان, name: title, widget: string, required: false }
+              - { label: متن, name: text, widget: text, required: false }
+          - label: 📊 آمار
             name: stats
             widget: object
             fields:
               - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - { label: آمار, name: items, widget: list, summary: "{{fields.value}} {{fields.label}}", fields: [ { label: عدد, name: value, widget: string }, { label: توضیح, name: label, widget: string } ] }
+              - label: آیتم‌ها
+                name: items
+                widget: list
+                summary: "{{fields.number}} {{fields.label}}"
+                fields:
+                  - { label: عدد, name: number, widget: string, hint: "مثل «۶ جلسه»" }
+                  - { label: برچسب, name: label, widget: string, required: false }
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
           - label: 💬 نقل قول
             name: quote
             widget: object
             fields:
-              - { label: متن, name: text, widget: text }
-              - { label: گوینده, name: author, widget: string, required: false }
-              - { label: نقش, name: role, widget: string, required: false }
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: متن نقل قول, name: text, widget: text }
+              - { label: نویسنده, name: author, widget: string, required: false }
+              - { label: سمت, name: role, widget: string, required: false }
+              - { label: آواتار, name: avatar, widget: image, required: false }
+          - label: ⏳ خط زمانی
+            name: timeline
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مراحل دوره" }
+              - label: مراحل
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: زمان, name: time, widget: string, required: false }
+                  - { label: عنوان, name: title, widget: string, required: false }
+                  - { label: توضیح, name: desc, widget: text, required: false }
+          - label: 📁 فایل‌ها
+            name: files
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: فایل‌ها
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: فایل, name: file, widget: file }
+                  - { label: عنوان, name: title, widget: string, required: false }
+                  - { label: توضیح, name: note, widget: string, required: false }
           - label: 🔘 دکمه‌ها
             name: buttons
             widget: object
@@ -538,8 +539,8 @@ collections:
                 widget: list
                 summary: "{{fields.label}}"
                 fields:
-                  - { label: متن دکمه, name: label, widget: string }
-                  - { label: لینک, name: link, widget: string, hint: "https://… یا مسیر داخلی مثل amoozesh.html" }
+                  - { label: متن, name: label, widget: string }
+                  - { label: لینک, name: link, widget: string, hint: "https://… یا مسیر داخلی" }
                   - label: رنگ
                     name: style
                     widget: select
@@ -555,7 +556,31 @@ collections:
                     name: icon
                     widget: select
                     required: false
-                    options: [ "", "telegram", "whatsapp", "download", "calendar" ]
+                    options: [ "", "telegram", "whatsapp", "download", "calendar", "play", "check", "link", "spark" ]
+          - label: 🎯 فراخوان (CTA)
+            name: cta
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: متن, name: text, widget: text, required: false }
+              - label: دکمه‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: متن, name: label, widget: string }
+                  - { label: لینک, name: link, widget: string }
+                  - label: رنگ
+                    name: style
+                    widget: select
+                    required: false
+                    options:
+                      - { label: طلایی, value: "gold" }
+                      - { label: سرمه‌ای, value: "navy" }
+                      - { label: آبی تلگرام, value: "tele" }
+                      - { label: ساده با قاب, value: "ghost" }
+                      - { label: سفید, value: "white" }
+                    default: "gold"
           - label: 📍 نقشه (نشان)
             name: location
             widget: object
@@ -563,33 +588,314 @@ collections:
               - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مکان برگزاری" }
               - { label: نام مکان, name: name, widget: string, required: false }
               - { label: نشانی, name: address, widget: string, required: false }
-              - { label: لینک نشان, name: map_url, widget: string, required: false, hint: "از اپ نشان «اشتراک‌گذاری» بزن و لینک را این‌جا بگذار (nshn.ir یا neshan.org)" }
+              - { label: لینک نشان, name: map_url, widget: string, required: false, hint: "لینک اشتراک‌گذاری از اپ نشان (nshn.ir)" }
           - label: 📋 فرم گوگل
             name: form
             widget: object
             fields:
               - { label: عنوان بخش, name: heading, widget: string, required: false, default: "ثبت‌نام" }
-              - { label: لینک فرم, name: url, widget: string, required: false, hint: "https://docs.google.com/forms/…" }
-              - { label: توضیح بالای فرم, name: note, widget: text, required: false }
+              - { label: لینک فرم, name: url, widget: string, required: false }
+              - { label: توضیح بالا, name: note, widget: text, required: false }
               - { label: ارتفاع (پیکسل), name: height, widget: number, required: false, default: 520 }
-          - label: 📌 برجسته (highlights)
-            name: highlights
+          - label: ➖ جداکننده
+            name: divider
+            widget: object
+            fields:
+              - { label: متن روی خط, name: text, widget: string, required: false }
+          - label: 📱 جای تبلیغات (موبایل)
+            name: ads
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "این بلوک فقط جای تبلیغات در دید موبایل را تعیین می‌کند؛ در کامپیوتر تبلیغات از بلوک سیستمی نوار کنار استفاده می‌شود." }
+      - label: بلوک‌های نوار کنار
+        name: blocks_side
+        widget: list
+        required: false
+        label_singular: بلوک کناری
+        collapsed: true
+        summary: "{{fields.heading}} — {{type}}"
+        hint: "ترتیب ستون کنار را با ▲▼ بچین. بلوک‌های «s-» سیستمی‌اند (ثبت‌نام، فهرست، تبلیغ، اطلاعات دوره، مدرس، اشتراک‌گذاری) و همین‌جا جابه‌جا/حذف می‌شوند."
+        default:
+          - type: s-ticket
+          - type: s-toc
+          - type: s-ads
+          - type: s-facts
+          - type: s-teacher
+          - type: s-share
+        types:
+          - label: 🎟 کارت ثبت‌نام (سیستم)
+            name: s-ticket
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "کارت قیمت و دکمهٔ ثبت‌نام — از فیلدهای «قیمت» و «لینک» خود دوره ساخته می‌شود." }
+          - label: 🧭 فهرست مطالب (سیستم)
+            name: s-toc
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "به‌صورت خودکار از عنوان بلوک‌های دارای سرتیتر ساخته می‌شود." }
+          - label: 🎯 تبلیغات (سیستم)
+            name: s-ads
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "بنرهای تعریف‌شده در بخش «تبلیغات»." }
+          - label: 🧾 اطلاعات دوره (سیستم)
+            name: s-facts
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "ردیف‌های مختصر دوره (جلسات، مدت، روش برگزاری…)." }
+          - label: 👤 کارت مدرس (سیستم)
+            name: s-teacher
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "از فیلدهای «مدرس»، «سمت»، «عکس» و «معرفی کوتاه» خود دوره ساخته می‌شود." }
+          - label: 📤 اشتراک‌گذاری (سیستم)
+            name: s-share
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "دکمه‌های شبکه‌های اجتماعی + دکمهٔ چاپ." }
+          - label: 📝 متن
+            name: text
             widget: object
             fields:
               - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - label: موارد برجسته
+              - { label: متن, name: markdown, widget: markdown }
+          - label: ⭐ در یک نگاه
+            name: highlights
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "در یک نگاه" }
+              - label: موارد
+                name: items
+                widget: list
+                summary: "{{fields.text}}"
+                fields:
+                  - { label: مورد, name: text, widget: string }
+          - label: 🧾 اطلاعات (ردیفی)
+            name: facts
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: ردیف‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}} — {{fields.value}}"
+                collapsed: true
+                fields:
+                  - { label: عنوان, name: label, widget: string, required: false }
+                  - { label: مقدار, name: value, widget: string, required: false }
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
+          - label: 🖼 عکس
+            name: image
+            widget: object
+            fields:
+              - { label: تصویر, name: image, widget: image }
+              - { label: کپشن, name: caption, widget: string, required: false }
+              - { label: alt, name: alt, widget: string, required: false }
+          - label: 🎬 ویدیو (آپارات یا فایل)
+            name: video
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: لینک آپارات, name: url, widget: string, required: false, hint: "مثل https://www.aparat.com/v/abc123" }
+              - { label: یا فایل ویدیو, name: file, widget: file, required: false }
+              - { label: عنوان ویدیو, name: title, widget: string, required: false }
+              - { label: توضیح, name: caption, widget: string, required: false }
+              - { label: پوستر, name: poster, widget: image, required: false }
+          - label: ⏱ زمان‌بندی / سرفصل جلسات
+            name: schedule
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "برنامهٔ دوره" }
+              - label: جلسات
                 name: items
                 widget: list
                 summary: "{{fields.title}}"
                 fields:
-                  - { label: آیکن, name: icon, widget: select, required: false, options: [ "", "spark", "check", "bolt", "clock", "calendar", "users", "money" ] }
-                  - { label: عنوان, name: title, widget: string }
-                  - { label: توضیح, name: text, widget: text, required: false }
-          - label: 🎯 تبلیغات موبایل (فقط جابه‌جایی)
-            name: ads
+                  - { label: عنوان جلسه, name: title, widget: string, required: false }
+                  - { label: زمان, name: time, widget: string, required: false, hint: "مثل «۱۵ مهر، ۱۸:۰۰»" }
+                  - { label: مدت, name: duration, widget: string, required: false, hint: "مثل «۲ ساعت»" }
+                  - { label: توضیح, name: note, widget: text, required: false }
+          - label: 🎯 مخاطبین دوره
+            name: audience
             widget: object
             fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "این بلوک فقط جای نمایش تبلیغات در موبایل را مشخص می‌کند؛ در کامپیوتر تبلیغات همیشه در ستون کنار است." }
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مخاطبین دوره" }
+              - { label: عنوان ستون مناسب, name: good_title, widget: string, required: false, default: "این دوره برای چه کسانی است؟" }
+              - { label: عنوان ستون نامناسب, name: bad_title, widget: string, required: false, default: "این دوره برای چه کسانی نیست؟" }
+              - label: مناسب برای
+                name: suitable
+                widget: list
+                summary: "{{fields.text}}"
+                fields:
+                  - { label: مورد, name: text, widget: string }
+              - label: نامناسب برای
+                name: unsuitable
+                widget: list
+                summary: "{{fields.text}}"
+                fields:
+                  - { label: مورد, name: text, widget: string }
+          - label: 🗂 تب‌ها
+            name: tabs
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: تب‌ها
+                name: tabs
+                widget: list
+                summary: "{{fields.tab}}"
+                fields:
+                  - { label: عنوان تب, name: tab, widget: string }
+                  - label: آیکن تب
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
+                  - { label: محتوای تب (متن), name: markdown, widget: markdown }
+          - label: 💰 بلیت‌ها / قیمت‌ها
+            name: prices
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "بلیت‌های دوره" }
+              - label: بلیت‌ها
+                name: items
+                widget: list
+                summary: "{{fields.name}} — {{fields.price}}"
+                fields:
+                  - { label: نام بلیت, name: name, widget: string, hint: "مثل «حضور آنلاین»" }
+                  - { label: قیمت, name: price, widget: string, hint: "مثل «۴۹۰ هزار تومان»" }
+                  - label: امکانات
+                    name: features
+                    widget: list
+                    summary: "{{fields.text}}"
+                    fields:
+                      - { label: مورد, name: text, widget: string }
+                  - { label: ویژه (پیشنهاد), name: hot, widget: boolean, default: false }
+                  - { label: لینک ثبت‌نام, name: link, widget: string, required: false, hint: "https://… یا مسیر داخلی" }
+                  - { label: متن دکمه, name: cta, widget: string, required: false, default: "ثبت‌نام" }
+          - label: 👤 کارت مدرس (بلوک)
+            name: teacher
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: تیتر کوچک, name: kicker, widget: string, required: false, default: "مدرس دوره" }
+              - { label: نام, name: name, widget: string, required: true }
+              - { label: سمت, name: role, widget: string, required: false }
+              - { label: معرفی کوتاه, name: bio, widget: text, required: false }
+              - { label: عکس, name: image, widget: image, required: false }
+              - { label: لینک, name: link, widget: string, required: false }
+          - label: 👥 سوالات متداول (بلوک)
+            name: faq
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "سوالات متداول" }
+              - label: سوالات
+                name: items
+                widget: list
+                summary: "{{fields.q}}"
+                fields:
+                  - { label: سوال, name: q, widget: string }
+                  - { label: پاسخ, name: a, widget: text }
+          - label: 📣 اعلان
+            name: notice
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: نوع
+                name: tone
+                widget: select
+                default: info
+                options:
+                  - { label: اطلاع‌رسانی, value: "info" }
+                  - { label: هشدار, value: "warn" }
+                  - { label: موفقیت, value: "success" }
+                  - { label: خطر, value: "danger" }
+              - { label: عنوان اعلان, name: title, widget: string, required: false }
+              - { label: متن, name: text, widget: text, required: false }
+          - label: 📊 آمار
+            name: stats
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: آیتم‌ها
+                name: items
+                widget: list
+                summary: "{{fields.number}} {{fields.label}}"
+                fields:
+                  - { label: عدد, name: number, widget: string, hint: "مثل «۶ جلسه»" }
+                  - { label: برچسب, name: label, widget: string, required: false }
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
+          - label: 💬 نقل قول
+            name: quote
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: متن نقل قول, name: text, widget: text }
+              - { label: نویسنده, name: author, widget: string, required: false }
+              - { label: سمت, name: role, widget: string, required: false }
+              - { label: آواتار, name: avatar, widget: image, required: false }
+          - label: 🔘 دکمه‌ها
+            name: buttons
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: توضیح کوتاه, name: text, widget: text, required: false }
+              - label: دکمه‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: متن, name: label, widget: string }
+                  - { label: لینک, name: link, widget: string, hint: "https://… یا مسیر داخلی" }
+                  - label: رنگ
+                    name: style
+                    widget: select
+                    required: false
+                    options:
+                      - { label: طلایی, value: "gold" }
+                      - { label: سرمه‌ای, value: "navy" }
+                      - { label: آبی تلگرام, value: "tele" }
+                      - { label: ساده با قاب, value: "ghost" }
+                      - { label: سفید, value: "white" }
+                    default: "navy"
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "telegram", "whatsapp", "download", "calendar", "play", "check", "link", "spark" ]
+          - label: 📍 نقشه (نشان)
+            name: location
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مکان برگزاری" }
+              - { label: نام مکان, name: name, widget: string, required: false }
+              - { label: نشانی, name: address, widget: string, required: false }
+              - { label: لینک نشان, name: map_url, widget: string, required: false, hint: "لینک اشتراک‌گذاری از اپ نشان (nshn.ir)" }
+          - label: 📁 فایل‌ها
+            name: files
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: فایل‌ها
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: فایل, name: file, widget: file }
+                  - { label: عنوان, name: title, widget: string, required: false }
+                  - { label: توضیح, name: note, widget: string, required: false }
+          - label: ➖ جداکننده
+            name: divider
+            widget: object
+            fields:
+              - { label: متن روی خط, name: text, widget: string, required: false }
 
   - name: kanonha
     label: کانون‌ها
