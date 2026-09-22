@@ -83,6 +83,9 @@ function renderHeaderN(prefix) {
         <ul class="nav-links">
           ${nav}
         </ul>
+        <button class="nav-search" type="button" aria-label="جستجو در سایت">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+        </button>
         <button class="nav-bell notif-bell" type="button" aria-label="اعلان‌ها" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </button>
@@ -91,6 +94,18 @@ function renderHeaderN(prefix) {
       </nav>
     </div>
   </header>
+
+  <div class="site-search" data-site-search data-index="${prefix}search-index.json" hidden>
+    <div class="site-search-panel">
+      <div class="site-search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+        <input class="site-search-input" type="search" placeholder="جستجو در تیترها و هشتگ‌ها…" autocomplete="off" aria-label="جستجو در سایت">
+        <button class="site-search-clear" type="button" aria-label="پاک کردن">✕</button>
+      </div>
+      <div class="site-search-results" data-sr></div>
+      <div class="site-search-empty" data-se hidden>چیزی پیدا نشد. عبارت دیگری را امتحان کنید.</div>
+    </div>
+  </div>
 
   <div class="mobile-menu">
     <div class="mm-backdrop"></div>
@@ -1247,6 +1262,26 @@ console.log("✔ صفحات دوره:", courseList.length, "فایل" + (amoRemo
   const payload = { updated: new Date().toISOString(), items };
   fs.writeFileSync(path.join(ROOT, "latest.json"), JSON.stringify(payload), "utf8");
   console.log("✔ latest.json (" + items.length + " مورد)");
+})();
+
+/* ---------- search-index.json: ایندکس سرچ برای جستجوی تیتر و هشتگ ---------- */
+(function writeSearchIndex() {
+  const normTags = (it) => {
+    const src = [];
+    if (Array.isArray(it.hashtags)) src.push(...it.hashtags);
+    if (Array.isArray(it.tags)) src.push(...it.tags);
+    return [...new Set(
+      src.map((h) => String(h || "").trim().replace(/^#+/, "").replace(/\s+/g, " ")).filter(Boolean)
+    )];
+  };
+  const items = [];
+  newsList.forEach((n) => items.push({ t: n.title || "", s: n.summary || "", h: normTags(n), u: "ettelaieh/" + n._slug + ".html", k: "اطلاعیه" }));
+  courseList.forEach((c) => items.push({ t: c.title || "", s: c.summary || "", h: normTags(c), u: "amoozesh/" + c._slug + ".html", k: "دوره" }));
+  kanonhaList.forEach((p) => items.push({ t: p.name || p.title || "", s: p.desc || "", h: normTags(p), u: "kanonha/" + (p.slug || p._slug) + ".html", k: "کانون" }));
+  anjomanhaList.forEach((p) => items.push({ t: p.name || p.title || "", s: p.desc || "", h: normTags(p), u: "anjomanha/" + (p.slug || p._slug) + ".html", k: "انجمن" }));
+  loadFolder("discounts").forEach((d) => items.push({ t: d.title || "", s: d.description || "", h: normTags(d), u: safeLink(d.link) || "ettelaieh.html", k: "تخفیف" }));
+  fs.writeFileSync(path.join(ROOT, "search-index.json"), JSON.stringify({ updated: new Date().toISOString(), items }), "utf8");
+  console.log("✔ search-index.json (" + items.length + " مورد)");
 })();
 
 /* ---------- sitemap.xml و robots.txt — ایندکس شدن درست در گوگل ---------- */

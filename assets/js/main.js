@@ -907,4 +907,132 @@
   }
 
   initNotifications();
+
+  /* جستجوی سراسری: جستجو در تیترها و هشتگ‌ها */
+  function initSiteSearch() {
+    var root = document.querySelector(".site-search");
+    if (!root) return;
+    var toggle = document.querySelector(".nav-search");
+    var input = root.querySelector(".site-search-input");
+    var clearBtn = root.querySelector(".site-search-clear");
+    var results = root.querySelector("[data-sr]");
+    var empty = root.querySelector("[data-se]");
+    var indexUrl = root.getAttribute("data-index") || "search-index.json";
+    var store = { items: [] };
+    var loading = false;
+    var pending = [];
+
+    function escHtml(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+    function normalize(s) {
+      return String(s || "").toLowerCase().replace(/^#+/, "").replace(/[\u200c\u200b]/g, "").replace(/\s+/g, " ").trim();
+    }
+    function selectToEnd() {
+      try { input.setSelectionRange(input.value.length, input.value.length); } catch (_) {}
+    }
+    function open(term) {
+      root.hidden = false;
+      document.body.classList.add("has-search");
+      if (term) {
+        input.value = term.replace(/^#/, "");
+        run();
+      }
+      input.focus();
+      selectToEnd();
+    }
+    function close() {
+      root.hidden = true;
+      document.body.classList.remove("has-search");
+    }
+    function load(cb) {
+      if (store.items.length) return cb();
+      if (loading) { pending.push(cb); return; }
+      loading = true;
+      var done = function () {
+        loading = false;
+        cb();
+        pending.splice(0).forEach(function (f) { f(); });
+      };
+      fetch(indexUrl)
+        .then(function (r) { return r.json(); })
+        .then(function (data) { store.items = (data && data.items) || []; done(); })
+        .catch(function () { done(); });
+    }
+    function run() {
+      var q = normalize(input.value);
+      if (!q) {
+        results.innerHTML = "";
+        empty.hidden = true;
+        return;
+      }
+      load(function () {
+        var hits = store.items.filter(function (it) {
+          if (normalize(it.t).indexOf(q) !== -1) return true;
+          return (it.h || []).some(function (h) { return normalize(h).indexOf(q) !== -1; });
+        }).slice(0, 12);
+        if (!hits.length) {
+          results.innerHTML = "";
+          empty.hidden = false;
+          return;
+        }
+        empty.hidden = true;
+        results.innerHTML = hits.map(function (it) {
+          var slow = String(it.t || "");
+          var at = slow.toLowerCase().indexOf(q);
+          var title = at !== -1
+            ? escHtml(slow.slice(0, at)) + "<mark>" + escHtml(slow.slice(at, at + q.length)) + "</mark>" + escHtml(slow.slice(at + q.length))
+            : escHtml(slow);
+          var tagHtml = (it.h || []).slice(0, 5).map(function (h) {
+            return '<span class="sr-tag">#' + escHtml(h) + "</span>";
+          }).join("");
+          return '<a class="sr-item" href="' + escHtml(it.u) + '"><span class="sr-kind">' + escHtml(it.k) + "</span>" +
+            '<span class="sr-txt"><b>' + title + "</b>" + (tagHtml ? '<span class="sr-tags">' + tagHtml + "</span>" : "") + "</span></a>";
+        }).join("");
+      });
+    }
+
+    if (toggle) toggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      open("");
+    });
+    if (clearBtn) clearBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      input.value = "";
+      results.innerHTML = "";
+      empty.hidden = true;
+      input.focus();
+    });
+    if (input) {
+      input.addEventListener("input", run);
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") { close(); return; }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var first = results.querySelector("a");
+          if (first) location.href = first.getAttribute("href");
+        }
+      });
+    }
+    document.addEventListener("click", function (e) {
+      if (!root.hidden && !root.contains(e.target) && !(toggle && toggle.contains(e.target))) close();
+    });
+    /* باز شدن جستجو از چیپ‌های هشتگ (#…) */
+    document.addEventListener("click", function (e) {
+      var el = e.target.closest("[data-search]");
+      if (!el) return;
+      e.preventDefault();
+      open(el.getAttribute("data-search") || "");
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !root.hidden) close();
+    });
+    window.__openSearch = function (term) { open(term || ""); };
+  }
+
+  initSiteSearch();
 })();

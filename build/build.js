@@ -110,6 +110,9 @@ function renderHeader(prefix) {
         <ul class="nav-links">
           ${navLinks(prefix)}
         </ul>
+        <button class="nav-search" type="button" aria-label="جستجو در سایت">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+        </button>
         <button class="nav-bell notif-bell" type="button" aria-label="اعلان‌ها" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </button>
@@ -118,6 +121,18 @@ function renderHeader(prefix) {
       </nav>
     </div>
   </header>
+
+  <div class="site-search" data-site-search data-index="${prefix}search-index.json" hidden>
+    <div class="site-search-panel">
+      <div class="site-search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+        <input class="site-search-input" type="search" placeholder="جستجو در تیترها و هشتگ‌ها…" autocomplete="off" aria-label="جستجو در سایت">
+        <button class="site-search-clear" type="button" aria-label="پاک کردن">✕</button>
+      </div>
+      <div class="site-search-results" data-sr></div>
+      <div class="site-search-empty" data-se hidden>چیزی پیدا نشد. عبارت دیگری را امتحان کنید.</div>
+    </div>
+  </div>
 
   <div class="mobile-menu">
     <div class="mm-backdrop"></div>
@@ -265,6 +280,17 @@ const isRecent = (n) => new Date(n.date || 0).getTime() >= Date.now() - LAST_MON
 /* ---------- Profile page ----------
    قالب واحد پروفایل کانون/انجمن: هویت، معرفی، درباره، فعالیت‌ها، رویدادها،
    دوره‌ها و بخش‌های اختیاری (افتخارات/تیم/گالری) فقط وقتی داده وجود دارد. */
+function hashChipsHtml(list) {
+  const arr = (Array.isArray(list) ? list : [])
+    .map((h) => String(h || "").trim().replace(/^#+/, ""))
+    .filter(Boolean)
+    .slice(0, 8);
+  if (!arr.length) return "";
+  return `<div class="op-hashtags">${arr
+    .map((h) => `<span class="hash-chip" role="button" tabindex="0" data-search="#${escA(h)}">#${esc(h)}</span>`)
+    .join("")}</div>`;
+}
+
 function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const tele = teleSafe(item.telegram);
   const joinHref = tele || TELE_URL;
@@ -554,6 +580,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           <div class="op-hero-txt">
             <span class="op-type">${esc(kindShort)} · دانشگاه سمنان</span>
             <h1>${esc(item.name)}</h1>
+            ${hashChipsHtml(item.hashtags)}
             <div class="op-hero-actions">
               <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${esc(joinLabel)}</a>
               ${recentNews.length ? `<a class="btn btn-outline-light" href="#flash">فعالیت‌های ماه اخیر</a>` : myNews.length ? `<a class="btn btn-outline-light" href="#news">اطلاعیه‌ها</a>` : ""}

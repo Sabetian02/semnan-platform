@@ -860,6 +860,16 @@ module.exports = function createAnnRenderer(ctx) {
     return `<span class="ap-art" aria-hidden="true"><span class="ap-art-emoji">${emoji}</span></span>`;
   }
 
+  /* چیپ‌های هشتگ — با «#» و اتصال به جستجوی سراسری (data-search) */
+  function hashChips(list, max) {
+    const arr = (Array.isArray(list) ? list : [])
+      .map((h) => String(h || "").trim().replace(/^#+/, ""))
+      .filter(Boolean)
+      .slice(0, max || 8);
+    if (!arr.length) return "";
+    return arr.map((h) => `<span class="ap-chip is-hashtag" role="button" tabindex="0" data-search="#${escA(h)}">#${esc(h)}</span>`).join("\n        ");
+  }
+
   function chipRow(n, org, st) {
     return `<div class="ap-chips">
         ${
@@ -870,6 +880,7 @@ module.exports = function createAnnRenderer(ctx) {
         <span class="ap-chip is-cat">${CAT_EMOJI[String(n.category || "").trim()] || "📰"} ${esc(n.category || "خبر")}</span>
         ${st ? `<span class="ap-chip is-status is-${st.key}">${ico(st.key === "past" ? "check" : "bell", "ap-i-xs")} ${esc(st.label)}</span>` : ""}
         ${org ? `<a class="ap-chip is-org" href="${escA(org.href)}">${ico(org.kind === "کانون" ? "users" : "book", "ap-i-xs")} ${esc(org.name)}</a>` : ""}
+        ${hashChips(n.hashtags)}
       </div>`;
   }
 
@@ -1520,7 +1531,7 @@ module.exports = function createAnnRenderer(ctx) {
     const chips = [];
     chips.push(`<span class="ap-chip is-cat">${esc(c.icon || "🎓")} ${esc(c.category || "دوره")}</span>`);
     chips.push(`<span class="ap-chip is-price">${ico("money", "ap-i-xs")} ${esc(price)}${/رایگان$/i.test(price) ? " 🎁" : ""}</span>`);
-    (Array.isArray(c.tags) ? c.tags.filter(Boolean) : []).slice(0, 5).forEach((t) => chips.push(`<span class="ap-chip">${esc(t)}</span>`));
+    chips.push(hashChips(Array.isArray(c.hashtags) && c.hashtags.length ? c.hashtags : c.tags));
 
     const metaItems = [];
     const m = (icon, label, val) => (val ? `<span class="cp-meta-item">${ico(icon, "ap-i-sm")}<b>${esc(label)}:</b> ${esc(val)}</span>` : "");
