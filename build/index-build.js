@@ -941,76 +941,6 @@ function renderCourseListPage(courseList) {
   );
 }
 
-/* ---------- صفحهٔ یک دوره (پوشهٔ amoozesh/) ---------- */
-function renderCoursePage(c) {
-  const prefix = "../";
-  const openN = openFor(prefix);
-  const closeN = closeFor(prefix);
-  const headerN = renderHeaderN(prefix);
-  const footerN = renderFooterN(prefix);
-
-  const img = pickImage(c);
-  const heroImg = img
-    ? `<div class="ann-img"><img src="${ABS_URI.test(img) ? img : prefix + img}" alt="${esc(c.title)}" loading="lazy"></div>`
-    : "";
-  const content = mdParse(c.body || "", { idPrefix: "cr-", localPrefix: prefix }).html || `<p>${esc(c.summary || "")}</p>`;
-
-  const facts = [
-    c.teacher ? `<div><dt>مدرس</dt><dd>${esc(c.teacher)}</dd></div>` : "",
-    c.lessons ? `<div><dt>ساختار دوره</dt><dd>${esc(c.lessons)}</dd></div>` : "",
-    c.category ? `<div><dt>دسته‌بندی</dt><dd>${esc(c.category)}</dd></div>` : "",
-    `<div><dt>هزینه</dt><dd>${esc(c.price || "رایگان")}</dd></div>`
-  ].filter(Boolean).join("");
-
-  /* لینک ثبت‌نام: URL بیرونی یا صفحهٔ داخلی؛ اگر لینک، همان صفحهٔ فهرست بود به کانال ثبت‌نام برمی‌گردد */
-  const rawLink = safeLink(c.link);
-  let regHref = TELE_URL;
-  let regTarget = ` target="_blank" rel="noopener"`;
-  if (rawLink && !/^\.?\/?amoozesh\.html$/i.test(rawLink)) {
-    if (ABS_URI.test(rawLink)) {
-      regHref = rawLink;
-    } else {
-      regHref = prefix + rawLink.replace(/^\.\//, "");
-      regTarget = "";
-    }
-  }
-
-  const body = [
-    `<main>
-      <section class="section ann-single">
-        <div class="container ann-open">
-          <article>
-            <div class="crumbs">
-              <a href="${prefix}index.html">خانه</a><span class="sep">/</span><a href="${prefix}amoozesh.html">آموزش‌های مجازی</a><span class="sep">/</span>
-            </div>
-            <div class="ann-head">
-              <span class="n-chip">${esc(c.category || "دوره")}</span>
-            </div>
-            <h1 class="ann-title">${esc(c.title)}</h1>
-            ${heroImg}
-            <dl class="course-facts">${facts}</dl>
-            <div class="ann-body">${content}</div>
-            ${ads && ads.show_courses !== false ? renderAdsBand(ads) : ""}
-            <div class="ann-cta">
-              <a class="btn btn-gold" href="${esc(regHref)}"${regTarget}>ثبت‌نام دوره</a>
-              <a class="btn btn-navy" href="${prefix}amoozesh.html">→ بازگشت به دوره‌ها</a>
-            </div>
-          </article>
-        </div>
-      </section>
-    </main>`
-  ];
-  return assemble(
-    openN,
-    esc(c.title) + " | آموزش‌های مجازی",
-    esc(c.summary || ""),
-    headerN,
-    body,
-    footerN,
-    closeN
-  );
-}
-
 /* ---------- صفحهٔ یک اطلاعیه (پوشهٔ ettelaieh/) ----------
    قالب کامل و حرفه‌ای اطلاعیه در ماژول اختصاصی ./ann-page.js ساخته می‌شود;
    این‌جا فقط با ابزارهای مشترک همین فایل به آن وصل می‌شویم (پایین‌تر، بعد از
@@ -1158,8 +1088,8 @@ const bySort = (a, b) => (a.sort || 0) - (b.sort || 0) || String(a.name || "").l
 const kanonhaList = loadFolder("kanonha").sort(bySort);
 const anjomanhaList = loadFolder("anjomanha").sort(bySort);
 
-/* ---------- قالب اطلاعیه (ann-page.js) با ابزارهای همین فایل ساخته می‌شود ---------- */
-const renderAnnPage = require("./ann-page")({
+/* ---------- قالب اطلاعیه و دوره (ann-page.js) با ابزارهای همین فایل ساخته می‌شود ---------- */
+const { renderAnnPage, renderCoursePage } = require("./ann-page")({
   esc,
   escA,
   faNum,
@@ -1174,6 +1104,7 @@ const renderAnnPage = require("./ann-page")({
   renderFooterN,
   mdParse,
   allNews: newsList,
+  allCourses: courseList,
   kanonhaList,
   anjomanhaList,
   newsOrg,
@@ -1184,7 +1115,7 @@ const renderAnnPage = require("./ann-page")({
   openFor,
   closeFor,
   assemble
-}).renderAnnPage;
+});
 
 const index = assemble(
   open,

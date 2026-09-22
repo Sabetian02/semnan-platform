@@ -1,16 +1,33 @@
 {
-  "teacher": "دکتر سارا کریمی",
-  "active": true,
-  "summary": "هوش مصنوعی برای مبتدی‌ها یک دورهٔ آنلاین است که در آن مهارت «هوش مصنوعی» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
-  "price": "رایگان",
-  "image_url": "",
   "title": "هوش مصنوعی برای مبتدی‌ها",
-  "icon": "🤖",
+  "subtitle": "",
+  "category": "هوش مصنوعی",
+  "summary": "هوش مصنوعی برای مبتدی‌ها یک دورهٔ آنلاین است که در آن مهارت «هوش مصنوعی» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
+  "tags": [],
+  "teacher": "دکتر سارا کریمی",
+  "teacher_role": "",
+  "teacher_image": "",
+  "teacher_bio": "",
+  "teacher_link": "",
+  "lessons": "۶ جلسه آنلاین",
+  "start_label": "",
+  "platform_label": "",
+  "organizer": "",
+  "code": "",
+  "start_date": null,
+  "end_date": null,
+  "price": "رایگان",
+  "image": "https://s3.eseminar.tv/c453019/upload/webinar/1788954226_78.webp",
   "cover_a": "#001840",
   "cover_b": "#102A71",
   "link": "amoozesh.html",
-  "image": "https://s3.eseminar.tv/c453019/upload/webinar/1788954226_78.webp",
-  "lessons": "۶ جلسه آنلاین",
-  "category": "هوش مصنوعی",
-  "sort": 3
+  "sort": 3,
+  "active": true,
+  "faq": [],
+  "blocks": [
+    {
+      "type": "ads"
+    }
+  ],
+  "icon": "🤖"
 }

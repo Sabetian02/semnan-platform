@@ -241,22 +241,307 @@ collections:
       - field: title
     fields:
       - { label: عنوان, name: title, widget: string, required: true }
+      - { label: زیرعنوان, name: subtitle, widget: string, required: false, hint: "مثل «پروژه‌محور و کاملاً آنلاین»" }
       - label: دسته
         name: category
         widget: select
         options: [ "مهارت نرم", "نرم‌افزار", "هوش مصنوعی", "برنامه‌نویسی", "زبان", "طراحی", "هنر و رسانه", "کارآفرینی" ]
         default: "مهارت نرم"
       - { label: توضیح, name: summary, widget: text, required: true }
+      - { label: برچسب‌ها, name: tags, widget: list, required: false, summary: "{{fields}}" }
       - { label: مدرس, name: teacher, widget: string, required: true }
-      - { label: جلسات, name: lessons, widget: string, required: true }
+      - { label: سمت مدرس, name: teacher_role, widget: string, required: false, hint: "مثل «عضو هیئت علمی دانشگاه سمنان»" }
+      - { label: عکس مدرس, name: teacher_image, widget: image, required: false }
+      - { label: معرفی کوتاه مدرس, name: teacher_bio, widget: text, required: false }
+      - { label: لینک مدرس, name: teacher_link, widget: string, required: false, hint: "https://… (بیرونی)" }
+      - { label: جلسات, name: lessons, widget: string, required: true, hint: "مثل «۶ جلسه آنلاین»" }
+      - { label: تاریخ شروع (نمایشی), name: start_label, widget: string, required: false, hint: "مثل «۱۵ مهر ۱۴۰۵»" }
+      - { label: محل برگزاری, name: platform_label, widget: string, required: false, default: "آنلاین (اسکای‌روم)", hint: "مثل «آنلاین (اسکای‌روم)»" }
+      - { label: برگزارکننده, name: organizer, widget: string, required: false, hint: "مثل «مرکز آموزش‌های آزاد»" }
+      - { label: کد دوره, name: code, widget: string, required: false, hint: "برای ارجاع در کارهای اداری" }
+      - { label: تاریخ واقعی شروع (برای گوگل), name: start_date, widget: datetime, required: false }
+      - { label: تاریخ واقعی پایان (برای گوگل), name: end_date, widget: datetime, required: false }
       - { label: قیمت, name: price, widget: string, required: true, default: "رایگان" }
       - { label: تصویر, name: image, widget: image, required: false }
       - { label: آدرس تصویر, name: image_url, widget: string, required: false }
       - { label: رنگ اول, name: cover_a, widget: string, required: false, default: "#102A71" }
       - { label: رنگ دوم, name: cover_b, widget: string, required: false, default: "#1b3a8b" }
-      - { label: لینک, name: link, widget: string, required: false }
+      - { label: لینک, name: link, widget: string, required: false, hint: "https://form/… یا مسیر داخلی؛ اگر خالی باشد دکمهٔ ثبت‌نام به کانال پلتفرم می‌رود" }
       - { label: ترتیب, name: sort, widget: number, required: false, default: 1 }
       - { label: فعال, name: active, widget: boolean, default: true }
+      - label: سوالات متداول
+        name: faq
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.q}}"
+        fields:
+          - { label: پرسش, name: q, widget: string }
+          - { label: پاسخ, name: a, widget: text }
+      - label: بلوک‌های محتوا
+        name: blocks
+        widget: list
+        required: false
+        label_singular: بلوک
+        collapsed: true
+        summary: "{{fields.heading}} — {{type}}"
+        hint: "هر بلوک را با ▲▼ جابجا کن و با «جای نمایش» بین ستون اصلی و کنار جابجا کن. بلوک «سرفصل‌ها» زمان‌بندی درس‌هاست، «مخاطبین» دو ستونِ برای چه کسی است/نیست، «مدرس» کارت مدرس در نوار کنار."
+        default:
+          - type: ads
+          - type: schedule
+            heading: "سرفصل‌های دوره"
+            items:
+              - title: "جلسهٔ اول: آشنایی با مبانی"
+                duration: "۱ ساعت"
+                note: "معرفی دوره و منابع"
+        types:
+          - label: 📝 متن
+            name: text
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+              - { label: متن, name: markdown, widget: markdown }
+          - label: 🎓 سرفصل‌ها و زمان‌بندی
+            name: schedule
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "سرفصل‌های دوره" }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+              - label: جلسه‌ها
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: عنوان جلسه, name: title, widget: string }
+                  - { label: زمان برگزاری, name: time, widget: string, required: false, hint: "مثل «شنبه‌ها ۱۰:۰۰»" }
+                  - { label: مدت, name: duration, widget: string, required: false, hint: "مثل «۱ ساعت»" }
+                  - { label: توضیح کوتاه, name: note, widget: text, required: false }
+          - label: 🎯 مخاطبین دوره
+            name: audience
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "این دوره برای چه کسانی است؟" }
+              - { label: عنوان سمت مثبت, name: good_title, widget: string, required: false, default: "این دوره برای چه کسانی است؟" }
+              - { label: مناسب برای, name: suitable, widget: list, summary: "{{fields}}" }
+              - { label: عنوان سمت منفی, name: bad_title, widget: string, required: false, default: "این دوره برای چه کسانی نیست؟" }
+              - { label: نامناسب برای, name: unsuitable, widget: list, summary: "{{fields}}" }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+          - label: 👤 مدرس
+            name: teacher
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مدرس دوره" }
+              - { label: نام, name: name, widget: string }
+              - { label: سمت, name: role, widget: string, required: false }
+              - { label: عکس, name: image, widget: image, required: false }
+              - { label: معرفی کوتاه, name: bio, widget: text, required: false }
+              - { label: لینک, name: link, widget: string, required: false, hint: "https://…" }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "side"
+          - label: 📊 اطلاعات کلیدی
+            name: facts
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "اطلاعات کلیدی دوره" }
+              - label: ردیف‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: عنوان, name: label, widget: string }
+                  - { label: مقدار, name: value, widget: string }
+                  - { label: لینک, name: link, widget: string, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+          - label: 🖼 عکس
+            name: image
+            widget: object
+            fields:
+              - { label: تصویر, name: image, widget: image }
+              - { label: کپشن, name: caption, widget: string, required: false }
+              - { label: alt, name: alt, widget: string, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+          - label: 🖼 گالری
+            name: gallery
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: تصاویر, name: images, widget: list, field: { label: تصویر, name: image, widget: image } }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+          - label: 🎬 ویدیو (آپارات)
+            name: video
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: لینک آپارات, name: url, widget: string, required: false, hint: "مثل https://www.aparat.com/v/abc123 — فقط آپارات" }
+              - { label: عنوان ویدیو, name: title, widget: string, required: false }
+              - { label: توضیح, name: caption, widget: string, required: false }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+          - label: 🕗 فایل‌ها و پیوست‌ها
+            name: files
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "فایل‌ها" }
+              - { label: راهنما, name: note, widget: text, required: false }
+              - { label: پیوست‌ها, name: items, widget: list, fields: [ { label: متن, name: label, widget: string }, { label: فایل, name: link, widget: file } ] }
+          - label: ❓ پرسش و پاسخ
+            name: faq
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "پرسش‌های پرتکرار" }
+              - label: پرسش‌ها
+                name: items
+                widget: list
+                summary: "{{fields.q}}"
+                fields:
+                  - { label: پرسش, name: q, widget: string }
+                  - { label: پاسخ, name: a, widget: text }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+          - label: 💡 نکته
+            name: notice
+            widget: object
+            fields:
+              - { label: عنوان, name: title, widget: string, required: false }
+              - { label: متن, name: text, widget: text }
+              - label: رنگ
+                name: tone
+                widget: select
+                required: false
+                options:
+                  - { label: آبی (اطلاع), value: "info" }
+                  - { label: سبز (موفق), value: "success" }
+                  - { label: زرد (هشدار), value: "warn" }
+                  - { label: قرمز (خطا), value: "danger" }
+                default: "info"
+          - label: 🔢 آمار
+            name: stats
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: آمار, name: items, widget: list, summary: "{{fields.value}} {{fields.label}}", fields: [ { label: عدد, name: value, widget: string }, { label: توضیح, name: label, widget: string } ] }
+          - label: 💬 نقل قول
+            name: quote
+            widget: object
+            fields:
+              - { label: متن, name: text, widget: text }
+              - { label: گوینده, name: author, widget: string, required: false }
+              - { label: نقش, name: role, widget: string, required: false }
+          - label: 🔘 دکمه‌ها
+            name: buttons
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - { label: توضیح کوتاه, name: text, widget: text, required: false }
+              - label: دکمه‌ها
+                name: items
+                widget: list
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: متن دکمه, name: label, widget: string }
+                  - { label: لینک, name: link, widget: string, hint: "https://… یا مسیر داخلی مثل amoozesh.html" }
+                  - label: رنگ
+                    name: style
+                    widget: select
+                    required: false
+                    options:
+                      - { label: طلایی, value: "gold" }
+                      - { label: سرمه‌ای, value: "navy" }
+                      - { label: آبی تلگرام, value: "tele" }
+                      - { label: ساده با قاب, value: "ghost" }
+                      - { label: سفید, value: "white" }
+                    default: "navy"
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "telegram", "whatsapp", "download", "calendar" ]
+          - label: 📍 نقشه (نشان)
+            name: location
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مکان برگزاری" }
+              - { label: نام مکان, name: name, widget: string, required: false }
+              - { label: نشانی, name: address, widget: string, required: false }
+              - { label: لینک نشان, name: map_url, widget: string, required: false, hint: "از اپ نشان «اشتراک‌گذاری» بزن و لینک را این‌جا بگذار (nshn.ir یا neshan.org)" }
+          - label: 📋 فرم گوگل
+            name: form
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "ثبت‌نام" }
+              - { label: لینک فرم, name: url, widget: string, required: false, hint: "https://docs.google.com/forms/…" }
+              - { label: توضیح بالای فرم, name: note, widget: text, required: false }
+              - { label: ارتفاع (پیکسل), name: height, widget: number, required: false, default: 520 }
+          - label: 📌 برجسته (highlights)
+            name: highlights
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false }
+              - label: موارد برجسته
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { label: آیکن, name: icon, widget: select, required: false, options: [ "", "spark", "check", "bolt", "clock", "calendar", "users", "money" ] }
+                  - { label: عنوان, name: title, widget: string }
+                  - { label: توضیح, name: text, widget: text, required: false }
+          - label: 🎯 تبلیغات موبایل (فقط جابه‌جایی)
+            name: ads
+            widget: object
+            fields:
+              - { label: راهنما, name: _hint, widget: hidden, default: "این بلوک فقط جای نمایش تبلیغات در موبایل را مشخص می‌کند؛ در کامپیوتر تبلیغات همیشه در ستون کنار است." }
 
   - name: kanonha
     label: کانون‌ها

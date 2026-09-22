@@ -1,16 +1,33 @@
 {
-  "teacher": "استاد نجمه قاسمی",
-  "active": true,
-  "summary": "انگلیسی مکالمه برای فرصت‌های بین‌المللی یک دورهٔ آنلاین است که در آن مهارت «زبان» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
-  "price": "ویژهٔ دانشجویان",
-  "image_url": "",
   "title": "انگلیسی مکالمه برای فرصت‌های بین‌المللی",
-  "icon": "🗣️",
+  "subtitle": "",
+  "category": "زبان",
+  "summary": "انگلیسی مکالمه برای فرصت‌های بین‌المللی یک دورهٔ آنلاین است که در آن مهارت «زبان» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
+  "tags": [],
+  "teacher": "استاد نجمه قاسمی",
+  "teacher_role": "",
+  "teacher_image": "",
+  "teacher_bio": "",
+  "teacher_link": "",
+  "lessons": "۱۶ جلسه آنلاین",
+  "start_label": "",
+  "platform_label": "",
+  "organizer": "",
+  "code": "",
+  "start_date": null,
+  "end_date": null,
+  "price": "ویژهٔ دانشجویان",
+  "image": "https://s3.eseminar.tv/c453019/upload/webinar/1789558076_82.webp",
   "cover_a": "#102A71",
   "cover_b": "#0c2458",
   "link": "amoozesh.html",
-  "image": "https://s3.eseminar.tv/c453019/upload/webinar/1789558076_82.webp",
-  "lessons": "۱۶ جلسه آنلاین",
-  "category": "زبان",
-  "sort": 5
+  "sort": 5,
+  "active": true,
+  "faq": [],
+  "blocks": [
+    {
+      "type": "ads"
+    }
+  ],
+  "icon": "🗣️"
 }

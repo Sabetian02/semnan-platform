@@ -1,16 +1,32 @@
 {
   "title": "عکاسی و فیلم‌برداری با موبایل",
+  "subtitle": "",
   "category": "هنر و رسانه",
   "summary": "عکاسی و فیلم‌برداری با موبایل یک دورهٔ آنلاین است که در آن مهارت «هنر و رسانه» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
+  "tags": [],
   "teacher": "استاد لیلا نعمتی",
+  "teacher_role": "",
+  "teacher_image": "",
+  "teacher_bio": "",
+  "teacher_link": "",
   "lessons": "۷ جلسه آنلاین",
+  "start_label": "",
+  "platform_label": "",
+  "organizer": "",
+  "code": "",
+  "start_date": null,
+  "end_date": null,
   "price": "رایگان",
-  "icon": "📱",
-  "image": "",
-  "image_url": "",
   "cover_a": "#17328f",
   "cover_b": "#102A71",
   "link": "amoozesh.html",
+  "sort": 8,
   "active": true,
-  "sort": 8
+  "faq": [],
+  "blocks": [
+    {
+      "type": "ads"
+    }
+  ],
+  "icon": "📱"
 }

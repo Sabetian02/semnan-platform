@@ -1,16 +1,33 @@
 {
-  "teacher": "دکتر نادر شریفی",
-  "active": true,
-  "summary": "بازاریابی دیجیتال و شبکه‌های اجتماعی یک دورهٔ آنلاین است که در آن مهارت «کارآفرینی» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
-  "price": "با گواهی معتبر",
-  "image_url": "",
   "title": "بازاریابی دیجیتال و شبکه‌های اجتماعی",
-  "icon": "📢",
+  "subtitle": "",
+  "category": "کارآفرینی",
+  "summary": "بازاریابی دیجیتال و شبکه‌های اجتماعی یک دورهٔ آنلاین است که در آن مهارت «کارآفرینی» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
+  "tags": [],
+  "teacher": "دکتر نادر شریفی",
+  "teacher_role": "",
+  "teacher_image": "",
+  "teacher_bio": "",
+  "teacher_link": "",
+  "lessons": "5 جلسه آنلاین",
+  "start_label": "",
+  "platform_label": "",
+  "organizer": "",
+  "code": "",
+  "start_date": null,
+  "end_date": null,
+  "price": "با گواهی معتبر",
+  "image": "https://s3.eseminar.tv/c453019/upload/webinar/1788267425_74.webp",
   "cover_a": "#0a2266",
   "cover_b": "#1b3a8b",
   "link": "amoozesh.html",
-  "image": "https://s3.eseminar.tv/c453019/upload/webinar/1788267425_74.webp",
-  "lessons": "5 جلسه آنلاین",
-  "category": "کارآفرینی",
-  "sort": 7
+  "sort": 7,
+  "active": true,
+  "faq": [],
+  "blocks": [
+    {
+      "type": "ads"
+    }
+  ],
+  "icon": "📢"
 }

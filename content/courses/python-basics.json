@@ -1,16 +1,32 @@
 {
   "title": "برنامه‌نویسی پایتون از صفر",
+  "subtitle": "",
   "category": "برنامه‌نویسی",
   "summary": "برنامه‌نویسی پایتون از صفر یک دورهٔ آنلاین است که در آن مهارت «برنامه‌نویسی» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
+  "tags": [],
   "teacher": "مهندس حسین موسوی",
+  "teacher_role": "",
+  "teacher_image": "",
+  "teacher_bio": "",
+  "teacher_link": "",
   "lessons": "۱۲ جلسه آنلاین",
+  "start_label": "",
+  "platform_label": "",
+  "organizer": "",
+  "code": "",
+  "start_date": null,
+  "end_date": null,
   "price": "با گواهی معتبر",
-  "icon": "🐍",
-  "image": "",
-  "image_url": "",
   "cover_a": "#1b3a8b",
   "cover_b": "#16317a",
   "link": "amoozesh.html",
+  "sort": 4,
   "active": true,
-  "sort": 4
+  "faq": [],
+  "blocks": [
+    {
+      "type": "ads"
+    }
+  ],
+  "icon": "🐍"
 }

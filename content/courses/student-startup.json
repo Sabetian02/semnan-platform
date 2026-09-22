@@ -1,16 +1,32 @@
 {
   "title": "مسیر شروع کارآفرینی دانشجویی",
+  "subtitle": "",
   "category": "کارآفرینی",
   "summary": "مسیر شروع کارآفرینی دانشجویی یک دورهٔ آنلاین است که در آن مهارت «کارآفرینی» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
+  "tags": [],
   "teacher": "دکتر پارسا عباسی",
+  "teacher_role": "",
+  "teacher_image": "",
+  "teacher_bio": "",
+  "teacher_link": "",
   "lessons": "۸ جلسه آنلاین",
+  "start_label": "",
+  "platform_label": "",
+  "organizer": "",
+  "code": "",
+  "start_date": null,
+  "end_date": null,
   "price": "با گواهی معتبر",
-  "icon": "🚀",
-  "image": "",
-  "image_url": "",
   "cover_a": "#1b3a8b",
   "cover_b": "#0a1f54",
   "link": "amoozesh.html",
+  "sort": 10,
   "active": true,
-  "sort": 10
+  "faq": [],
+  "blocks": [
+    {
+      "type": "ads"
+    }
+  ],
+  "icon": "🚀"
 }

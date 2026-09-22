@@ -1,16 +1,32 @@
 {
   "title": "فن بیان و سخنرانی برای ارائه‌های دانشگاهی",
+  "subtitle": "",
   "category": "مهارت نرم",
   "summary": "فن بیان و سخنرانی برای ارائه‌های دانشگاهی یک دورهٔ آنلاین است که در آن مهارت «مهارت نرم» را با تمرین و پروژهٔ عملی یاد می‌گیری؛ مناسب دانشجویان دانشگاه سمنان با گواهی پایان دوره.",
+  "tags": [],
   "teacher": "دکتر مریم احمدی",
+  "teacher_role": "",
+  "teacher_image": "",
+  "teacher_bio": "",
+  "teacher_link": "",
   "lessons": "۸ جلسه آنلاین",
+  "start_label": "",
+  "platform_label": "",
+  "organizer": "",
+  "code": "",
+  "start_date": null,
+  "end_date": null,
   "price": "رایگان",
-  "icon": "🎤",
-  "image": "",
-  "image_url": "",
   "cover_a": "#102A71",
   "cover_b": "#1b3a8b",
   "link": "amoozesh.html",
+  "sort": 1,
   "active": true,
-  "sort": 1
+  "faq": [],
+  "blocks": [
+    {
+      "type": "ads"
+    }
+  ],
+  "icon": "🎤"
 }

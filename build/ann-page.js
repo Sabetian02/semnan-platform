@@ -49,6 +49,7 @@ const I = {
   minus: '<path d="M5 12h14"/>',
   money: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/>',
   list: '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  layers: '<path d="M12 3l9 5-9 5-9-5 9-5Z"/><path d="M3 13l9 5 9-5"/><path d="M3 17l9 5 9-5"/>',
   monitor: '<rect x="2.5" y="4" width="19" height="12.5" rx="2"/><path d="M8 20.5h8M12 16.5v4"/>',
   bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
   phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.4 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/>',
@@ -71,6 +72,7 @@ module.exports = function createAnnRenderer(ctx) {
     faNum,
     ROOT,
     site,
+    TELE_URL = "",
     pickImage,
     safeLink,
     ABS_URI,
@@ -79,6 +81,7 @@ module.exports = function createAnnRenderer(ctx) {
     renderFooterN,
     mdParse,
     allNews = [],
+    allCourses = [],
     kanonhaList = [],
     anjomanhaList = [],
     newsOrg,
@@ -588,9 +591,81 @@ module.exports = function createAnnRenderer(ctx) {
     return b.text ? `<div class="ap-divider"><span>${esc(b.text)}</span></div>` : `<hr class="ap-hr">`;
   }
 
+  /* ===== بلوک‌های مخصوص صفحات دوره (amoozesh/) — الهام از وبینارهای ایسمینار ===== */
+  /* سرفصل‌ها/زمان‌بندی درس‌ها: بازهٔ زمانی + مدت + توضیح (شبیه تایم‌لاین وبینار) */
+  function bSchedule(b) {
+    const items = (Array.isArray(b.items) ? b.items : []).filter((it) => it && (it.title || it.time || it.note));
+    if (!items.length) return "";
+    return `<div class="cp-schedule">
+      <ol class="cp-sched">
+        ${items
+          .map((it, i) => {
+            const t = String(it.time || "").trim();
+            const d = String(it.duration || "").trim();
+            const title = String(it.title || "").trim();
+            const note = String(it.note || "").trim();
+            return `<li class="cp-sched-item">
+            <span class="cp-sched-no">${fa(String(i + 1).padStart(2, "0"))}</span>
+            <div class="cp-sched-body">
+              <div class="cp-sched-head">
+                ${title ? `<h4>${esc(title)}</h4>` : ""}
+                <span class="cp-sched-tags">
+                  ${t ? `<span class="cp-sched-tag is-time">${ico("clock", "ap-i-xs")} ${esc(t)}</span>` : ""}
+                  ${d ? `<span class="cp-sched-tag is-dur">${ico("bolt", "ap-i-xs")} ${esc(d)}</span>` : ""}
+                </span>
+              </div>
+              ${note ? `<p class="cp-sched-note">${esc(note)}</p>` : ""}
+            </div>
+          </li>`;
+          })
+          .join("\n          ")}
+      </ol>
+    </div>`;
+  }
+
+  /* مخاطبین: دو ستون — این دوره برای چه کسی است / برای چه کسی نیست (الگوی ایسمینار) */
+  function bAudience(b) {
+    const good = (Array.isArray(b.suitable) ? b.suitable : []).filter(Boolean);
+    const bad = (Array.isArray(b.unsuitable) ? b.unsuitable : []).filter(Boolean);
+    if (!good.length && !bad.length) return "";
+    return `<div class="cp-audience">
+      <div class="cp-aud-col is-good">
+        <h4><span class="cp-aud-ico">${ico("check", "ap-i-sm")}</span> ${esc(b.good_title || "این دوره برای چه کسانی است؟")}</h4>
+        <ul>${good.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+      </div>
+      ${bad.length ? `<div class="cp-aud-col is-bad">
+        <h4><span class="cp-aud-ico">${ico("xmark", "ap-i-sm")}</span> ${esc(b.bad_title || "این دوره برای چه کسانی نیست؟")}</h4>
+        <ul>${bad.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+      </div>` : ""}
+    </div>`;
+  }
+
+  /* کارت مدرس: عکس یا حرف اول نام + سمت + معرفی + لینک */
+  function bTeacher(b, prefix) {
+    const name = String(b.name || "").trim();
+    if (!name) return "";
+    const img = b.image ? safeMedia(b.image) : "";
+    const avatar = img
+      ? `<img class="cp-tch-avatar" src="${srcUrl(img, prefix)}" alt="${escA(name)}" loading="lazy">`
+      : `<span class="cp-tch-avatar is-initial">${esc([...(name)].slice(0, 1)[0])}</span>`;
+    return `<div class="cp-teacher">
+      <div class="cp-tch-media">${avatar}</div>
+      <div class="cp-tch-info">
+        <span class="cp-tch-kicker">${esc(b.kicker || "مدرس دوره")}</span>
+        <h4 class="cp-tch-name">${esc(name)}</h4>
+        ${b.role ? `<p class="cp-tch-role">${esc(b.role)}</p>` : ""}
+        ${b.bio ? `<p class="cp-tch-bio">${esc(b.bio)}</p>` : ""}
+        ${b.link ? `<a class="cp-tch-link" href="${escA(ctaHref(b.link) || b.link)}" target="_blank" rel="noopener">${ico("link", "ap-i-sm")} اطلاعات بیشتر</a>` : ""}
+      </div>
+    </div>`;
+  }
+
    const RENDER = {
     highlights: (b, c) => bHighlights(b, c.prefix),
     facts: (b) => bFacts(b),
+    schedule: (b) => bSchedule(b),
+    audience: (b) => bAudience(b),
+    teacher: (b, c) => bTeacher(b, c.prefix),
     text: (b, c) => bText(b, c.prefix, c.idPrefix, c.toc),
     image: (b, c) => bImage(b, c.prefix),
     gallery: (b, c) => bGallery(b, c.prefix, c.idPrefix.replace(/[^a-z0-9-]/gi, "") || "gal"),
@@ -1183,6 +1258,376 @@ module.exports = function createAnnRenderer(ctx) {
     );
   }
 
+  /* =============== قالب صفحهٔ دورهٔ آموزشی (پوشهٔ amoozesh/) ===============
+     ترکیبی از قالب اطلاعیه (هیرو، نوار کنار، بلوک‌های قابل‌چینش) و الگوی
+     وبینارهای ایسمینار (کارت بلیت/ثبت‌نام، سرفصل‌های زمان‌بندی‌شده، مخاطبین).
+     داده‌ها از بلوک‌های داشبورد (blocks) ساخته می‌شود؛ فیلدهای تختِ قدیمی هم
+     پشتیبانی می‌شوند تا صفحه بدون بلوک خالی نماند. */
+
+  /* لینک ثبت‌نام: URL بیرونی یا صفحهٔ داخلی؛ اگر لینک همان فهرست بود به کانال ثبت‌نام برمی‌گردد */
+  function courseRegister(c) {
+    const rawLink = safeLink(c.link);
+    if (rawLink && !/^\.?\/?amoozesh\.html$/i.test(rawLink)) {
+      if (ABS_URI.test(rawLink)) {
+        return { label: "ثبت‌نام و رزرو دوره", href: rawLink, style: "gold", external: true, ico: "telegram" };
+      }
+      return { label: "ثبت‌نام و رزرو دوره", href: "../" + rawLink.replace(/^\.\//, ""), style: "gold", external: false, ico: "" };
+    }
+    return { label: "ثبت‌نام و رزرو دوره", href: TELE_URL, style: "gold", external: true, ico: "telegram" };
+  }
+
+  /* بلوک‌های خودکار وقتی دوره بلوک محتوایی ندارد (مثل اطلاعیه) */
+  function courseAutoBlocks(c) {
+    const raw = (Array.isArray(c.blocks) ? c.blocks : []).filter((b) => b && b.type);
+    const real = raw.filter((b) => b.type !== "ads");
+    if (real.length) return raw;
+    const auto = [];
+    if (String(c.body || "").trim()) auto.push({ type: "text", heading: "دربارهٔ دوره", markdown: c.body });
+    else if (String(c.summary || "").trim()) auto.push({ type: "text", heading: "دربارهٔ دوره", markdown: c.summary });
+    const facts = [];
+    if (c.teacher) facts.push({ label: "مدرس", value: c.teacher });
+    if (c.start_label) facts.push({ label: "شروع دوره", value: c.start_label });
+    if (c.duration_label || c.lessons) facts.push({ label: "مدت / ساختار", value: c.duration_label || c.lessons });
+    if (c.platform_label) facts.push({ label: "محل برگزاری", value: c.platform_label });
+    if (c.organizer) facts.push({ label: "برگزارکننده", value: c.organizer });
+    if (c.code) facts.push({ label: "کد دوره", value: c.code });
+    if (facts.length) auto.push({ type: "facts", heading: "اطلاعات کلیدی دوره", items: facts });
+    if (String(c.price || "").trim())
+      auto.push({ type: "notice", title: "هزینهٔ ثبت‌نام", text: c.price === "رایگان" ? "شرکت در این دوره رایگان است." : "برای اطلاع از هزینهٔ نهایی و نحوهٔ پرداخت با پشتیبانی در تماس باشید.", tone: c.price === "رایگان" ? "success" : "info" });
+    return auto;
+  }
+
+  function courseFactRows(c) {
+    const rows = [];
+    const row = (icon, label, val, href) => {
+      if (!val) return "";
+      return `<li><span class="ap-kf-ico">${ico(icon, "ap-i-sm")}</span><span class="ap-kf-l">${esc(label)}</span><span class="ap-kf-v">${href ? `<a href="${escA(href)}"${ABS_URI.test(href) ? ' target="_blank" rel="noopener"' : ""}>${esc(val)}</a>` : esc(val)}</span></li>`;
+    };
+    row("users", "مدرس", c.teacher, c.teacher_link || "");
+    row("calendar", "شروع دوره", c.start_label, "");
+    row("clock", "مدت / ساختار", c.duration_label || c.lessons, "");
+    row("monitor", "محل برگزاری", c.platform_label, "");
+    row("spark", "برگزارکننده", c.organizer, "");
+    row("tag", "کد دوره", c.code, "");
+    row("money", "هزینه", c.price || "رایگان", c.link && ABS_URI.test(c.link) ? c.link : "");
+    return rows.join("");
+  }
+
+  function courseTeacherCard(c, prefix) {
+    if (!c.teacher) return "";
+    return `<section class="ap-card cp-teacher-card">
+        <h2 class="ap-card-h">${ico("users", "ap-card-i")} مدرس دوره</h2>
+        ${bTeacher({ name: c.teacher, role: c.teacher_role, image: c.teacher_image, bio: c.teacher_bio, link: c.teacher_link, kicker: "مدرس دوره" }, prefix)}
+      </section>`;
+  }
+
+  function courseRelatedCard(c) {
+    const href = "amoozesh/" + c._slug + ".html";
+    const img = pickImage(c);
+    const media = img
+      ? `<span class="cp-rel-media"><img src="${escA(srcUrl(img, "../"))}" alt="" loading="lazy"></span>`
+      : `<span class="cp-rel-media is-art">${esc(c.icon || "🎓")}</span>`;
+    return `<a class="cp-rel" href="${escA(href)}">
+        ${media}
+        <span class="cp-rel-body">
+          <span class="cp-rel-cat">${esc(c.category || "دوره")}</span>
+          <b>${esc(c.title)}</b>
+          <small>${esc(c.price || "رایگان")}</small>
+        </span>
+      </a>`;
+  }
+
+  function courseRelated(c, limit) {
+    const tags = Array.isArray(c.tags) ? c.tags : [];
+    const pool = allCourses.filter((x) => x._slug !== c._slug);
+    const scored = pool
+      .map((x) => {
+        let s = 0;
+        if (x.category && x.category === c.category) s += 2;
+        (Array.isArray(x.tags) ? x.tags : []).forEach((t) => {
+          if (tags.includes(t)) s += 1;
+        });
+        return { x, s };
+      })
+      .filter((r) => r.s > 0)
+      .sort((a, b) => b.s - a.s || (a.x.sort || 0) - (b.x.sort || 0))
+      .slice(0, limit);
+    if (!scored.length) return "";
+    return `<section class="ap-related cp-related">
+        <h2 class="ap-related-h">${ico("layers", "ap-i-sm")} دوره‌های مرتبط</h2>
+        <div class="ap-related-grid">${scored.map((r) => courseRelatedCard(r.x)).join("\n          ")}</div>
+      </section>`;
+  }
+
+  function courseHeadExtras(c, url, toc) {
+    const title = (c.seo && c.seo.title) || c.title || "";
+    const desc = (c.seo && c.seo.description) || c.summary || "";
+    const img = (c.seo && c.seo.image) || pickImage(c);
+    const ogImg = img ? (ABS_URI.test(img) ? img : absUrl(img)) : absUrl("assets/images/SVG/logo.svg");
+    const canonical = (c.seo && c.seo.canonical) || url;
+    const tags = Array.isArray(c.tags) ? c.tags.filter(Boolean) : [];
+    const metas = [
+      `<link rel="canonical" href="${escA(canonical)}">`,
+      c.seo && c.seo.noindex ? `<meta name="robots" content="noindex, follow">` : `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">`,
+      `<meta property="og:type" content="article">`,
+      `<meta property="og:locale" content="fa_IR">`,
+      `<meta property="og:site_name" content="${escA(BRAND)}">`,
+      `<meta property="og:title" content="${escA(title)}">`,
+      `<meta property="og:description" content="${escA(desc)}">`,
+      `<meta property="og:url" content="${escA(canonical)}">`,
+      `<meta property="og:image" content="${escA(ogImg)}">`,
+      `<meta property="og:image:alt" content="${escA(title)}">`,
+      `<meta name="twitter:card" content="summary_large_image">`,
+      `<meta name="twitter:title" content="${escA(title)}">`,
+      `<meta name="twitter:description" content="${escA(desc)}">`,
+      `<meta name="twitter:image" content="${escA(ogImg)}">`
+    ];
+    if (c.category) metas.push(`<meta property="article:section" content="${escA(c.category)}">`);
+    tags.slice(0, 8).forEach((t) => metas.push(`<meta property="article:tag" content="${escA(t)}">`));
+
+    const graph = [];
+    const free = /رایگان/i.test(String(c.price || ""));
+    const courseSchema = {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      name: title,
+      description: desc,
+      url: canonical,
+      image: ogImg,
+      provider: { "@type": "Organization", name: BRAND, url: SITE_URL },
+      offers: {
+        "@type": "Offer",
+        price: free ? "0" : String(c.price || "").replace(/[^0-9.]/g, "") || "0",
+        priceCurrency: "IRR",
+        availability: "https://schema.org/PreOrder"
+      }
+    };
+    if (c.teacher) courseSchema.creator = { "@type": "Person", name: c.teacher };
+    if (c.start_date) {
+      courseSchema.hasCourseInstance = {
+        "@type": "CourseInstance",
+        courseMode: "online",
+        startDate: c.start_date,
+        endDate: c.end_date || undefined,
+        location: c.platform_label ? { "@type": "Place", name: c.platform_label } : { "@type": "VirtualLocation", url: canonical }
+      };
+    }
+    graph.push(courseSchema);
+
+    const faqItems = [];
+    const addFaq = (f) => {
+      if (!f || !f.q) return;
+      if (!faqItems.some((x) => String(x.q) === String(f.q))) faqItems.push(f);
+    };
+    (Array.isArray(c.blocks) ? c.blocks : []).forEach((b) => {
+      if (b && b.type === "faq" && Array.isArray(b.items)) b.items.forEach(addFaq);
+    });
+    (Array.isArray(c.faq) ? c.faq : []).forEach(addFaq);
+    if (faqItems.length) {
+      graph.push({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a || "" }
+        }))
+      });
+    }
+    if (toc.length > 1) {
+      graph.push({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "بخش‌های " + String(title),
+        itemListElement: toc.map((t, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: t.text,
+          url: canonical + "#" + t.id
+        }))
+      });
+    }
+    return metas.join("\n  ") + "\n  " + graph.map(jsonLd).join("\n  ");
+  }
+
+  function renderCoursePage(c) {
+    const prefix = "../";
+    const slug = encodeURI(c._slug || "");
+    const url = absUrl("amoozesh/" + slug + ".html");
+    const blocks = courseAutoBlocks(c);
+    const toc = [];
+
+    const adsSlots = ads && ads.show_courses !== false ? adsMarkup(ads) : "";
+    const courseAdsSide = adsSlots ? `<div class="ap-ads ap-ads--side">${adsSlots}</div>` : "";
+    const adsMain = adsSlots ? `<div class="ap-ads ap-ads--inline">${adsSlots}</div>` : "";
+
+    const mainHtml = [];
+    const sideHtml = [];
+    let adPlaced = false;
+    blocks.forEach((b, i) => {
+      if (b.type === "ads") {
+        if (adsMain && !adPlaced) {
+          mainHtml.push(adsMain);
+          adPlaced = true;
+        }
+        return;
+      }
+      const r = renderBlock(b, i, { prefix, n: c, cover: pickImage(c) });
+      if (typeof r.html === "object" && r.html) {
+        if (b.place === "side") sideHtml.push(r.html.section);
+        else mainHtml.push(r.html.section);
+        if (r.html.entry) toc.push(r.html.entry);
+      } else if (typeof r.html === "string" && r.html) {
+        (b.place === "side" ? sideHtml : mainHtml).push(r.html);
+      }
+      if (r.toc && r.toc.length) toc.push(...r.toc);
+    });
+    if (adsMain && !adPlaced) mainHtml.push(adsMain);
+
+    const register = courseRegister(c);
+    const price = String(c.price || "رایگان").trim();
+
+    const chips = [];
+    chips.push(`<span class="ap-chip is-cat">${esc(c.icon || "🎓")} ${esc(c.category || "دوره")}</span>`);
+    chips.push(`<span class="ap-chip is-price">${ico("money", "ap-i-xs")} ${esc(price)}${/رایگان$/i.test(price) ? " 🎁" : ""}</span>`);
+    (Array.isArray(c.tags) ? c.tags.filter(Boolean) : []).slice(0, 5).forEach((t) => chips.push(`<span class="ap-chip">${esc(t)}</span>`));
+
+    const metaItems = [];
+    const m = (icon, label, val) => (val ? `<span class="cp-meta-item">${ico(icon, "ap-i-sm")}<b>${esc(label)}:</b> ${esc(val)}</span>` : "");
+    metaItems.push(m("users", "مدرس", c.teacher));
+    metaItems.push(m("calendar", "شروع", c.start_label));
+    metaItems.push(m("clock", "مدت", c.duration_label || c.lessons));
+    metaItems.push(m("monitor", "محل برگزاری", c.platform_label));
+    metaItems.push(m("spark", "برگزارکننده", c.organizer));
+    metaItems.push(m("tag", "کد دوره", c.code));
+
+    const headInner = `
+        <nav class="ap-crumbs" aria-label="مسیر صفحه">
+          <a href="${prefix}index.html">خانه</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
+          <a href="${prefix}amoozesh.html">آموزش‌های مجازی</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">${esc(String(c.title || "").slice(0, 46))}${String(c.title || "").length > 46 ? "…" : ""}</span>
+        </nav>
+        ${chips.length ? `<div class="ap-chips">${chips.join("\n          ")}</div>` : ""}
+        <h1 class="ap-title cp-title">${esc(c.title || "")}</h1>
+        ${c.subtitle ? `<p class="cp-subtitle">${esc(c.subtitle)}</p>` : ""}
+        ${c.summary ? `<p class="ap-lead">${esc(c.summary)}</p>` : ""}
+        ${metaItems.length ? `<div class="cp-meta">${metaItems.join("\n          ")}</div>` : ""}
+        ${register ? `<div class="ap-actions">
+          ${btn(register)}
+          ${register ? `<a class="ap-back cp-hero-back" href="${prefix}amoozesh.html">${ico("arrow", "ap-back-i")} همهٔ دوره‌ها</a>` : ""}
+        </div>` : ""}`;
+
+    const head = `<header class="ap-head cp-head"><div class="container">${headInner}</div></header>`;
+
+    const artBg = c.cover_a || c.cover_b ? ` style="--cp-a:${escA(c.cover_a || "#001840")};--cp-b:${escA(c.cover_b || "#102A71")}"` : "";
+    const img = pickImage(c);
+    const cpCover = img
+      ? coverFigure(c, prefix)
+      : `<figure class="cp-art cp-art--navy"${artBg}><span class="ap-art-emoji cp-art-emoji">${esc(c.icon || "🎓")}</span></figure>`;
+    const topCover = `<div class="ap-topcover cp-topcover"><div class="container">${cpCover}</div></div>`;
+
+    const tocCard = (toc) => `
+      <section class="ap-card ap-card--toc" data-ap-toc aria-label="فهرست مطالب">
+        <h2 class="ap-card-h">${ico("spark", "ap-card-i")} فهرست مطالب</h2>
+        <ul class="ap-toc">
+          ${toc.map((t) => `<li><a href="#${t.id}" data-ap-toc-link><span class="ap-toc-arrow" aria-hidden="true"></span>${esc(t.text)}</a></li>`).join("")}
+        </ul>
+        <span class="ap-toc-bar"><i data-ap-toc-progress aria-hidden="true"></i></span>
+      </section>`;
+
+    const ticketThumb = img
+      ? `<span class="cp-ticket-media"><img src="${escA(srcUrl(img, prefix))}" alt="" loading="lazy"></span>`
+      : `<span class="cp-ticket-media is-art"${artBg}>${esc(c.icon || "🎓")}</span>`;
+
+    const ticket = `<section class="cp-ticket">
+        ${ticketThumb}
+        <div class="cp-ticket-head">
+          <span class="cp-ticket-cat">${esc(c.category || "دوره")}</span>
+          <b class="cp-ticket-price">${esc(price)}</b>
+        </div>
+        <ul class="cp-ticket-facts">
+          ${c.start_label ? `<li>${ico("calendar", "ap-i-sm")} ${esc(c.start_label)}</li>` : ""}
+          ${(c.duration_label || c.lessons) ? `<li>${ico("clock", "ap-i-sm")} ${esc(c.duration_label || c.lessons)}</li>` : ""}
+          ${c.platform_label ? `<li>${ico("monitor", "ap-i-sm")} ${esc(c.platform_label)}</li>` : ""}
+          ${c.organizer ? `<li>${ico("spark", "ap-i-sm")} ${esc(c.organizer)}</li>` : ""}
+        </ul>
+        ${register ? btn(register, "cp-ticket-cta") : ""}
+        <a class="cp-ticket-back" href="${prefix}amoozesh.html">→ بازگشت به فهرست دوره‌ها</a>
+      </section>`;
+
+    const factsCard = `<section class="ap-card ap-card--facts">
+        <h2 class="ap-card-h">${ico("layers", "ap-card-i")} اطلاعات دوره</h2>
+        <ul class="ap-kf">${courseFactRows(c)}</ul>
+      </section>`;
+
+    const aside = `<aside class="ap-side" aria-label="اطلاعات جانبی دوره">
+          ${ticket}
+          ${toc.length > 1 ? tocCard(toc) : ""}
+          ${courseAdsSide}
+          ${factsCard}
+          ${courseTeacherCard(c, prefix)}
+          ${sideShare(url, c.title || "")}
+          ${sideHtml.join("\n          ")}
+        </aside>`;
+
+    const body = `
+  <main class="ap" data-ap-layout="course">
+    <div class="ap-readbar" aria-hidden="true"><span data-ap-progress></span></div>
+    ${topCover}
+    ${head}
+    <div class="ap-body">
+      ${toc.length > 1 ? `<nav class="ap-toc-rail" data-ap-toc aria-label="فهرست مطالب">
+        <span class="ap-toc-rail-label">مطالب این دوره</span>
+        ${toc.map((t) => `<a href="#${t.id}" data-ap-toc-link class="ap-toc-chip">${esc(t.text)}</a>`).join("")}
+      </nav>` : ""}
+      <div class="container ap-grid">
+        <article class="ap-main">
+          ${mainHtml.join("\n          ")}
+          ${courseRelated(c, 3)}
+          <a class="ap-back" href="${prefix}amoozesh.html">${ico("arrow", "ap-back-i")} بازگشت به فهرست دوره‌ها</a>
+        </article>
+        ${aside}
+      </div>
+    </div>
+    <div class="ap-mobilebar">
+      ${register ? `<a class="ap-mb-cta" href="${escA(register.href)}"${register.external ? ' target="_blank" rel="noopener"' : ""}>${ico(register.ico === "telegram" ? "bell" : "bolt", "ap-i-sm")} ${esc(register.label)}</a>` : ""}
+      <button type="button" class="ap-mb-btn" data-ap-native data-ap-url="${escA(url)}" data-ap-title="${escA(c.title || "")}" aria-label="اشتراک‌گذاری">${ico("share", "ap-i-sm")}</button>
+      <button type="button" class="ap-mb-btn" data-ap-copy="${escA(url)}" aria-label="کپی نشانی">${ico("copy", "ap-i-sm")}</button>
+      <button type="button" class="ap-mb-btn" data-ap-top aria-label="بازگشت به بالا">${ico("top", "ap-i-sm")}</button>
+    </div>
+    <button type="button" class="ap-top" data-ap-top aria-label="بازگشت به بالای صفحه">${ico("top", "ap-i-sm")}</button>
+    <div class="ap-lightbox" data-ap-lightbox hidden>
+      <button type="button" class="ap-lb-close" data-ap-lb-close aria-label="بستن">✕</button>
+      <button type="button" class="ap-lb-nav is-prev" data-ap-lb-prev aria-label="تصویر بعدی">${ico("chev", "ap-lb-i")}</button>
+      <figure class="ap-lb-stage"><img data-ap-lb-img alt="" decoding="async"><figcaption data-ap-lb-cap hidden></figcaption></figure>
+      <button type="button" class="ap-lb-nav is-next" data-ap-lb-next aria-label="تصویر قبلی">${ico("chev", "ap-lb-i")}</button>
+      <div class="ap-lb-count" data-ap-lb-count aria-hidden="true"></div>
+    </div>
+    <div class="ap-toast" data-ap-toast role="status" aria-live="polite" hidden></div>
+  </main>`;
+
+    const openBase = ctx.openFor ? ctx.openFor(prefix) : ctx.open;
+    const closeBase = ctx.closeFor ? ctx.closeFor(prefix) : ctx.close;
+    const openN = openBase.replace(
+      "</head>",
+      `  <link rel="stylesheet" href="${prefix}assets/css/ann.css?v=${escA(assetVer)}">\n  ${courseHeadExtras(c, url, toc)}\n</head>`
+    );
+    const closeN = closeBase.replace(
+      "</body>",
+      `  <script src="${prefix}assets/js/ann.js?v=${escA(assetVer)}" defer></script>\n</body>`
+    );
+
+    return ctx.assemble(
+      openN,
+      esc(c.seo && c.seo.title ? c.seo.title : c.title || "") + " | آموزش\u200cهای مجازی",
+      esc(c.seo && c.seo.description ? c.seo.description : c.summary || ""),
+      renderHeaderN(prefix),
+      [body],
+      renderFooterN(prefix),
+      closeN
+    );
+  }
+
   /* مسیر تصویر محتواییِ امن (آپلود داخلی یا URL بیرونی) */
   function safeMedia(v) {
     const s = String(v || "").trim();
@@ -1192,5 +1637,5 @@ module.exports = function createAnnRenderer(ctx) {
     return fs.existsSync(path.join(ROOT, rel)) ? s : "";
   }
 
-  return { renderAnnPage };
+  return { renderAnnPage, renderCoursePage };
 };
