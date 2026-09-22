@@ -255,6 +255,7 @@ collections:
       - { label: معرفی کوتاه مدرس, name: teacher_bio, widget: text, required: false }
       - { label: لینک مدرس, name: teacher_link, widget: string, required: false, hint: "https://… (بیرونی)" }
       - { label: جلسات, name: lessons, widget: string, required: true, hint: "مثل «۶ جلسه آنلاین»" }
+      - { label: مدت / ساختار (نمایشی), name: duration_label, widget: string, required: false, hint: "مثل «۶ هفته، هفتگی ۲ ساعت» — اگر خالی بود از «جلسات» استفاده می‌شود" }
       - { label: تاریخ شروع (نمایشی), name: start_label, widget: string, required: false, hint: "مثل «۱۵ مهر ۱۴۰۵»" }
       - { label: محل برگزاری, name: platform_label, widget: string, required: false, default: "آنلاین (اسکای‌روم)", hint: "مثل «آنلاین (اسکای‌روم)»" }
       - { label: برگزارکننده, name: organizer, widget: string, required: false, hint: "مثل «مرکز آموزش‌های آزاد»" }
@@ -345,6 +346,53 @@ collections:
                   - { label: ستون اصلی, value: "main" }
                   - { label: کنار, value: "side" }
                 default: "main"
+          - label: 🗂 تب‌ها (مثل وبینار)
+            name: tabs
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, hint: "خالی بگذار تا تب‌ها بدون عنوان اضافه نمایش داده شوند" }
+              - label: تب‌ها
+                name: tabs
+                widget: list
+                summary: "{{fields.tab}}"
+                fields:
+                  - { label: نام تب, name: tab, widget: string }
+                  - label: آیکن
+                    name: icon
+                    widget: select
+                    required: false
+                    options: [ "", "spark", "check", "clock", "users", "help", "shield", "layers" ]
+                  - { label: متن تب, name: markdown, widget: markdown }
+          - label: 🎟 بلیت‌ها / قیمت‌ها (مثل وبینار)
+            name: prices
+            widget: object
+            fields:
+              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "گزینه‌های ثبت‌نام" }
+              - label: جای نمایش
+                name: place
+                widget: select
+                options:
+                  - { label: ستون اصلی, value: "main" }
+                  - { label: کنار, value: "side" }
+                default: "main"
+              - label: بلیت‌ها
+                name: items
+                widget: list
+                summary: "{{fields.name}}"
+                fields:
+                  - { label: نام بلیت, name: name, widget: string }
+                  - { label: قیمت, name: price, widget: string, hint: "مثل «رایگان» یا «۴۵۰ هزار تومان»" }
+                  - label: پیشنهاد اصلی
+                    name: hot
+                    widget: boolean
+                    required: false
+                    default: false
+                  - { label: متن دکمه, name: cta, widget: string, required: false, default: "ثبت‌نام" }
+                  - { label: لینک, name: link, widget: string, required: false, hint: "https://… یا مسیر داخلی؛ خالی = بدون دکمه" }
+                  - label: امکانات
+                    name: features
+                    widget: list
+                    summary: "{{fields}}"
           - label: 👤 مدرس
             name: teacher
             widget: object

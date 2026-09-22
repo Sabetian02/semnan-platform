@@ -334,7 +334,7 @@ module.exports = function createAnnRenderer(ctx) {
     highlights: "spark", text: "list", facts: "info", video: "play", gallery: "image",
     files: "file", timeline: "clock", form: "edit", faq: "help", notice: "warn",
     stats: "chart", quote: "quote", cta: "bolt", location: "pin", image: "image", divider: "minus",
-    buttons: "bolt"
+    buttons: "bolt", schedule: "clock", audience: "users", tabs: "list", prices: "money", teacher: "shield"
   };
 
   function bHighlights(b, prefix) {
@@ -640,6 +640,58 @@ module.exports = function createAnnRenderer(ctx) {
     </div>`;
   }
 
+  /* تب‌ها (بدون جاوااسکریپت — با radio مخفی و CSS): مثل «توضیحات / سرفصل‌ها / …» در سمینار */
+  function bTabs(b, prefix, idSeed) {
+    const items = (Array.isArray(b.tabs) ? b.tabs : []).filter((t) => t && String(t.tab || "").trim());
+    if (!items.length) return "";
+    const gid = "cp-tabs-" + String(idSeed || "0").replace(/[^a-z0-9-]/gi, "");
+    return `<div class="cp-tabs" data-cp-tabs>
+      ${items
+        .map((t, i) => `<input type="radio" name="${gid}" id="${gid}-${i}" class="cp-tab-radio"${i === 0 ? " checked" : ""} hidden aria-hidden="true">`)
+        .join("")}
+      <nav class="cp-tabbar" aria-label="بخش‌های دوره">
+        ${items
+          .map((t, i) => `<label class="cp-tab-btn" for="${gid}-${i}">${t.icon ? ico(t.icon, "ap-i-sm") : ""}${esc(t.tab)}</label>`)
+          .join("")}
+      </nav>
+      ${items
+        .map((t, i) => {
+          const bodyHtml = String(t.markdown || "").trim()
+            ? mdParse(t.markdown, { idPrefix: gid + "-" + i + "-", localPrefix: prefix }).html
+            : "";
+          return `<section class="cp-tab-panel" data-cp-tab-panel="${i}">${bodyHtml || ""}</section>`;
+        })
+        .join("")}
+    </div>`;
+  }
+
+  /* جدول قیمت/بلیت (مثل «بلیت‌های وبینار»): چند گزینه با لیست امکانات و دکمهٔ ثبت‌نام */
+  function bPrices(b, prefix) {
+    const items = (Array.isArray(b.items) ? b.items : []).filter((t) => t && String(t.name || "").trim());
+    if (!items.length) return "";
+    return `<div class="cp-prices">
+      ${items
+        .map((t, i) => {
+          const feats = (Array.isArray(t.features) ? t.features : []).filter(Boolean);
+          const isHot = t.hot === true;
+          const price = String(t.price || "").trim();
+          const cta = t.link
+            ? (ABS_URI.test(t.link) ? { label: t.cta || "ثبت‌نام", href: t.link, style: "gold", external: true } : { label: t.cta || "ثبت‌نام", href: prefix + t.link.replace(/^\.\//, ""), style: "gold", external: false })
+            : null;
+          return `<div class="cp-price${isHot ? " is-hot" : ""}">
+            <div class="cp-price-head">
+              ${isHot ? `<span class="cp-price-badge">${ico("spark", "ap-i-xs")} پیشنهاد</span>` : ""}
+              <h4>${esc(t.name)}</h4>
+              <b class="cp-price-val">${esc(price)}</b>
+            </div>
+            ${feats.length ? `<ul class="cp-price-feats">${feats.map((f) => `<li>${ico("check", "ap-i-xs")} ${esc(f)}</li>`).join("")}</ul>` : ""}
+            ${cta ? btn(cta, "cp-price-cta") : ""}
+          </div>`;
+        })
+        .join("\n      ")}
+    </div>`;
+  }
+
   /* کارت مدرس: عکس یا حرف اول نام + سمت + معرفی + لینک */
   function bTeacher(b, prefix) {
     const name = String(b.name || "").trim();
@@ -665,6 +717,8 @@ module.exports = function createAnnRenderer(ctx) {
     facts: (b) => bFacts(b),
     schedule: (b) => bSchedule(b),
     audience: (b) => bAudience(b),
+    tabs: (b, c) => bTabs(b, c.prefix, c.idPrefix),
+    prices: (b, c) => bPrices(b, c.prefix),
     teacher: (b, c) => bTeacher(b, c.prefix),
     text: (b, c) => bText(b, c.prefix, c.idPrefix, c.toc),
     image: (b, c) => bImage(b, c.prefix),
@@ -1501,30 +1555,56 @@ module.exports = function createAnnRenderer(ctx) {
     metaItems.push(m("spark", "برگزارکننده", c.organizer));
     metaItems.push(m("tag", "کد دوره", c.code));
 
+    const detbarCells = [];
+    const det = (icon, label, val) => (val ? `<span class="cp-det">${ico(icon, "ap-i-sm")}<span><b>${esc(label)}</b><i>${esc(val)}</i></span></span>` : "");
+    detbarCells.push(det("users", "مدرس", c.teacher));
+    detbarCells.push(det("calendar", "شروع دوره", c.start_label));
+    detbarCells.push(det("clock", "مدت / جلسات", c.duration_label || c.lessons));
+    detbarCells.push(det("monitor", "محل برگزاری", c.platform_label));
+    detbarCells.push(det("spark", "برگزارکننده", c.organizer));
+    detbarCells.push(det("tag", "کد دوره", c.code));
+    detbarCells.push(det("money", "هزینه", price));
+
+    const artBg = c.cover_a || c.cover_b ? ` style="--cp-a:${escA(c.cover_a || "#001840")};--cp-b:${escA(c.cover_b || "#102A71")}"` : "";
+    const img = pickImage(c);
+    const heroMedia = img
+      ? `<figure class="cp-hero-media">
+          <span class="cp-hero-media-box">
+            <img class="cp-hero-media-img" src="${escA(srcUrl(img, prefix))}" alt="${escA(c.title)}" loading="eager" decoding="async">
+          </span>
+          <span class="cp-hero-media-tag">${ico("monitor", "ap-i-xs")} ${esc(c.platform_label || "دورهٔ آنلاین")}</span>
+        </figure>`
+      : `<figure class="cp-hero-media">
+          <span class="cp-hero-media-box is-art"${artBg}><span class="ap-art-emoji cp-art-emoji">${esc(c.icon || "🎓")}</span></span>
+          <span class="cp-hero-media-tag">${ico("monitor", "ap-i-xs")} ${esc(c.platform_label || "دورهٔ آنلاین")}</span>
+        </figure>`;
+
     const headInner = `
         <nav class="ap-crumbs" aria-label="مسیر صفحه">
           <a href="${prefix}index.html">خانه</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
           <a href="${prefix}amoozesh.html">آموزش‌های مجازی</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
           <span aria-current="page">${esc(String(c.title || "").slice(0, 46))}${String(c.title || "").length > 46 ? "…" : ""}</span>
         </nav>
-        ${chips.length ? `<div class="ap-chips">${chips.join("\n          ")}</div>` : ""}
-        <h1 class="ap-title cp-title">${esc(c.title || "")}</h1>
-        ${c.subtitle ? `<p class="cp-subtitle">${esc(c.subtitle)}</p>` : ""}
-        ${c.summary ? `<p class="ap-lead">${esc(c.summary)}</p>` : ""}
-        ${metaItems.length ? `<div class="cp-meta">${metaItems.join("\n          ")}</div>` : ""}
-        ${register ? `<div class="ap-actions">
-          ${btn(register)}
-          ${register ? `<a class="ap-back cp-hero-back" href="${prefix}amoozesh.html">${ico("arrow", "ap-back-i")} همهٔ دوره‌ها</a>` : ""}
-        </div>` : ""}`;
+        <div class="cp-hero">
+          <div class="cp-hero-info">
+            ${chips.length ? `<div class="ap-chips">${chips.join("\n          ")}</div>` : ""}
+            <h1 class="ap-title cp-title">${esc(c.title || "")}</h1>
+            ${c.subtitle ? `<p class="cp-subtitle">${esc(c.subtitle)}</p>` : ""}
+            ${c.summary ? `<p class="ap-lead">${esc(c.summary)}</p>` : ""}
+            ${metaItems.length ? `<div class="cp-meta">${metaItems.join("\n          ")}</div>` : ""}
+            ${register ? `<div class="ap-actions">
+              ${btn(register)}
+              ${`<a class="ap-back cp-hero-back" href="${prefix}amoozesh.html">${ico("arrow", "ap-back-i")} همهٔ دوره‌ها</a>`}
+            </div>` : ""}
+          </div>
+          ${heroMedia}
+        </div>`;
 
     const head = `<header class="ap-head cp-head"><div class="container">${headInner}</div></header>`;
 
-    const artBg = c.cover_a || c.cover_b ? ` style="--cp-a:${escA(c.cover_a || "#001840")};--cp-b:${escA(c.cover_b || "#102A71")}"` : "";
-    const img = pickImage(c);
-    const cpCover = img
-      ? coverFigure(c, prefix)
-      : `<figure class="cp-art cp-art--navy"${artBg}><span class="ap-art-emoji cp-art-emoji">${esc(c.icon || "🎓")}</span></figure>`;
-    const topCover = `<div class="ap-topcover cp-topcover"><div class="container">${cpCover}</div></div>`;
+    const detbar = detbarCells.filter(Boolean).length
+      ? `<div class="cp-detbar"><div class="container"><div class="cp-detbar-in">${detbarCells.join("")}</div></div></div>`
+      : "";
 
     const tocCard = (toc) => `
       <section class="ap-card ap-card--toc" data-ap-toc aria-label="فهرست مطالب">
@@ -1573,8 +1653,8 @@ module.exports = function createAnnRenderer(ctx) {
     const body = `
   <main class="ap" data-ap-layout="course">
     <div class="ap-readbar" aria-hidden="true"><span data-ap-progress></span></div>
-    ${topCover}
     ${head}
+    ${detbar}
     <div class="ap-body">
       ${toc.length > 1 ? `<nav class="ap-toc-rail" data-ap-toc aria-label="فهرست مطالب">
         <span class="ap-toc-rail-label">مطالب این دوره</span>
