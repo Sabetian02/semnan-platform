@@ -242,6 +242,7 @@ img { max-width: 100%; display: block; }
   border-top: 1px solid rgba(255, 220, 95, .35);
   margin: 16px 0 10px;
   max-width: 200px;
+  margin-bottom: 18px
 }
 .hero-eyebrow {
   display: inline-block;
@@ -257,7 +258,7 @@ img { max-width: 100%; display: block; }
   max-width: 620px;
   margin: 0 0 30px;
 }
-.hero-cta { display: flex; gap: 14px; justify-content: flex-start; flex-wrap: wrap; }
+.hero-cta { display: flex; gap: 14px; justify-content: flex-start; flex-wrap: wrap; margin-top: 20px;}
 
 .hero-stats {
   display: flex; flex-wrap: wrap; gap: 12px 34px;
@@ -272,7 +273,7 @@ img { max-width: 100%; display: block; }
     0 0 22px rgba(245, 196, 0, .5),
     0 0 42px rgba(245, 196, 0, .3);
 }
-.hs span { color: rgba(255, 255, 255, .78); font-size: .88rem; font-weight: 600; }
+.hs span { color: rgba(255, 255, 255, .78); font-size: .80rem; font-weight: 300; }
 
 /* Visual card */
 .hero-visual { position: relative; }

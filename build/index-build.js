@@ -1091,7 +1091,7 @@ function renderDiscounts(head, discountList) {
         <div class="section-head">
           <span class="eyebrow">${esc(head.eyebrow)}</span>
           <h2>${esc(head.title || "تخفیف‌های دانشجویی")}</h2>
-          <p>${esc(head.subtitle || "کدهای تخفیف فعال دانشجویی را بگیر و کمتر هزینه کن.")}</p>
+          ${head.subtitle ? `<p>${esc(head.subtitle)}</p>` : ""}
         </div>
         <div class="dc-list">${items}</div>
       </div>
