@@ -101,6 +101,7 @@ function renderHeaderN(prefix) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
         <input class="site-search-input" type="search" placeholder="جستجو در تیترها و هشتگ‌ها…" autocomplete="off" aria-label="جستجو در سایت">
         <button class="site-search-clear" type="button" aria-label="پاک کردن">✕</button>
+        <button class="site-search-close" type="button" aria-label="بستن">✕</button>
       </div>
       <div class="site-search-results" data-sr></div>
       <div class="site-search-empty" data-se hidden>چیزی پیدا نشد. عبارت دیگری را امتحان کنید.</div>

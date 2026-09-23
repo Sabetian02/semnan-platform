@@ -915,9 +915,11 @@
     var toggle = document.querySelector(".nav-search");
     var input = root.querySelector(".site-search-input");
     var clearBtn = root.querySelector(".site-search-clear");
+    var closeBtn = root.querySelector(".site-search-close");
     var results = root.querySelector("[data-sr]");
     var empty = root.querySelector("[data-se]");
     var indexUrl = root.getAttribute("data-index") || "search-index.json";
+    var linkBase = indexUrl.replace(/[^/]*$/, "");
     var store = { items: [] };
     var loading = false;
     var pending = [];
@@ -934,6 +936,12 @@
     }
     function selectToEnd() {
       try { input.setSelectionRange(input.value.length, input.value.length); } catch (_) {}
+    }
+    function absUrl(u) {
+      var s = String(u || "");
+      if (/^(https?:)?\/\//i.test(s)) return s;
+      if (s.charAt(0) === "/" || s.charAt(0) === "#" || s.charAt(0) === ".") return s;
+      return linkBase + s;
     }
     function open(term) {
       root.hidden = false;
@@ -990,7 +998,7 @@
           var tagHtml = (it.h || []).slice(0, 5).map(function (h) {
             return '<span class="sr-tag">#' + escHtml(h) + "</span>";
           }).join("");
-          return '<a class="sr-item" href="' + escHtml(it.u) + '"><span class="sr-kind">' + escHtml(it.k) + "</span>" +
+          return '<a class="sr-item" href="' + absUrl(it.u) + '"><span class="sr-kind">' + escHtml(it.k) + "</span>" +
             '<span class="sr-txt"><b>' + title + "</b>" + (tagHtml ? '<span class="sr-tags">' + tagHtml + "</span>" : "") + "</span></a>";
         }).join("");
       });
@@ -1006,6 +1014,10 @@
       results.innerHTML = "";
       empty.hidden = true;
       input.focus();
+    });
+    if (closeBtn) closeBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      close();
     });
     if (input) {
       input.addEventListener("input", run);
