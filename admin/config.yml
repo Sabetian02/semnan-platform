@@ -51,12 +51,12 @@ collections:
         widget: select
         options: [ "خبر", "رویداد", "فراخوان", "اطلاع‌رسانی", "دوره", "جدید", "تخفیف" ]
         default: "خبر"
-      - label: هشتگ‌ها
+      - label: تگ‌ها / هشتگ‌ها
         name: hashtags
         widget: list
         required: false
         value_type: string
-        hint: "فقط خود کلمه را بنویس؛ هر مورد یک هشتگ"
+        hint: "هر کلمه را تایپ و Enter بزن؛ با کلیک روی هر تگ، همان کلمه در جستجو می‌شود"
       - label: کانون
         name: kanon
         widget: relation
@@ -254,8 +254,7 @@ collections:
         options: [ "مهارت نرم", "نرم‌افزار", "هوش مصنوعی", "برنامه‌نویسی", "زبان", "طراحی", "هنر و رسانه", "کارآفرینی" ]
         default: "مهارت نرم"
       - { label: توضیح, name: summary, widget: text, required: true }
-      - { label: برچسب‌ها, name: tags, widget: list, required: false, summary: "{{fields}}" }
-      - { label: هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "فقط خود کلمه را بنویس؛ هر مورد یک هشتگ" }
+      - { label: تگ‌ها / هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "هر کلمه را تایپ و Enter بزن؛ با کلیک روی هر تگ، همان کلمه در جستجو می‌شود" }
       - { label: مدرس, name: teacher, widget: string, required: true }
       - { label: سمت مدرس, name: teacher_role, widget: string, required: false, hint: "مثل «عضو هیئت علمی دانشگاه سمنان»" }
       - { label: عکس مدرس, name: teacher_image, widget: image, required: false }
@@ -910,7 +909,7 @@ collections:
       - { label: نام کوتاه, name: short, widget: string, required: true }
       - { label: تلگرام, name: telegram, widget: string, required: false }
       - { label: درباره, name: desc, widget: text, required: true }
-      - { label: هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "فقط خود کلمه را بنویس؛ هر مورد یک هشتگ" }
+      - { label: تگ‌ها / هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "هر کلمه را تایپ و Enter بزن؛ با کلیک روی هر تگ، همان کلمه در جستجو می‌شود" }
       - label: اعضا
         name: members
         widget: list
@@ -944,7 +943,7 @@ collections:
       - { label: نام کوتاه, name: short, widget: string, required: true }
       - { label: تلگرام, name: telegram, widget: string, required: false }
       - { label: درباره, name: desc, widget: text, required: true }
-      - { label: هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "فقط خود کلمه را بنویس؛ هر مورد یک هشتگ" }
+      - { label: تگ‌ها / هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "هر کلمه را تایپ و Enter بزن؛ با کلیک روی هر تگ، همان کلمه در جستجو می‌شود" }
       - label: اعضا
         name: members
         widget: list

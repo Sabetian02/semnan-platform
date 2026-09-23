@@ -955,8 +955,8 @@ module.exports = function createAnnRenderer(ctx) {
         let score = 0;
         if (org && ((org.base === "kanonha" && x.kanon === org.slug) || (org.base === "anjomanha" && x.anjoman === org.slug))) score += 3;
         if (x.category && x.category === n.category) score += 2;
-        const tags = Array.isArray(n.tags) ? n.tags : [];
-        const xt = Array.isArray(x.tags) ? x.tags : [];
+        const tags = Array.isArray(n.hashtags) ? n.hashtags : [];
+        const xt = Array.isArray(x.hashtags) ? x.hashtags : [];
         if (tags.length && xt.length && tags.some((t) => xt.indexOf(t) >= 0)) score += 2;
         return { x, score };
       })
@@ -1005,7 +1005,7 @@ module.exports = function createAnnRenderer(ctx) {
     const img = (n.seo && n.seo.image) || pickImage(n);
     const ogImg = img ? (ABS_URI.test(img) ? img : absUrl(img)) : absUrl("assets/images/SVG/logo.svg");
     const canonical = (n.seo && n.seo.canonical) || url;
-    const tags = Array.isArray(n.tags) ? n.tags.filter(Boolean) : [];
+    const tags = Array.isArray(n.hashtags) ? n.hashtags.filter(Boolean) : [];
     const e = ev(n);
     const st = statusOf(n);
     const pageTitle = title + " | اطلاعیه‌های پلتفرم";
@@ -1155,7 +1155,7 @@ module.exports = function createAnnRenderer(ctx) {
     const st = statusOf(n);
     const blocks = toBlocks(n);
     const cta = primaryCta(n);
-    const tags = Array.isArray(n.tags) ? n.tags.filter(Boolean) : [];
+    const tags = Array.isArray(n.hashtags) ? n.hashtags.filter(Boolean) : [];
     const toc = [];
 
     /* بلوک‌های بدنه و نوار کنار، به ترتیبی که در داشبورد چیده شده‌اند */
@@ -1403,13 +1403,13 @@ module.exports = function createAnnRenderer(ctx) {
   }
 
   function courseRelated(c, limit) {
-    const tags = Array.isArray(c.tags) ? c.tags : [];
+    const tags = Array.isArray(c.hashtags) ? c.hashtags : [];
     const pool = allCourses.filter((x) => x._slug !== c._slug);
     const scored = pool
       .map((x) => {
         let s = 0;
         if (x.category && x.category === c.category) s += 2;
-        (Array.isArray(x.tags) ? x.tags : []).forEach((t) => {
+        (Array.isArray(x.hashtags) ? x.hashtags : []).forEach((t) => {
           if (tags.includes(t)) s += 1;
         });
         return { x, s };
@@ -1430,7 +1430,7 @@ module.exports = function createAnnRenderer(ctx) {
     const img = (c.seo && c.seo.image) || pickImage(c);
     const ogImg = img ? (ABS_URI.test(img) ? img : absUrl(img)) : absUrl("assets/images/SVG/logo.svg");
     const canonical = (c.seo && c.seo.canonical) || url;
-    const tags = Array.isArray(c.tags) ? c.tags.filter(Boolean) : [];
+    const tags = Array.isArray(c.hashtags) ? c.hashtags.filter(Boolean) : [];
     const metas = [
       `<link rel="canonical" href="${escA(canonical)}">`,
       c.seo && c.seo.noindex ? `<meta name="robots" content="noindex, follow">` : `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">`,
@@ -1531,7 +1531,7 @@ module.exports = function createAnnRenderer(ctx) {
     const chips = [];
     chips.push(`<span class="ap-chip is-cat">${esc(c.icon || "🎓")} ${esc(c.category || "دوره")}</span>`);
     chips.push(`<span class="ap-chip is-price">${ico("money", "ap-i-xs")} ${esc(price)}${/رایگان$/i.test(price) ? " 🎁" : ""}</span>`);
-    chips.push(hashChips(Array.isArray(c.hashtags) && c.hashtags.length ? c.hashtags : c.tags));
+    chips.push(hashChips(Array.isArray(c.hashtags) && c.hashtags.length ? c.hashtags : []));
 
     const metaItems = [];
     const m = (icon, label, val) => (val ? `<span class="cp-meta-item">${ico(icon, "ap-i-sm")}<b>${esc(label)}:</b> ${esc(val)}</span>` : "");

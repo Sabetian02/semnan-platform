@@ -100,7 +100,6 @@ function renderHeaderN(prefix) {
       <div class="site-search-bar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
         <input class="site-search-input" type="search" placeholder="جستجو در تیترها و هشتگ‌ها…" autocomplete="off" aria-label="جستجو در سایت">
-        <button class="site-search-clear" type="button" aria-label="پاک کردن">✕</button>
         <button class="site-search-close" type="button" aria-label="بستن">✕</button>
       </div>
       <div class="site-search-results" data-sr></div>
@@ -657,7 +656,7 @@ const newsListCard = (n) => {
   const date = n.date
     ? `<time class="lp-date" data-date="${escA(n.date)}"></time>`
     : `<span class="lp-date">اطلاعیه</span>`;
-  const hay = [n.title, n.summary, n.category, n.author, ...(Array.isArray(n.tags) ? n.tags : [])]
+  const hay = [n.title, n.summary, n.category, n.author, ...(Array.isArray(n.hashtags) ? n.hashtags : [])]
     .filter(Boolean)
     .join(" ");
   return `<article class="lp-card lp-news lp-body reveal"
@@ -1270,7 +1269,6 @@ console.log("✔ صفحات دوره:", courseList.length, "فایل" + (amoRemo
   const normTags = (it) => {
     const src = [];
     if (Array.isArray(it.hashtags)) src.push(...it.hashtags);
-    if (Array.isArray(it.tags)) src.push(...it.tags);
     return [...new Set(
       src.map((h) => String(h || "").trim().replace(/^#+/, "").replace(/\s+/g, " ")).filter(Boolean)
     )];

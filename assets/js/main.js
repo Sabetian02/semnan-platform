@@ -914,7 +914,6 @@
     if (!root) return;
     var toggle = document.querySelector(".nav-search");
     var input = root.querySelector(".site-search-input");
-    var clearBtn = root.querySelector(".site-search-clear");
     var closeBtn = root.querySelector(".site-search-close");
     var results = root.querySelector("[data-sr]");
     var empty = root.querySelector("[data-se]");
@@ -1008,13 +1007,6 @@
       e.stopPropagation();
       open("");
     });
-    if (clearBtn) clearBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      input.value = "";
-      results.innerHTML = "";
-      empty.hidden = true;
-      input.focus();
-    });
     if (closeBtn) closeBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       close();
@@ -1033,12 +1025,14 @@
     document.addEventListener("click", function (e) {
       if (!root.hidden && !root.contains(e.target) && !(toggle && toggle.contains(e.target))) close();
     });
-    /* باز شدن جستجو از چیپ‌های هشتگ (#…) */
+    /* باز شدن جستجو از چیپ‌های هشتگ (#…) — فقط تگ‌ها، نه تیترها/کارتها */
     document.addEventListener("click", function (e) {
       var el = e.target.closest("[data-search]");
       if (!el) return;
+      var v = el.getAttribute("data-search") || "";
+      if (v.charAt(0) !== "#") return;
       e.preventDefault();
-      open(el.getAttribute("data-search") || "");
+      open(v);
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && !root.hidden) close();

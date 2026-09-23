@@ -6,5 +6,10 @@
   "kanon": "govandegi-va-ecra",
   "date": "2026-08-15T10:00:00.000Z",
   "image_url": "https://picsum.photos/seed/gov-t-07/960/540",
-  "active": true
+  "active": true,
+  "hashtags": [
+    "جشنواره",
+    "هنرهای نمایشی",
+    "دانشگاه"
+  ]
 }
