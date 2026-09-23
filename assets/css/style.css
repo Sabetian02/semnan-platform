@@ -2295,6 +2295,16 @@ a.op-pub:hover { transform: translateY(-2px); border-color: rgba(245, 196, 0, .7
   font-size: .72rem; font-weight: 800;
 }
 .op-ach-lvl-ico { width: 13px; height: 13px; }
+.op-ach-year {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: rgba(16, 42, 113, .05);
+  border: 1px dashed rgba(16, 42, 113, .22);
+  color: var(--navy);
+  font-size: .72rem; font-weight: 800;
+}
 .op-ach-rank {
   display: inline-flex;
   align-self: flex-start;

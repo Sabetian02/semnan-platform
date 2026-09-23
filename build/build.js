@@ -403,6 +403,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
                   <b class="op-ach-title">${esc(a.title)}</b>
                   <span class="op-ach-meta">
                     ${lvl ? `<span class="op-ach-lvl">${opIco("award", "op-ach-lvl-ico")} سطح ${esc(lvl)}</span>` : ""}
+                    ${a.year ? `<time class="op-ach-year" datetime="${escA(String(a.year).trim())}">${esc(a.year)}</time>` : ""}
                     ${a.rank ? `<span class="op-ach-rank">${esc(a.rank)}</span>` : ""}
                   </span>
                 </div>

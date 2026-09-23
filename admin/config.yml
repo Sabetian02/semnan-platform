@@ -918,10 +918,8 @@ collections:
         fields:
           - { label: عنوان, name: title, widget: string, required: true }
           - { label: سطح, name: level, widget: select, options: ["دانشگاهی", "استانی", "ملی", "بین‌المللی"] }
-          - { label: جشنواره / رقابت, name: event, widget: string, required: false }
-          - { label: جایگاه, name: rank, widget: string, required: false }
-          - { label: سال, name: year, widget: string, required: false }
-          - { label: توضیح, name: desc, widget: text, required: false }
+          - { label: مقام / جایگاه, name: rank, widget: string, required: false }
+          - { label: تاریخ, name: year, widget: string, required: false, hint: "مؤلفهٔ اختیاری؛ اگر خالی بماند نمایش داده نمی‌شود" }
       - label: اعضا
         name: members
         widget: list
@@ -977,10 +975,8 @@ collections:
         fields:
           - { label: عنوان, name: title, widget: string, required: true }
           - { label: سطح, name: level, widget: select, options: ["دانشگاهی", "استانی", "ملی", "بین‌المللی"] }
-          - { label: جشنواره / رقابت, name: event, widget: string, required: false }
-          - { label: جایگاه, name: rank, widget: string, required: false }
-          - { label: سال, name: year, widget: string, required: false }
-          - { label: توضیح, name: desc, widget: text, required: false }
+          - { label: مقام / جایگاه, name: rank, widget: string, required: false }
+          - { label: تاریخ, name: year, widget: string, required: false, hint: "مؤلفهٔ اختیاری؛ اگر خالی بماند نمایش داده نمی‌شود" }
       - label: اعضا
         name: members
         widget: list
