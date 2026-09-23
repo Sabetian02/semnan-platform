@@ -1862,7 +1862,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 26px 22px 0;
+  padding: 20px 16px 0;
   transition: transform .25s, box-shadow .25s, border-color .25s;
 }
 .kn-card:hover {
@@ -1872,40 +1872,53 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 }
 .kn-logo {
   display: grid; place-items: center;
-  width: 92px; height: 92px;
+  width: 76px; height: 76px;
   border-radius: 50%;
   background:
     radial-gradient(circle at 50% 0%, rgba(255, 220, 95, .32), transparent 64%),
     linear-gradient(150deg, #fff, var(--cream));
   border: 2px solid rgba(245, 196, 0, .5);
   box-shadow: 0 16px 32px -22px rgba(0, 24, 64, .55);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .kn-logo-img, .kn-mono { width: 60%; height: 60%; object-fit: contain; display: block; }
 .kn-logo-img {
   filter: brightness(0) saturate(100%) invert(11%) sepia(75%) saturate(1743%) hue-rotate(211deg) brightness(124%) contrast(106%);
 }
-.kn-name { font-size: 1.06rem; font-weight: 800; color: var(--navy-dark); line-height: 1.75; margin-bottom: 8px; }
-.kn-desc {
-  color: var(--muted); font-size: .86rem; line-height: 1.9;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-  margin-bottom: 18px;
+.kn-name { font-size: .96rem; font-weight: 800; color: var(--navy-dark); line-height: 1.7; margin-bottom: 10px; }
+.kn-stats {
+  margin-bottom: 14px;
 }
+.kn-stats li {
+  padding: 8px 3px;
+  border-radius: 9px;
+}
+.kn-stats b { font-size: .96rem; }
 .kn-foot {
   margin-top: auto; width: 100%;
   display: flex; align-items: center; justify-content: space-between;
   border-top: 1px dashed var(--line);
-  padding: 14px 0;
-  font-size: .86rem; font-weight: 800; color: var(--navy);
+  padding: 12px 0;
+  font-size: .84rem; font-weight: 800; color: var(--navy);
 }
 .kn-foot svg { width: 15px; height: 15px; transition: transform .2s; }
 .kn-card:hover .kn-foot { color: var(--navy-dark); }
 .kn-card:hover .kn-foot svg { transform: translateX(-3px); }
 
+/* گرید فهرست کانون‌ها و انجمن‌ها: دسکتاپ کارت‌های کوچک‌تر، موبایل دو ستونه */
+.kn-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+
 @media (max-width: 640px) {
   .kn-toolbar { padding: 12px 14px; }
   .kn-toolbar .lp-reset { width: 100%; }
-  .kn-card { padding: 22px 18px 0; }
+  .kn-card { padding: 16px 10px 0; }
+  .kn-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .kn-logo { width: 62px; height: 62px; margin-bottom: 9px; }
+  .kn-name { font-size: .86rem; margin-bottom: 8px; }
+  .kn-stats { margin-bottom: 10px; }
+  .kn-stats li { padding: 6px 2px; }
+  .kn-stats b { font-size: .86rem; }
+  .kn-foot { padding: 9px 0; font-size: .8rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .kn-card, .kn-card:hover { transform: none; transition: none; }

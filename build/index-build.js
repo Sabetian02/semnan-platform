@@ -562,13 +562,34 @@ function renderLpSidebar(o) {
 /* لوگو/نشان جایگزین از build/org.js می‌آید (مشترک با صفحهٔ پروفایل) */
 const { orgLogo, newsOrg } = require("./org");
 
+/* آمار کارت: «رویداد/دوره/تخفیف» از اطلاعیه‌های مجموعه و «تعداد اعضا» از جدول اعضا */
+const STAT_CATEGORIES = ["رویداد", "دوره", "تخفیف"];
+const entityStats = (it, base) => {
+  const key = base === "kanonha" ? "kanon" : "anjoman";
+  const catCounts = {};
+  STAT_CATEGORIES.forEach((c) => (catCounts[c] = 0));
+  newsList.forEach((n) => {
+    if (n && n[key] === it.slug) {
+      const c = String(n.category || "").trim();
+      if (c in catCounts) catCounts[c] += 1;
+    }
+  });
+  return [
+    ...STAT_CATEGORIES.map((c) => ({ n: catCounts[c], l: c })),
+    { n: (it.members || []).length, l: "تعداد اعضا" }
+  ];
+};
+
 function entityCard(it, base) {
   const search = [it.name, it.short, it.desc, (it.members || []).map((m) => `${m && m.name ? m.name : ""} ${m && m.major ? m.major : ""}`).join(" ")].join(" ");
   const tele = it.telegram && ABS_URI.test(it.telegram) ? it.telegram : "";
+  const stats = entityStats(it, base);
   return `<a class="kn-card reveal" href="${base}/${escA(it.slug)}.html" data-search="${escA(search)}"${tele ? ` data-telegram="${escA(tele)}"` : ""}>
         <span class="kn-logo">${orgLogo(it, "", "kn-logo-img", "kn-mono")}</span>
         <h3 class="kn-name">${esc(it.name)}</h3>
-        <p class="kn-desc">${esc(it.desc)}</p>
+        <ul class="kn-stats op-cat-chips" aria-label="آمار">
+          ${stats.map((s) => `<li class="${s.n ? "" : "is-zero"}"><b>${faNum(s.n)}</b><span>${esc(s.l)}</span></li>`).join("")}
+        </ul>
         <span class="kn-foot"><span>مشاهده پروفایل</span>${LP_ICON.arrow}</span>
       </a>`;
 }
@@ -599,7 +620,7 @@ function renderEntityListPage(items, o) {
               <span>حذف جستجو</span>
             </button>
           </div>
-          <div class="lp-grid" data-lp-list>
+          <div class="lp-grid kn-grid" data-lp-list>
             ${cards}
           </div>
           ${renderLpEmpty(LP_ICON.search, o.emptyTitle, o.emptyHint, o.emptyReset)}

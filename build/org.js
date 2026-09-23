@@ -47,7 +47,13 @@ const LOGO_MAP = {
   "mohandesi-mekanik": LOGO_DIR + "لوگو انجمن علمی مهندسی مکانیک.svg",
   "hoghoogh-feqh": LOGO_DIR + "لوگوی انجمن علمی حقوق و فقه.svg",
   "govandegi-va-ecra": "لوگوی_کانون_فرهنگی_گویندگی_و_اجرا.svg",
-  "kooir-shenasi": LOGO_DIR + "لوگو انجمن علمی کویرشناسی.svg"
+  "kooir-shenasi": LOGO_DIR + "لوگو انجمن علمی کویرشناسی.svg",
+  "anjoman-gardeshgari": LOGO_DIR + "انجمن علمی گردشگری.svg",
+  "zist-farzanegan": LOGO_DIR + "انجمن علمی زیست شناسی فرزانگان.svg",
+  "olum-kamyuter": LOGO_DIR + "انجمن علمی علوم کامپیوتر.svg",
+  "omran": LOGO_DIR + "انجمن علمی عمران.svg",
+  "mohandesi-shimi": LOGO_DIR + "انجمن علمی مهندسی شیمی.svg",
+  "naghashi": LOGO_DIR + "انجمن علمی نقاشی.svg"
 };
 
 const LOGO_SUBDIR = "assets/images/SVG/";
