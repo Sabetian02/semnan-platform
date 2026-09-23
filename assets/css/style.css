@@ -838,6 +838,7 @@ img { max-width: 100%; display: block; }
   .foot-grid { grid-template-columns: 1fr; gap: 26px; text-align: center; }
   .foot-brand { justify-content: center; }
   .foot-brand-col p { margin-inline: auto; }
+  .foot-col--quick { display: none; }
 }
 
 @media (max-width: 600px) {

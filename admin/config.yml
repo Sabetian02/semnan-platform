@@ -73,6 +73,38 @@ collections:
         value_field: slug
         display_fields: [ "name" ]
         required: false
+      - label: کانون‌های برگزارکننده / همکار
+        name: co_kanons
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.kanon}}"
+        hint: "اگر اطلاعیه چند کانون داشته باشد، همه را این‌جا کم کرده و انتخاب کن. فیلد «کانون» بالا برای سازگاری قبلی است."
+        fields:
+          - label: کانون
+            name: kanon
+            widget: relation
+            collection: kanonha
+            search_fields: [ "name", "short" ]
+            value_field: slug
+            display_fields: [ "name" ]
+            required: false
+      - label: انجمن‌های برگزارکننده / همکار
+        name: co_anjomans
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.anjoman}}"
+        hint: "اگر اطلاعیه چند انجمن داشته باشد، همه را این‌جا کم کرده و انتخاب کن. فیلد «انجمن» بالا برای سازگاری قبلی است."
+        fields:
+          - label: انجمن
+            name: anjoman
+            widget: relation
+            collection: anjomanha
+            search_fields: [ "name", "short" ]
+            value_field: slug
+            display_fields: [ "name" ]
+            required: false
       - label: تصویر کاور
         name: image
         widget: image
@@ -242,11 +274,16 @@ collections:
     extension: json
     summary: "{{title}} — {{teacher}}"
     sortable_fields:
-      - field: commit_date
+      - field: date
         default_sort: desc
       - field: title
     fields:
       - { label: عنوان, name: title, widget: string, required: true }
+      - label: تاریخ انتشار
+        name: date
+        widget: datetime
+        required: true
+        hint: "برای مرتب‌سازی «جدیدترین/قدیمی‌ترین» و نمایش تاریخ در کارت‌های فهرست دوره‌ها."
       - { label: زیرعنوان, name: subtitle, widget: string, required: false, hint: "مثل «پروژه‌محور و کاملاً آنلاین»" }
       - label: دسته
         name: category

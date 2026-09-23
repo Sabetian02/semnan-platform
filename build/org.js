@@ -94,19 +94,62 @@ function orgImage(src, prefix, alt) {
 /* تشکل مرجعِ یک اطلاعیه (کانون/انجمن).
    اطلاعیه‌ها از «بخش اطلاعیهٔ اصلی» می‌آیند و فیلد kanon/anjoman آن‌ها را به
    پروفایل تشکل‌ها وصل می‌کند؛ در نتیجه دسته‌بندی‌ها همیشه همان دسته‌بندی منطبق
-   بر تنظیمات اصلی است و نیازی به کپی نیست. */
-function newsOrg(n, kanonha, anjomanha) {
-  const k = n && n.kanon;
-  if (k && Array.isArray(kanonha)) {
-    const m = kanonha.find((x) => x && x.slug === k);
-    if (m) return { slug: m.slug, name: m.name, kind: "کانون", base: "kanonha" };
-  }
-  const a = n && n.anjoman;
-  if (a && Array.isArray(anjomanha)) {
-    const m = anjomanha.find((x) => x && x.slug === a);
-    if (m) return { slug: m.slug, name: m.name, kind: "انجمن", base: "anjomanha" };
-  }
-  return null;
+   بر تنظیمات اصلی است و نیازی به کپی نیست.
+   برگزارکننده‌ها می‌توانند چندتایی باشند: فیلدهای تکی (kanon/anjoman) برای
+   سازگاری قبلی + فیلدهای لیستی (kanons/anjomans و co_kanons/co_anjomans).
+   هر آیتم لیست می‌تواند `"slug"` یا `{ kanon: "slug" }` باشد — هر دو نرمال می‌شود. */
+function slugFromItem(item) {
+  if (item == null) return "";
+  return typeof item === "string" ? item : item.kanon || item.anjoman || item.slug || "";
+}
+function newsOrgs(n, kanonha, anjomanha) {
+  if (!n) return [];
+  const slots = [];
+  const addSlot = (key) => {
+    const v = n[key];
+    const list = Array.isArray(v) ? v : v ? [v] : [];
+    list.forEach((x) => {
+      const s = String(slugFromItem(x) || "").trim();
+      if (s) slots.push({ key, slug: s });
+    });
+  };
+  addSlot("kanon");
+  addSlot("kanons");
+  addSlot("co_kanons");
+  addSlot("anjoman");
+  addSlot("anjomans");
+  addSlot("co_anjomans");
+  const out = [];
+  const seen = {};
+  slots.forEach((sl) => {
+    const coll = sl.key.indexOf("kanon") === 0 ? kanonha : anjomanha;
+    if (!Array.isArray(coll)) return;
+    const m = coll.find((x) => x && x.slug === sl.slug);
+    if (!m) return;
+    const kind = sl.key.indexOf("kanon") === 0 ? "کانون" : "انجمن";
+    const base = sl.key.indexOf("kanon") === 0 ? "kanonha" : "anjomanha";
+    const tag = kind + ":" + m.slug;
+    if (seen[tag]) return;
+    seen[tag] = true;
+    out.push({ slug: m.slug, name: m.name, kind, base });
+  });
+  return out;
 }
 
-module.exports = { ROOT, esc, escA, LOGO_MAP, orgLogo, orgPlaceholder, orgImage, newsOrg };
+/* تشکل مرجع یک اطلاعیه — برای سازگاری با کدهای قبلی همان عنصر اول را برمی‌گرداند */
+function newsOrg(n, kanonha, anjomanha) {
+  return newsOrgs(n, kanonha, anjomanha)[0] || null;
+}
+
+/* لینک تلگرام طوری که مستقیم در اپ باز شود: https://t.me/user → tg://resolve?domain=user
+   لینک‌های share تلگرام (https://t.me/share/…) دست نمی‌خورند تا دکمهٔ اشتراک‌گذاری
+   همچنان وب‌شیت تلگرام را باز کند. */
+function tgHref(link) {
+  const s = String(link || "").trim();
+  const m = s.match(/^https?:\/\/(?:www\.)?t\.me\/([A-Za-z0-9_]+)(?:[/?#].*)?$/);
+  if (!m || m[1] === "share") return s;
+  const domain = m[1];
+  return "tg://resolve?domain=" + domain;
+}
+
+module.exports = { ROOT, esc, escA, LOGO_MAP, orgLogo, orgPlaceholder, orgImage, newsOrg, newsOrgs, tgHref };

@@ -25,7 +25,10 @@ const escA = (s) => esc(s).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 /* عدد فارسی برای شمارنده‌های استاتیک صفحهٔ فهرست */
 const faNum = (n) => String(n).replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+d]);
 
-const TELE_URL = (home.hero && home.hero.telegram_url) || "https://t.me/PlatformSem";
+/* لوگو/نشان جایگزین مشترک + لینک تلگرام اپ — از build/org.js */
+const { orgLogo, newsOrg, newsOrgs, tgHref } = require("./org");
+
+const TELE_URL = tgHref((home.hero && home.hero.telegram_url) || "https://t.me/PlatformSem");
 /* نسخهٔ دارایی‌ها: با هر دیپلوی، URL سیاس/جی‌اس عوض می‌شود تا کش مرورگر باطل شود */
 let ASSET_VER;
 try {
@@ -89,7 +92,7 @@ function renderHeaderN(prefix) {
         <button class="nav-bell notif-bell" type="button" aria-label="اعلان‌ها" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </button>
-        <a class="btn btn-navy btn-sm nav-cta" href="${esc((site.cta && site.cta.link) || "https://t.me/PlatformSem")}" target="_blank" rel="noopener">${esc((site.cta && site.cta.label) || "ورود به کانال پلتفرم")}</a>
+        <a class="btn btn-navy btn-sm nav-cta" href="${esc(tgHref((site.cta && site.cta.link) || "https://t.me/PlatformSem"))}" target="_blank" rel="noopener">${esc((site.cta && site.cta.label) || "ورود به کانال پلتفرم")}</a>
         <button class="burger" aria-label="باز کردن منو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       </nav>
     </div>
@@ -130,7 +133,7 @@ function renderFooterN(prefix) {
   const footLinks = (list) => (list || []).map(
     (x) => `<li><a href="${hrefN(x.link, prefix)}">${esc(x.label)}</a></li>`
   ).join("\n            ");
-  const teleUrl = site.telegram_url || "https://t.me/PlatformSem";
+  const teleUrl = tgHref(site.telegram_url || "https://t.me/PlatformSem");
   return `
   <footer class="site-footer">
     <div class="container">
@@ -143,7 +146,7 @@ function renderFooterN(prefix) {
           <p>${esc(f.about || "")}</p>
           <a class="foot-tele" href="${esc(teleUrl)}" target="_blank" rel="noopener">${teleSvg} کانال تلگرام پلتفرم</a>
         </div>
-        <div class="foot-col">
+        <div class="foot-col foot-col--quick">
           <h4>${esc(f.quick_title || "دسترسی سریع")}</h4>
           <ul>
             ${footLinks(f.quick)}
@@ -361,7 +364,7 @@ function renderHero(h) {
     (s) => `<div class="hs"><b>${esc(s.number)}</b><span>${esc(s.label)}</span></div>`
   ).join("\n              ");
   const cards = h.card_items.map((c) =>
-    `<a class="hc-item hc-link" href="${esc(c.link)}">
+    `<a class="hc-item hc-link" href="${esc(tgHref(c.link))}">
                 <span class="hc-ico${c.tone ? " " + esc(c.tone) : ""}">${c.icon}</span>
                 <div class="hc-txt"><b>${esc(c.title)}</b><span>${esc(c.subtitle)}</span></div>
               </a>`
@@ -394,8 +397,8 @@ function renderHero(h) {
               ${cards}
               <div class="hc-bar"><i style="width:100%"></i></div>
             </div>
-            <a class="hero-float f1" href="${esc(h.float1.link)}"><span>${h.float1.icon}</span>${esc(h.float1.text)}</a>
-            <a class="hero-float f2" href="${esc(h.float2.link)}"><span>${h.float2.icon}</span>${esc(h.float2.text)}</a>
+            <a class="hero-float f1" href="${esc(tgHref(h.float1.link))}"><span>${h.float1.icon}</span>${esc(h.float1.text)}</a>
+            <a class="hero-float f2" href="${esc(tgHref(h.float2.link))}"><span>${h.float2.icon}</span>${esc(h.float2.text)}</a>
           </div>
         </div>
       </div>
@@ -413,12 +416,12 @@ function adSlots(a) {
   const slots = [];
   const ratio = ADS_RATIO(a);
   if (a.slot1 && a.slot1.active !== false) {
-    slots.push(`<a class="ad-slot" style="${ratio}" href="${esc(a.slot1.link)}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۱">
+    slots.push(`<a class="ad-slot" style="${ratio}" href="${esc(tgHref(a.slot1.link))}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۱">
             <img class="ad-slot-img" src="${esc(a.slot1.image)}" alt="فضای تبلیغاتی شمارهٔ ۱" loading="lazy">
           </a>`);
   }
   if (a.slot2 && a.slot2.active !== false) {
-    slots.push(`<a class="ad-slot" style="${ratio}" href="${esc(a.slot2.link)}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۲">
+    slots.push(`<a class="ad-slot" style="${ratio}" href="${esc(tgHref(a.slot2.link))}" target="_blank" rel="noopener" aria-label="فضای تبلیغاتی ۲">
             <img class="ad-slot-img" src="${esc(a.slot2.image)}" alt="فضای تبلیغاتی شمارهٔ ۲" loading="lazy">
           </a>`);
   }
@@ -463,7 +466,7 @@ function renderAdReserve(a) {
         : teleSvg;
   }
   return `<div class="ad-reserve">
-      <a class="btn btn-gold" href="${esc(r.link)}" target="_blank" rel="noopener">${icon}${esc(r.label || "رزرو تبلیغات")}</a>
+      <a class="btn btn-gold" href="${esc(tgHref(r.link))}" target="_blank" rel="noopener">${icon}${esc(r.label || "رزرو تبلیغات")}</a>
     </div>`;
 }
 
@@ -507,6 +510,13 @@ function renderLpSidebar(o) {
             ])}
           </fieldset>`
     : "";
+  const orgBox = o.orgs && o.orgs.length
+    ? `
+          <fieldset class="lp-fbox">
+            <legend class="lp-fbox-title">برگزارکننده</legend>
+            ${lpRadios("lp-org", "lp-org", o.orgs)}
+          </fieldset>`
+    : "";
   return `<div class="lp-layout">
         <aside class="lp-side" aria-label="فیلترها">
           <div class="lp-side-inner">
@@ -528,7 +538,7 @@ function renderLpSidebar(o) {
               <fieldset class="lp-fbox">
                 <legend class="lp-fbox-title">${esc(o.catName)}</legend>
                 ${lpRadios("lp-cat", "lp-cat", o.cats)}
-              </fieldset>${priceBox}
+              </fieldset>${orgBox}${priceBox}
               <button class="lp-reset" type="button" data-lp-reset hidden>
                 ${LP_ICON.x}
                 <span>حذف فیلترها</span>
@@ -560,29 +570,32 @@ function renderLpSidebar(o) {
 
 /* ---------- فهرست کانون‌ها و انجمن‌ها (بدون فیلتر، فقط جستجو + کارت لوگومحور) ---------- */
 /* لوگو/نشان جایگزین از build/org.js می‌آید (مشترک با صفحهٔ پروفایل) */
-const { orgLogo, newsOrg } = require("./org");
 
-/* آمار کارت: «رویداد/دوره/تخفیف» از اطلاعیه‌های مجموعه و «تعداد اعضا» از جدول اعضا */
-const STAT_CATEGORIES = ["رویداد", "دوره", "تخفیف"];
+/* آمار کارت: «رویداد/دوره/دستاورد» از اطلاعیه‌های مجموعه و «اعضا» از جدول اعضا */
+const STAT_CATEGORIES = ["رویداد", "دوره"];
 const entityStats = (it, base) => {
-  const key = base === "kanonha" ? "kanon" : "anjoman";
   const catCounts = {};
   STAT_CATEGORIES.forEach((c) => (catCounts[c] = 0));
   newsList.forEach((n) => {
-    if (n && n[key] === it.slug) {
+    const key = base === "kanonha" ? "kanon" : "anjoman";
+    const listKey = base === "kanonha" ? "co_kanons" : "co_anjomans";
+    const direct = n && n[key] === it.slug;
+    const listed = Array.isArray(n[listKey]) && n[listKey].some((x) => x && x[key] === it.slug);
+    if (direct || listed) {
       const c = String(n.category || "").trim();
       if (c in catCounts) catCounts[c] += 1;
     }
   });
   return [
     ...STAT_CATEGORIES.map((c) => ({ n: catCounts[c], l: c })),
-    { n: (it.members || []).length, l: "تعداد اعضا" }
+    { n: (it.achievements || []).length, l: "دستاورد" },
+    { n: (it.members || []).length, l: "اعضا" }
   ];
 };
 
 function entityCard(it, base) {
   const search = [it.name, it.short, it.desc, (it.members || []).map((m) => `${m && m.name ? m.name : ""} ${m && m.major ? m.major : ""}`).join(" ")].join(" ");
-  const tele = it.telegram && ABS_URI.test(it.telegram) ? it.telegram : "";
+  const tele = it.telegram && ABS_URI.test(it.telegram) ? tgHref(it.telegram) : "";
   const stats = entityStats(it, base);
   return `<a class="kn-card reveal" href="${base}/${escA(it.slug)}.html" data-search="${escA(search)}"${tele ? ` data-telegram="${escA(tele)}"` : ""}>
         <span class="kn-logo">${orgLogo(it, "", "kn-logo-img", "kn-mono")}</span>
@@ -656,7 +669,7 @@ const courseListCard = (c) => {
   const lessons = c.lessons ? `<span class="lp-meta-i">${LP_ICON.layers} ${esc(c.lessons)}</span>` : "";
   const hay = [c.title, c.summary, c.category, c.teacher, price].filter(Boolean).join(" ");
   return `<article class="lp-card lp-course reveal"
-          data-cat="${escA(c.category || "")}" data-price="${free}" data-title="${escA(c.title)}" data-search="${escA(hay)}">
+          data-cat="${escA(c.category || "")}" data-price="${free}" data-title="${escA(c.title)}" data-dt="${escA(c.date || "")}" data-search="${escA(hay)}">
         ${courseCover(c, "", detail)}
         <div class="lp-body">
           <span class="lp-cat-chip">${esc(c.category || "دوره")}</span>
@@ -681,7 +694,7 @@ const newsListCard = (n) => {
     .filter(Boolean)
     .join(" ");
   return `<article class="lp-card lp-news lp-body reveal"
-          data-cat="${escA(n.category || "خبر")}" data-dt="${escA(n.date || "")}" data-title="${escA(n.title)}" data-search="${escA(hay)}">
+          data-cat="${escA(n.category || "خبر")}" data-dt="${escA(n.date || "")}" data-title="${escA(n.title)}" data-orgs="${escA(newsOrgKeys(n))}" data-search="${escA(hay)}">
         <div class="lp-news-head">
           <span class="lp-cat-chip">${esc(n.category || "خبر")}</span>
           ${date}
@@ -697,10 +710,21 @@ const newsListCard = (n) => {
 
 /* نشان ‌تشکل مرجعِ اطلاعیه (کانون/انجمن) — لینک به پروفایل همان تشکل */
 const newsOrgLabel = (n, prefix) => {
-  const org = newsOrg(n, kanonhaList, anjomanhaList);
-  if (!org) return "";
-  return `<a class="lp-org-chip" href="${prefix || ""}${org.base}/${escA(org.slug)}.html">${esc(org.name)}</a>`;
+  const orgs = newsOrgs(n, kanonhaList, anjomanhaList);
+  if (!orgs.length) return "";
+  return orgs
+    .map(
+      (org) =>
+        `<a class="lp-org-chip" href="${prefix || ""}${org.base}/${escA(org.slug)}.html">${esc(org.name)}</a>`
+    )
+    .join(" ");
 };
+
+/* اسلاگ‌های برگزارکنندهٔ یک اطلاعیه (با پیشوند کانون/انجمن) — برای فیلتر سایدبار */
+const newsOrgKeys = (n) =>
+  newsOrgs(n, kanonhaList, anjomanhaList)
+    .map((org) => (org.kind === "کانون" ? "k:" : "a:") + org.slug)
+    .join(" ");
 
 /* مقدمهٔ صفحهٔ فهرست: crumbs + تیتر + توضیح + شمارنده */
 function renderLpIntro(crumb, title, desc, countLabel, count) {
@@ -879,6 +903,17 @@ function renderCourses(head, courseList) {
 /* ---------- صفحهٔ فهرست اطلاعیه‌ها (همهٔ اطلاعیه‌ها؛ جستجو/فیلتر/مرتب‌سازی) ---------- */
 function renderAnnListPage(newsList) {
   const cats = distinctCats(newsList.map((n) => n.category));
+  const orgMap = new Map();
+  newsList.forEach((n) =>
+    newsOrgs(n, kanonhaList, anjomanhaList).forEach((org) => {
+      const k = (org.kind === "کانون" ? "k:" : "a:") + org.slug;
+      if (!orgMap.has(k)) orgMap.set(k, { value: k, label: org.name, count: 0 });
+      orgMap.get(k).count += 1;
+    })
+  );
+  const orgs = [{ value: "", label: "همهٔ تشکل‌ها", count: newsList.length }].concat(
+    Array.from(orgMap.values()).sort((a, b) => a.label.localeCompare(b.label, "fa"))
+  );
   const cards = newsList.map(newsListCard).join("\n        ");
   const body = [
     `<main>
@@ -903,10 +938,10 @@ function renderAnnListPage(newsList) {
             cats: [{ value: "", label: "همهٔ دسته‌ها", count: newsList.length }].concat(
               cats.map((c) => ({ value: c, label: c, count: newsList.filter((x) => x.category === c).length }))
             ),
+            orgs,
             sorts: [
               { value: "new", label: "جدیدترین" },
-              { value: "old", label: "قدیمی‌ترین" },
-              { value: "title", label: "عنوان (الف تا ی)" }
+              { value: "old", label: "قدیمی‌ترین" }
             ],
             cards,
             empty: renderLpEmpty(LP_ICON.search, "اطلاعیه‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ اطلاعیه‌ها")
@@ -957,8 +992,8 @@ function renderCourseListPage(courseList) {
             ),
             price: true,
             sorts: [
-              { value: "", label: "پیش‌فرض" },
-              { value: "title", label: "عنوان (الف تا ی)" }
+              { value: "new", label: "جدیدترین" },
+              { value: "old", label: "قدیمی‌ترین" }
             ],
             cards,
             empty: renderLpEmpty(LP_ICON.search, "دوره‌ای با این مشخصات پیدا نشد", "عبارت دیگری جستجو کنید یا دسته‌بندی را عوض کنید.", "نمایش همهٔ دوره‌ها")
@@ -1021,7 +1056,7 @@ function renderDiscounts(head, discountList) {
             <span class="eyebrow">${esc(head.eyebrow)}</span>
             <h2>${esc(head.empty_title)}</h2>
             <p>${esc(head.empty_text)}</p>
-            <a class="btn btn-gold" href="${esc(head.cta.link)}" target="_blank" rel="noopener">${teleSvg} ${esc(head.cta.label)}</a>
+            <a class="btn btn-gold" href="${esc(tgHref(head.cta.link))}" target="_blank" rel="noopener">${teleSvg} ${esc(head.cta.label)}</a>
           </div>
         </div>
       </div>
@@ -1106,7 +1141,7 @@ function renderJoin(j) {
         <div class="join-band reveal">
           <h2>${esc(j.title)}</h2>
           <p>${esc(j.text)}</p>
-          <a class="btn btn-gold" href="${esc(j.cta.link)}" target="_blank" rel="noopener">${esc(j.cta.label)}</a>
+          <a class="btn btn-gold" href="${esc(tgHref(j.cta.link))}" target="_blank" rel="noopener">${esc(j.cta.label)}</a>
         </div>
       </div>
     </section>`;
@@ -1145,6 +1180,8 @@ const { renderAnnPage, renderCoursePage } = require("./ann-page")({
   kanonhaList,
   anjomanhaList,
   newsOrg,
+  newsOrgs,
+  tgHref,
   assetVer: ASSET_VER,
   ads: ads,
   open,

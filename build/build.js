@@ -54,8 +54,11 @@ const allNews = fs
   .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 const newsForOrg = (slug, orgKind) =>
   allNews.filter((n) => {
-    const key = orgKind === "anjoman" ? n.anjoman : n.kanon;
-    return key && key === slug;
+    const key = orgKind === "anjoman" ? "anjoman" : "kanon";
+    const listKey = orgKind === "anjoman" ? "co_anjomans" : "co_kanons";
+    const direct = n[key] === slug;
+    const listed = Array.isArray(n[listKey]) && n[listKey].some((x) => x && x[key] === slug);
+    return direct || listed;
   });
 
 const esc = (s) =>
@@ -64,13 +67,12 @@ const esc = (s) =>
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-const TELE_URL = site.telegram_url || "https://t.me/PlatformSem";
-const ABS_URI = /^(https?:|mailto:|tel:)/i;
-const teleSafe = (t) => (t && ABS_URI.test(t) ? t : "");
+/* لینک تلگرام طوری که مستقیم در اپ باز شود (tg://resolve?domain=…) */
+const { escA, orgLogo, orgImage, newsOrg, tgHref } = require("./org");
+const TELE_URL = tgHref(site.telegram_url) || "https://t.me/PlatformSem";
+const ABS_URI = /^(https?:|mailto:|tel:|tg:)/i;
+const teleSafe = (t) => (t && ABS_URI.test(t) ? tgHref(t) : "");
 const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L6.74 13.3 2.64 12c-.88-.25-.89-.86.2-1.3L20.03 4.7c.73-.33 1.43.18 1.15 1.3l-3.7 17.42c-.25 1.16-.95 1.44-1.92.9l-5.29-3.9-2.55 2.2c-.29.28-.53.46-1.1.46l.32-4.9z"/></svg>`;
-
-/* لوگو/نشان جایگزین مشترک با صفحات فهرست */
-const { escA, orgLogo, orgImage, newsOrg } = require("./org");
 
 const navLinks = (prefix) =>
   site.nav
@@ -116,7 +118,7 @@ function renderHeader(prefix) {
         <button class="nav-bell notif-bell" type="button" aria-label="اعلان‌ها" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </button>
-        <a class="btn btn-navy btn-sm nav-cta" href="${esc(site.cta.link)}" target="_blank" rel="noopener">${esc(site.cta.label)}</a>
+        <a class="btn btn-navy btn-sm nav-cta" href="${esc(tgHref(site.cta.link))}" target="_blank" rel="noopener">${esc(site.cta.label)}</a>
         <button class="burger" aria-label="باز کردن منو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       </nav>
     </div>
@@ -166,7 +168,7 @@ function renderFooter(prefix) {
           <p>${esc(f.about)}</p>
           <a class="foot-tele" href="${esc(TELE_URL)}" target="_blank" rel="noopener">${teleSvg} کانال تلگرام پلتفرم</a>
         </div>
-        <div class="foot-col">
+        <div class="foot-col foot-col--quick">
           <h4>${esc(f.quick_title)}</h4>
           <ul>
             ${footLinks(f.quick, prefix)}
@@ -410,8 +412,8 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
               </div>`;
   };
 
-  /* آمار — «رویداد/دوره/تخفیف» از اطلاعیه‌های مجموعه و «تعداد اعضا» از جدول اعضا */
-  const STAT_CATEGORIES = ["رویداد", "دوره", "تخفیف"];
+  /* آمار — «رویداد/دوره» از اطلاعیه‌های مجموعه، «دستاورد» از جدول دستاوردها و «اعضا» از جدول اعضا */
+  const STAT_CATEGORIES = ["رویداد", "دوره"];
   const catCounts = {};
   STAT_CATEGORIES.forEach((c) => (catCounts[c] = 0));
   myNews.forEach((n) => {
@@ -420,7 +422,8 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   });
   const statChips = [
     ...STAT_CATEGORIES.map((c) => ({ n: catCounts[c], l: c })),
-    { n: members.length, l: "تعداد اعضا" }
+    { n: achievements.length, l: "دستاورد" },
+    { n: members.length, l: "اعضا" }
   ];
   const statsChipsHtml = `<ul class="op-cat-chips">
               ${statChips.map((s) => `<li class="${s.n ? "" : "is-zero"}"><b>${faNum(s.n)}</b><span>${esc(s.l)}</span></li>`).join("")}

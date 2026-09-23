@@ -85,6 +85,8 @@ module.exports = function createAnnRenderer(ctx) {
     kanonhaList = [],
     anjomanhaList = [],
     newsOrg,
+    newsOrgs,
+    tgHref,
     assetVer = "",
     ads = null
   } = ctx;
@@ -228,13 +230,20 @@ module.exports = function createAnnRenderer(ctx) {
     return `<img${cls ? ` class="${cls}${shape}"` : shape ? ` class="${shape.trim()}"` : ""} src="${escA(url)}" alt="${escA(alt)}"${attrs} loading="${eager ? "eager" : "lazy"}" decoding="async">`;
   }
 
-  /* =============== تشکل مرجع و لینک‌ها =============== */
+  /* =============== تشکل‌های مرجع و لینک‌ها =============== */
   function orgFor(n) {
+    if (typeof newsOrgs === "function") {
+      return newsOrgs(n, kanonhaList, anjomanhaList).map((o) => {
+        const all = o.base === "kanonha" ? kanonhaList : anjomanhaList;
+        const item = (all || []).find((x) => x && x.slug === o.slug) || null;
+        return { ...o, item, href: "../" + o.base + "/" + encodeURI(o.slug) + ".html" };
+      });
+    }
     const o = typeof newsOrg === "function" ? newsOrg(n, kanonhaList, anjomanhaList) : null;
-    if (!o) return null;
+    if (!o) return [];
     const all = o.base === "kanonha" ? kanonhaList : anjomanhaList;
     const item = all.find((x) => x && x.slug === o.slug) || null;
-    return { ...o, item, href: "../" + o.base + "/" + encodeURI(o.slug) + ".html" };
+    return [{ ...o, item, href: "../" + o.base + "/" + encodeURI(o.slug) + ".html" }];
   }
   /* لینک امن و داخلی/بیرونی‌شده برای دکمه‌ها */
   function ctaHref(link) {
@@ -254,7 +263,7 @@ module.exports = function createAnnRenderer(ctx) {
       if (href && String(c.label || "").trim()) {
         out.push({
           label: String(c.label).trim(),
-          href,
+          href: c && c.icon === "telegram" ? tgHref(href) : href,
           style: ["gold", "navy", "ghost", "tele", "light"].indexOf(c.style) >= 0 ? c.style : "navy",
           external: ABS_URI.test(href),
           ico: c.icon || ""
@@ -784,7 +793,9 @@ module.exports = function createAnnRenderer(ctx) {
     }
     rows.push(row("tag", "دسته", n.category || "خبر", "../ettelaieh.html?cat=" + encodeURIComponent(n.category || "")));
     if (n.author) rows.push(row("edit", "منتشرکننده", n.author));
-    if (org) rows.push(row(org.kind === "کانون" ? "users" : "book", org.kind, org.name, org.href));
+    if (org && org.length) {
+      org.forEach((o) => rows.push(row(o.kind === "کانون" ? "users" : "book", o.kind + " برگزارکننده", o.name, o.href)));
+    }
     const body = rows.filter(Boolean).join("");
     if (!body) return "";
     return `<section class="ap-card ap-card--kf" aria-labelledby="ap-kf-h">
@@ -822,14 +833,19 @@ module.exports = function createAnnRenderer(ctx) {
       </section>`;
   }
 
-  function sideOrg(n, org) {
-    if (!org) return "";
-    const logo = org.item && org.item.slug ? orgLogo(org.item, "../", "ap-org-img", "ap-org-mono") : "";
-    return `<section class="ap-card ap-card--org">
-        <a class="ap-org" href="${escA(org.href)}">
+  function sideOrg(n, orgs) {
+    if (!orgs || !orgs.length) return "";
+    const cards = orgs
+      .map((org) => {
+        const logo = org.item && org.item.slug ? orgLogo(org.item, "../", "ap-org-img", "ap-org-mono") : "";
+        return `<a class="ap-org" href="${escA(org.href)}">
           <span class="ap-org-logo">${logo}</span>
           <span class="ap-org-txt"><small>${esc(org.kind)} برگزارکننده</small><b>${esc(org.name)}</b><span>مشاهدهٔ پروفایل و فعالیت‌ها ${ico("chev", "ap-i-xs")}</span></span>
-        </a>
+        </a>`;
+      })
+      .join("\n        ");
+    return `<section class="ap-card ap-card--org">
+        ${cards}
       </section>`;
   }
 
@@ -870,7 +886,10 @@ module.exports = function createAnnRenderer(ctx) {
     return arr.map((h) => `<span class="ap-chip is-hashtag" role="button" tabindex="0" data-search="#${escA(h)}">#${esc(h)}</span>`).join("\n        ");
   }
 
-  function chipRow(n, org, st) {
+  function chipRow(n, orgs, st) {
+    const orgChips = (Array.isArray(orgs) ? orgs : [])
+      .map((org) => `<a class="ap-chip is-org" href="${escA(org.href)}">${ico(org.kind === "کانون" ? "users" : "book", "ap-i-xs")} ${esc(org.name)}</a>`)
+      .join("");
     return `<div class="ap-chips">
         ${
           n.badge
@@ -879,7 +898,7 @@ module.exports = function createAnnRenderer(ctx) {
         }
         <span class="ap-chip is-cat">${CAT_EMOJI[String(n.category || "").trim()] || "📰"} ${esc(n.category || "خبر")}</span>
         ${st ? `<span class="ap-chip is-status is-${st.key}">${ico(st.key === "past" ? "check" : "bell", "ap-i-xs")} ${esc(st.label)}</span>` : ""}
-        ${org ? `<a class="ap-chip is-org" href="${escA(org.href)}">${ico(org.kind === "کانون" ? "users" : "book", "ap-i-xs")} ${esc(org.name)}</a>` : ""}
+        ${orgChips}
         ${hashChips(n.hashtags)}
       </div>`;
   }
@@ -953,7 +972,9 @@ module.exports = function createAnnRenderer(ctx) {
     const scored = pool
       .map((x) => {
         let score = 0;
-        if (org && ((org.base === "kanonha" && x.kanon === org.slug) || (org.base === "anjomanha" && x.anjoman === org.slug))) score += 3;
+        const sameOrg = (x) =>
+        Array.isArray(org) && org.some((o) => (o.base === "kanonha" && x.kanon === o.slug) || (o.base === "anjomanha" && x.anjoman === o.slug));
+      if (sameOrg(x)) score += 3;
         if (x.category && x.category === n.category) score += 2;
         const tags = Array.isArray(n.hashtags) ? n.hashtags : [];
         const xt = Array.isArray(x.hashtags) ? x.hashtags : [];
@@ -1047,7 +1068,7 @@ module.exports = function createAnnRenderer(ctx) {
       keywords: tags.length ? tags.join("، ") : undefined,
       author: n.author
         ? { "@type": "Person", name: n.author }
-        : { "@type": "Organization", name: org ? org.name : BRAND },
+        : { "@type": "Organization", name: org && org.length ? org[0].name : BRAND },
       publisher: {
         "@type": "Organization",
         name: BRAND,
@@ -1086,7 +1107,7 @@ module.exports = function createAnnRenderer(ctx) {
         location: (e.location || e.address) && String(e.mode || "") !== "آنلاین"
           ? { "@type": "Place", name: e.location || e.address, address: e.address || e.location }
           : { "@type": "VirtualLocation", url: canonical },
-        organizer: { "@type": "Organization", name: org ? org.name : BRAND, url: org ? absUrl(org.href.replace("../", "")) : absUrl("index.html") },
+        organizer: { "@type": "Organization", name: org && org.length ? org[0].name : BRAND, url: org && org.length ? absUrl((org[0].href || "").replace("../", "")) : absUrl("index.html") },
         offers:
           e.fee || e.registration_url
             ? {
@@ -1234,7 +1255,7 @@ module.exports = function createAnnRenderer(ctx) {
             ${n.contact.name ? `<li>${ico("info", "ap-i-sm")} ${esc(n.contact.name)}</li>` : ""}
             ${n.contact.phone ? `<li>${ico("phone", "ap-i-sm")} <a href="tel:${escA(telHref(n.contact.phone))}" dir="ltr">${esc(n.contact.phone)}</a></li>` : ""}
             ${n.contact.email ? `<li>${ico("mail", "ap-i-sm")} <a href="mailto:${escA(n.contact.email)}" dir="ltr">${esc(n.contact.email)}</a></li>` : ""}
-            ${n.contact.telegram ? `<li>${icoFill("telegram", "ap-i-sm")} <a href="${escA(/^https?:/.test(n.contact.telegram) ? n.contact.telegram : "https://t.me/" + String(n.contact.telegram).replace(/^@/, ""))}" target="_blank" rel="noopener" dir="ltr">${esc(n.contact.telegram)}</a></li>` : ""}
+            ${n.contact.telegram ? `<li>${icoFill("telegram", "ap-i-sm")} <a href="${escA(tgHref(/^https?:/.test(n.contact.telegram) ? n.contact.telegram : "https://t.me/" + String(n.contact.telegram).replace(/^@/, "")))}" target="_blank" rel="noopener" dir="ltr">${esc(n.contact.telegram)}</a></li>` : ""}
           </ul>
         </section>`
       : "";
@@ -1334,7 +1355,7 @@ module.exports = function createAnnRenderer(ctx) {
     const rawLink = safeLink(c.link);
     if (rawLink && !/^\.?\/?amoozesh\.html$/i.test(rawLink)) {
       if (ABS_URI.test(rawLink)) {
-        return { label: "ثبت‌نام و رزرو دوره", href: rawLink, style: "gold", external: true, ico: "telegram" };
+        return { label: "ثبت‌نام و رزرو دوره", href: tgHref(rawLink), style: "gold", external: true, ico: "telegram" };
       }
       return { label: "ثبت‌نام و رزرو دوره", href: "../" + rawLink.replace(/^\.\//, ""), style: "gold", external: false, ico: "" };
     }

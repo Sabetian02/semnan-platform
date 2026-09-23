@@ -170,7 +170,7 @@
   border: 1px solid var(--line);
   border-radius: 26px;
   padding: 32px 36px 30px;
-  margin-top: -78px;
+  margin-top: 26px;
   box-shadow: var(--ap-shadow-lg), 0 0 0 1px rgba(245, 196, 0, 0.07);
   position: relative;
   overflow: hidden;
@@ -2294,7 +2294,7 @@
   .ap-topcover + .ap-head .container {
     border-radius: 18px;
     padding: 20px 18px 18px;
-    margin-top: -38px;
+    margin-top: 18px;
   }
   .ap-head .ap-title {
     font-size: clamp(1.25rem, 5.4vw, 1.6rem);
@@ -2911,7 +2911,7 @@
   }
   .ap-topcover + .ap-head .container {
     padding: 26px 22px 24px;
-    margin-block-start: -64px;
+    margin-block-start: 20px;
   }
   .ap-title {
     font-size: clamp(1.35rem, 6.4vw, 1.7rem);

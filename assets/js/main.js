@@ -61,6 +61,7 @@
     var cards = Array.prototype.slice.call(list.children);
     var search = wrap.querySelector("[data-lp-search]");
     var catGrp = wrap.querySelector("[data-lp-cat]");
+    var orgGrp = wrap.querySelector("[data-lp-org]");
     var priceGrp = wrap.querySelector("[data-lp-price]");
     var sortGrp = wrap.querySelector("[data-lp-sort]");
     var empty = wrap.querySelector("[data-lp-empty]");
@@ -83,11 +84,16 @@
     function apply() {
       var q = normTxt(search ? search.value : "");
       var cat = grpVal(catGrp);
+      var org = grpVal(orgGrp);
       var pr = grpVal(priceGrp);
       var sort = grpVal(sortGrp);
       var visible = cards.filter(function (card) {
         if (q && normTxt(card.getAttribute("data-search")).indexOf(q) === -1) return false;
         if (cat && card.getAttribute("data-cat") !== cat) return false;
+        if (org) {
+          var o = String(card.getAttribute("data-orgs") || "");
+          if (o.split(" ").indexOf(org) === -1) return false;
+        }
         if (pr && card.getAttribute("data-price") !== pr) return false;
         return true;
       });
@@ -112,7 +118,7 @@
       var n = visible.length;
       document.querySelectorAll("[data-lp-count]").forEach(function (el) { el.textContent = faDigitsN(n); });
       if (empty) empty.hidden = n !== 0;
-      document.querySelectorAll("[data-lp-reset]").forEach(function (b) { b.hidden = !(q || cat || pr); });
+      document.querySelectorAll("[data-lp-reset]").forEach(function (b) { b.hidden = !(q || cat || org || pr); });
       wrap.querySelectorAll(".lp-chip").forEach(function (chip) {
         var inp = chip.querySelector("input");
         chip.classList.toggle("is-on", !!(inp && inp.checked));
@@ -120,13 +126,14 @@
     }
 
     if (search) search.addEventListener("input", apply);
-    [catGrp, priceGrp, sortGrp].forEach(function (grp) {
+    [catGrp, orgGrp, priceGrp, sortGrp].forEach(function (grp) {
       if (grp) grp.addEventListener("change", apply);
     });
     document.querySelectorAll("[data-lp-reset]").forEach(function (b) {
       b.addEventListener("click", function () {
         if (search) search.value = "";
         grpReset(catGrp);
+        grpReset(orgGrp);
         grpReset(priceGrp);
         grpReset(sortGrp);
         apply();
@@ -158,6 +165,7 @@
       var q = p.get("q") || p.get("search") || "";
       if (q && search) search.value = q;
       pickRadio(catGrp, p.get("cat") || p.get("category") || "");
+      pickRadio(orgGrp, p.get("org") || "");
       pickRadio(sortGrp, p.get("sort") || "");
       pickRadio(priceGrp, p.get("price") || "");
     })();

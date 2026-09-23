@@ -26,7 +26,7 @@ for (const file of htmls) {
   let m;
   while ((m = re.exec(src))) {
     const raw = m[1];
-    if (/^(https?:|mailto:|tel:|data:)/.test(raw)) continue;
+    if (/^(https?:|mailto:|tel:|data:|tg:)/.test(raw)) continue;
     let decoded = raw;
     try { decoded = decodeURIComponent(raw); } catch (e) {}
     const clean = decoded.split("?")[0].replace(/\/+$/, "");
@@ -37,22 +37,22 @@ for (const file of htmls) {
       problems++;
     }
   }
-  // count telegram brand mentions
-  const tg = src.match(/t\.me\/PlatformSem/g);
+  // count telegram brand mentions (web or app scheme)
+  const tg = src.match(/(?:t\.me|tg:\/\/resolve\?domain=)\/?(PlatformSem(?:[?#].*)?)/g);
   if (tg) teleCount += tg.length;
   tg && tg.forEach(() => { teleSeen[rel] = (teleSeen[rel] || 0) + 1; });
 }
 
 console.log("\nScanned", htmls.length, "HTML files");
 console.log("Broken local links:", problems);
-console.log("t.me/PlatformSem references:", teleCount, "across", Object.keys(teleSeen).length, "pages");
+console.log("Telegram PlatformSem references:", teleCount, "across", Object.keys(teleSeen).length, "pages");
 
 // check telegram channel presence in profile pages
 const profileFiles = htmls.filter((f) => /(kanonha|anjomanha)\\/.test(f));
 let missing = 0;
 for (const f of profileFiles) {
   const src = fs.readFileSync(f, "utf8");
-  if (!/https:\/\/t\.me\/\S+/.test(src)) {
+  if (!/https:\/\/t\.me\/\S+|tg:\/\/resolve\?domain=\S+/.test(src)) {
     console.log("✖ No telegram link in", path.relative(ROOT, f));
     missing++;
   }
