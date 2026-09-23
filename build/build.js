@@ -304,17 +304,6 @@ const isRecent = (n) => new Date(n.date || 0).getTime() >= Date.now() - LAST_MON
 /* ---------- Profile page ----------
    قالب واحد پروفایل کانون/انجمن: هویت، معرفی، درباره، فعالیت‌ها، رویدادها،
    دوره‌ها و بخش‌های اختیاری (افتخارات/تیم/گالری) فقط وقتی داده وجود دارد. */
-function hashChipsHtml(list) {
-  const arr = (Array.isArray(list) ? list : [])
-    .map((h) => String(h || "").trim().replace(/^#+/, ""))
-    .filter(Boolean)
-    .slice(0, 8);
-  if (!arr.length) return "";
-  return `<div class="op-hashtags">${arr
-    .map((h) => `<span class="hash-chip" role="button" tabindex="0" data-search="#${escA(h)}">#${esc(h)}</span>`)
-    .join("")}</div>`;
-}
-
 function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const tele = teleSafe(item.telegram);
   const joinHref = tele || TELE_URL;
@@ -679,7 +668,6 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
           <div class="op-hero-txt">
             <span class="op-type">${esc(kindShort)} · دانشگاه سمنان</span>
             <h1>${esc(item.name)}</h1>
-            ${hashChipsHtml(item.hashtags)}
             <div class="op-hero-actions">
               <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${esc(joinLabel)}</a>
               ${recentNews.length ? `<a class="btn btn-outline-light" href="#flash">فعالیت‌های ماه اخیر</a>` : myNews.length ? `<a class="btn btn-outline-light" href="#news">اطلاعیه‌ها</a>` : ""}

@@ -2695,10 +2695,7 @@ body.has-search { overflow: hidden; }
 .sr-tag { font-size: 11px; color: var(--navy); background: rgba(16,42,113,.08); border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; }
 .site-search-empty { padding: 22px; text-align: center; color: var(--muted); font-size: 14px; }
 /* چیپ هشتگ */
-.ap-chip.is-hashtag, .hash-chip { cursor: pointer; user-select: none; }
-.hash-chip { display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; color: var(--navy); background: var(--gold-soft); border: 1px solid rgba(16,42,113,.16); border-radius: 999px; padding: 4px 12px; transition: transform .12s ease, background .12s ease; }
-.hash-chip:hover { background: var(--gold); transform: translateY(-1px); }
-.op-hashtags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.ap-chip.is-hashtag { cursor: pointer; user-select: none; }
 @media (max-width: 860px) {
   .site-search { padding: 64px 10px 16px; }
   .sr-txt b { font-size: 13px; }
