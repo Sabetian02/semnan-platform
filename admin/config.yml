@@ -910,6 +910,18 @@ collections:
       - { label: تلگرام, name: telegram, widget: string, required: false }
       - { label: درباره, name: desc, widget: text, required: true }
       - { label: تگ‌ها / هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "هر کلمه را تایپ و Enter بزن؛ با کلیک روی هر تگ، همان کلمه در جستجو می‌شود" }
+      - label: دستاوردها
+        name: achievements
+        widget: list
+        required: false
+        summary: "{{fields.title}} — {{fields.level}}"
+        fields:
+          - { label: عنوان, name: title, widget: string, required: true }
+          - { label: سطح, name: level, widget: select, options: ["دانشگاهی", "استانی", "ملی", "بین‌المللی"] }
+          - { label: جشنواره / رقابت, name: event, widget: string, required: false }
+          - { label: جایگاه, name: rank, widget: string, required: false }
+          - { label: سال, name: year, widget: string, required: false }
+          - { label: توضیح, name: desc, widget: text, required: false }
       - label: اعضا
         name: members
         widget: list
@@ -944,6 +956,31 @@ collections:
       - { label: تلگرام, name: telegram, widget: string, required: false }
       - { label: درباره, name: desc, widget: text, required: true }
       - { label: تگ‌ها / هشتگ‌ها, name: hashtags, widget: list, required: false, value_type: string, hint: "هر کلمه را تایپ و Enter بزن؛ با کلیک روی هر تگ، همان کلمه در جستجو می‌شود" }
+      - label: نشریات
+        name: publications
+        widget: list
+        required: false
+        summary: "{{fields.title}}"
+        fields:
+          - { label: عنوان, name: title, widget: string, required: true }
+          - { label: نوع, name: type, widget: select, options: ["نشریه", "مجله", "گزارش", "مقاله", "خبرنامه"] }
+          - { label: شماره / دوره, name: issue, widget: string, required: false }
+          - { label: سال, name: year, widget: string, required: false }
+          - { label: تصویر جلد, name: image, widget: image, required: false }
+          - { label: لینک, name: link, widget: string, required: false }
+          - { label: توضیح, name: desc, widget: text, required: false }
+      - label: دستاوردها
+        name: achievements
+        widget: list
+        required: false
+        summary: "{{fields.title}} — {{fields.level}}"
+        fields:
+          - { label: عنوان, name: title, widget: string, required: true }
+          - { label: سطح, name: level, widget: select, options: ["دانشگاهی", "استانی", "ملی", "بین‌المللی"] }
+          - { label: جشنواره / رقابت, name: event, widget: string, required: false }
+          - { label: جایگاه, name: rank, widget: string, required: false }
+          - { label: سال, name: year, widget: string, required: false }
+          - { label: توضیح, name: desc, widget: text, required: false }
       - label: اعضا
         name: members
         widget: list

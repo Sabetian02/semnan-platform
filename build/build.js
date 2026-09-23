@@ -247,6 +247,14 @@ const OP_ICONS = {
 const opIco = (name, cls) =>
   `<svg class="${cls || "op-ico"}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${OP_ICONS[name] || OP_ICONS.spark}</svg>`;
 
+/* ایموجی مدال/کاپ دستاورد — بر پایهٔ سطح رقابت */
+const ACH_MEDALS = {
+  "بینالمللی": "🏆",
+  "ملی": "🥇",
+  "استانی": "🥈",
+  "دانشگاهی": "🥉"
+};
+
 /* آیکن فعالیت بر پایهٔ کلیدواژه — صرفاً تزئینی، بدون افزودن دادهٔ ساختگی */
 const ACT_ICON_RULES = [
   [/(پادکست|رادیو|تیزر|رسانه|مصاحبه|گویند|صدا|ضبط)/, "mic"],
@@ -313,6 +321,14 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const gallery = (Array.isArray(item.gallery) ? item.gallery : [])
     .map((g) => (g && typeof g === "object" ? g : { image: g }))
     .filter((g) => g && String(g.image || "").trim());
+  /* نشریات — عنوان، نوع، شماره/سال، جلد و لینک (ویژهٔ انجمن‌ها) */
+  const publications = (Array.isArray(item.publications) ? item.publications : [])
+    .map((p) => (p && typeof p === "object" ? p : { title: p }))
+    .filter((p) => p && String(p.title || "").trim());
+  /* دستاوردها — عنوان، سطح، رقابت/جشنواره، جایگاه، سال و توضیح */
+  const achievements = (Array.isArray(item.achievements) ? item.achievements : [])
+    .map((a) => (a && typeof a === "object" ? a : { title: a }))
+    .filter((a) => a && String(a.title || "").trim());
   const aboutLong = String(item.desc || "").length > 420;
 
   const secHead = (ico, id, title, extra) =>
@@ -350,6 +366,50 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
     })
     .filter(Boolean);
 
+  /* کارت نشریه — جلد/آیکن + عنوان + نوع + شماره/سال، قابل لینک شدن */
+  const pubCard = (p, i) => {
+    const cover = orgImage(p.image, prefix, `جلد ${p.title || faNum(i + 1)}`);
+    const visual = cover
+      ? `<span class="op-pub-cover">${cover}</span>`
+      : `<span class="op-pub-cover op-pub-cover-ico" aria-hidden="true">${opIco("doc", "op-pub-cover-svg")}</span>`;
+    const metaBits = [
+      p.type ? `<span class="op-pub-type">${esc(p.type)}</span>` : "",
+      p.issue ? `<span class="op-pub-meta">${opIco("book", "op-pub-meta-ico")} ${esc(p.issue)}</span>` : "",
+      p.year ? `<span class="op-pub-meta">${opIco("calendar", "op-pub-meta-ico")} ${esc(p.year)}</span>` : ""
+    ].filter(Boolean);
+    const inner = `${visual}<span class="op-pub-body">
+                ${metaBits.join("")}
+                <b class="op-pub-title">${esc(p.title)}</b>
+                ${p.desc ? `<span class="op-pub-desc">${esc(p.desc)}</span>` : ""}
+                ${p.link ? `<span class="op-pub-link">${esc(p.link_label || "مطالعه نشریه")} ${opIco("arrow", "op-pub-link-ico")}</span>` : ""}
+              </span>`;
+    return p.link
+      ? `<a class="op-pub" href="${escA(p.link)}" target="_blank" rel="noopener">${inner}</a>`
+      : `<div class="op-pub">${inner}</div>`;
+  };
+
+  /* کارت دستاورد — کاپ/مدال با سطح (بین‌المللی/ملی/استانی/دانشگاهی) */
+  const achMedal = (lvl) => {
+    const key = String(lvl || "").replace(/\s+/g, "");
+    return ACH_MEDALS[key] || ACH_MEDALS["دانشگاهی"];
+  };
+  const achCard = (a) => {
+    const lvl = String(a.level || "").trim() || "دانشگاهی";
+    return `<div class="op-ach" data-lvl="${escA(lvl)}">
+                <span class="op-ach-medal" aria-hidden="true">${achMedal(lvl)}</span>
+                <div class="op-ach-body">
+                  <span class="op-ach-head">
+                    ${lvl ? `<span class="op-ach-lvl">${esc(lvl)}</span>` : ""}
+                    ${a.year ? `<time class="op-ach-year">${esc(a.year)}</time>` : ""}
+                  </span>
+                  <b class="op-ach-title">${esc(a.title)}</b>
+                  ${a.event ? `<span class="op-ach-event">${opIco("trophy", "op-ach-event-ico")} ${esc(a.event)}</span>` : ""}
+                  ${a.rank ? `<span class="op-ach-rank">${esc(a.rank)}</span>` : ""}
+                  ${a.desc ? `<p class="op-ach-desc">${esc(a.desc)}</p>` : ""}
+                </div>
+              </div>`;
+  };
+
   /* آمار — «رویداد/دوره/تخفیف» از اطلاعیه‌های مجموعه و «تعداد اعضا» از جدول اعضا */
   const STAT_CATEGORIES = ["رویداد", "دوره", "تخفیف"];
   const catCounts = {};
@@ -374,6 +434,8 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const tocHrefs = [
     myNews.length ? ["#news", "اطلاعیه‌ها"] : null,
     courseNews.length ? ["#classes", "دوره‌ها و کارگاه‌ها"] : null,
+    publications.length ? ["#publications", "نشریات"] : null,
+    achievements.length ? ["#achievements", "دستاوردها"] : null,
     members.length ? ["#members", "فهرست اعضا"] : null,
     galleryImgs.length ? ["#gallery", "گالری تصاویر"] : null
   ].filter(Boolean);
@@ -398,6 +460,8 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const tabs = [
     { key: "about", label: "درباره", icon: "info", n: 0 },
     hasActivity ? { key: "activity", label: "فعالیت‌ها", icon: "spark", n: myNews.length } : null,
+    publications.length ? { key: "publications", label: "نشریات", icon: "doc", n: publications.length } : null,
+    achievements.length ? { key: "achievements", label: "دستاوردها", icon: "award", n: achievements.length } : null,
     members.length ? { key: "members", label: "اعضا", icon: "users", n: members.length } : null,
     galleryImgs.length ? { key: "gallery", label: "گالری", icon: "image", n: galleryImgs.length } : null
   ].filter(Boolean);
@@ -483,6 +547,31 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
               ${courseNews.map(archiveItem).join("\n              ")}
             </ul>
             <nav class="op-pager" data-pgr-nav hidden aria-label="صفحه‌بندی دوره‌ها و کارگاه‌ها"></nav>
+          </div>
+        </section>`);
+  }
+
+  /* نشریات — جلدها و شماره‌های انجمن (مخصوص انجمن‌های علمی) */
+  if (publications.length) {
+    sections.push(`<section class="op-sec" id="publications" data-op-tab="publications" aria-labelledby="op-pub-h">
+          ${secHead("doc", "op-pub-h", "نشریات", count(publications.length, "نشریه"))}
+          <div class="op-sec-body">
+            <p class="op-sec-note">نشریات، گزارش‌ها و مقالات ${item.short} برای مطالعهٔ آنلاین در دسترس است.</p>
+            <ul class="op-pubs">
+              ${publications.map(pubCard).join("\n              ")}
+            </ul>
+          </div>
+        </section>`);
+  }
+
+  /* دستاوردها — کاپ‌ها و مدال‌های جشنواره‌ها (رویش، حرکت و…) */
+  if (achievements.length) {
+    sections.push(`<section class="op-sec" id="achievements" data-op-tab="achievements" aria-labelledby="op-ach-h">
+          ${secHead("award", "op-ach-h", "دستاوردها", count(achievements.length, "دستاورد"))}
+          <div class="op-sec-body">
+            <ul class="op-achs">
+              ${achievements.map(achCard).join("\n              ")}
+            </ul>
           </div>
         </section>`);
   }
