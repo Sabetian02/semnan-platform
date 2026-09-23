@@ -1,4 +1,5 @@
 node_modules/
+.freebuff/
 .wrangler/
 worker/.wrangler/
 worker/.wrangler/state/
