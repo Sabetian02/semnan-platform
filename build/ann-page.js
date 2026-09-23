@@ -1529,8 +1529,6 @@ module.exports = function createAnnRenderer(ctx) {
     const price = String(c.price || "رایگان").trim();
 
     const chips = [];
-    chips.push(`<span class="ap-chip is-cat">${esc(c.icon || "🎓")} ${esc(c.category || "دوره")}</span>`);
-    chips.push(`<span class="ap-chip is-price">${ico("money", "ap-i-xs")} ${esc(price)}${/رایگان$/i.test(price) ? " 🎁" : ""}</span>`);
     chips.push(hashChips(Array.isArray(c.hashtags) && c.hashtags.length ? c.hashtags : []));
 
     const metaItems = [];
@@ -1555,11 +1553,9 @@ module.exports = function createAnnRenderer(ctx) {
           <span class="cp-hero-media-box">
             <img class="cp-hero-media-img" src="${escA(srcUrl(img, prefix))}" alt="${escA(c.title)}" loading="eager" decoding="async">
           </span>
-          <span class="cp-hero-media-tag">${ico("monitor", "ap-i-xs")} ${esc(c.platform_label || "دورهٔ آنلاین")}</span>
         </figure>`
       : `<figure class="cp-hero-media">
           <span class="cp-hero-media-box is-art"${artBg}><span class="ap-art-emoji cp-art-emoji">${esc(c.icon || "🎓")}</span></span>
-          <span class="cp-hero-media-tag">${ico("monitor", "ap-i-xs")} ${esc(c.platform_label || "دورهٔ آنلاین")}</span>
         </figure>`;
 
     const headInner = `
