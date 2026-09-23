@@ -247,13 +247,29 @@ const OP_ICONS = {
 const opIco = (name, cls) =>
   `<svg class="${cls || "op-ico"}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${OP_ICONS[name] || OP_ICONS.spark}</svg>`;
 
-/* ایموجی مدال/کاپ دستاورد — بر پایهٔ سطح رقابت */
-const ACH_MEDALS = {
-  "بینالمللی": "🏆",
-  "ملی": "🥇",
-  "استانی": "🥈",
-  "دانشگاهی": "🥉"
+/* فلز مدال دستاورد — طلا/نقره/برنز بر پایهٔ سطح رقابت */
+const ACH_METALS = {
+  "بینالمللی": "gold",
+  "ملی": "gold",
+  "استانی": "silver",
+  "دانشگاهی": "bronze"
 };
+
+/* مدال وکتوری ثابت — با متغیرهای رنگی --md-* که طلا/نقره/برنز را می‌سازد.
+   طرح یکسان برای همهٔ سطح‌ها؛ فقط رنگ فلز عوض می‌شود. */
+const ACH_MEDAL_SVG = `<svg class="op-ach-medal-svg" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
+              <g class="op-ach-shine-g"><rect class="op-ach-shine" x="-64" y="24" width="104" height="64" rx="10"/></g>
+              <path class="op-ach-rib op-ach-rib-top" d="M52 4 L46 40 L53 35 Z"/>
+              <path class="op-ach-rib op-ach-rib-top" d="M68 4 L74 40 L67 35 Z"/>
+              <circle class="op-ach-disc op-ach-disc-lo" cx="60" cy="56" r="47"/>
+              <circle class="op-ach-disc op-ach-disc-mid" cx="60" cy="56" r="42"/>
+              <circle class="op-ach-band" cx="60" cy="56" r="29" />
+              <path class="op-ach-star" d="M60 39 L63.82 49.74 L75.22 50.06 L66.18 57.01 L69.41 67.94 L60 61.5 L50.59 67.94 L53.82 57.01 L44.78 50.06 L56.18 49.74 Z"/>
+              <circle class="op-ach-dotring" cx="60" cy="56" r="34.5"/>
+              <path class="op-ach-rib op-ach-rib-lo" d="M38 100 h44 l7 23 -16 -6 -9 8 -9 -8 -16 6 z"/>
+              <path class="op-ach-rib op-ach-rib-mid" d="M45 100 h30 l-5 17 -10 8 -10 -8 z"/>
+              <ellipse class="op-ach-gleam" cx="45" cy="33" rx="15" ry="24"/>
+            </svg>`;
 
 /* آیکن فعالیت بر پایهٔ کلیدواژه — صرفاً تزئینی، بدون افزودن دادهٔ ساختگی */
 const ACT_ICON_RULES = [
@@ -388,24 +404,18 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
       : `<div class="op-pub">${inner}</div>`;
   };
 
-  /* کارت دستاورد — کاپ/مدال با سطح (بین‌المللی/ملی/استانی/دانشگاهی) */
-  const achMedal = (lvl) => {
-    const key = String(lvl || "").replace(/\s+/g, "");
-    return ACH_MEDALS[key] || ACH_MEDALS["دانشگاهی"];
-  };
+  /* کارت دستاورد — مدال وکتوری، با فلز طلا/نقره/برنز بر پایهٔ سطح */
   const achCard = (a) => {
     const lvl = String(a.level || "").trim() || "دانشگاهی";
-    return `<div class="op-ach" data-lvl="${escA(lvl)}">
-                <span class="op-ach-medal" aria-hidden="true">${achMedal(lvl)}</span>
+    const metal = ACH_METALS[lvl] || ACH_METALS["دانشگاهی"];
+    return `<div class="op-ach" data-metal="${escA(metal)}">
+                <span class="op-ach-medal" aria-hidden="true">${ACH_MEDAL_SVG}</span>
                 <div class="op-ach-body">
-                  <span class="op-ach-head">
-                    ${lvl ? `<span class="op-ach-lvl">${esc(lvl)}</span>` : ""}
-                    ${a.year ? `<time class="op-ach-year">${esc(a.year)}</time>` : ""}
-                  </span>
                   <b class="op-ach-title">${esc(a.title)}</b>
-                  ${a.event ? `<span class="op-ach-event">${opIco("trophy", "op-ach-event-ico")} ${esc(a.event)}</span>` : ""}
-                  ${a.rank ? `<span class="op-ach-rank">${esc(a.rank)}</span>` : ""}
-                  ${a.desc ? `<p class="op-ach-desc">${esc(a.desc)}</p>` : ""}
+                  <span class="op-ach-meta">
+                    ${lvl ? `<span class="op-ach-lvl">${opIco("award", "op-ach-lvl-ico")} سطح ${esc(lvl)}</span>` : ""}
+                    ${a.rank ? `<span class="op-ach-rank">${esc(a.rank)}</span>` : ""}
+                  </span>
                 </div>
               </div>`;
   };
