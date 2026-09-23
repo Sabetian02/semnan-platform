@@ -17,10 +17,37 @@ const escA = (s) => esc(s).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
 /* نگاشت اسلاگ → نام فایل لوگو در assets/images/SVG.
    هر تشکلی که لوگو ندارد، نشان جایگزین (مونوگرام) می‌گیرد. */
+const LOGO_DIR = "لوگو انجمن های علمی/";
 const LOGO_MAP = {
-  "hoghoogh-feqh": "لوگوی انجمن علمی حقوق و فقه.svg",
+  "zaban-farsi": LOGO_DIR + "انجمن زبان و ادبیات فارسی.svg",
+  "adyan-erfan": LOGO_DIR + "انجمن علمی ادیان و عرفان.svg",
+  "eghtesad": LOGO_DIR + "انجمن علمی اقتصاد.svg",
+  "hesabdari": LOGO_DIR + "انجمن علمی حسابداری.svg",
+  "dampezeshki": LOGO_DIR + "انجمن علمی دکتری دامپزشکی.svg",
+  "robotics-ai": LOGO_DIR + "انجمن علمی رباتیک و هوش مصنوعی.svg",
+  "ravanshenasi": LOGO_DIR + "انجمن علمی روانشناسی.svg",
+  "zaban-anglisi": LOGO_DIR + "انجمن علمی زبان و ادبیات انگلیسی دانشگاه سمنان.svg",
+  "zist-seloli": LOGO_DIR + "انجمن علمی زیست شناسی دانشگاه سمنان.svg",
+  "shahrsazi": LOGO_DIR + "انجمن علمی شهرسازی.svg",
+  "anjoman-sanaye-dasti": LOGO_DIR + "انجمن علمی صنایع دستی.svg",
+  "tarahi-parche": LOGO_DIR + "انجمن علمی طراحی پارچه.svg",
+  "olum-azmayeshgahi": LOGO_DIR + "انجمن علمی علوم آزمایشگاهی دامپزشکی.svg",
+  "aks-semnan": LOGO_DIR + "انجمن علمی عکاسی.svg",
+  "farsh": LOGO_DIR + "انجمن علمی فرش.svg",
+  "modiriat": LOGO_DIR + "انجمن علمی مدیریت.svg",
+  "memari": LOGO_DIR + "انجمن علمی معماری.svg",
+  "manabe-tabii": LOGO_DIR + "انجمن علمی منابع طبیعی.svg",
+  "mohandesi-barg": LOGO_DIR + "انجمن علمی مهندسی برق.svg",
+  "ie-semnan-uni": LOGO_DIR + "انجمن علمی مهندسی صنایع.svg",
+  "mavad-va-metallurgi": LOGO_DIR + "انجمن علمی مهندسی مواد و متالورژی.svg",
+  "naft-va-gaz": LOGO_DIR + "انجمن علمی مهندسی نفت.svg",
+  "mohandesi-kamyuter": LOGO_DIR + "انجمن علمی مهندسی کامپیوتر دانشگاه سمنان.svg",
+  "graphik": LOGO_DIR + "انجمن علمی گرافیک.svg",
+  "shimi": LOGO_DIR + "لوگو انجمن علمی شیمی.svg",
+  "mohandesi-mekanik": LOGO_DIR + "لوگو انجمن علمی مهندسی مکانیک.svg",
+  "hoghoogh-feqh": LOGO_DIR + "لوگوی انجمن علمی حقوق و فقه.svg",
   "govandegi-va-ecra": "لوگوی_کانون_فرهنگی_گویندگی_و_اجرا.svg",
-  "kooir-shenasi": "لوگو انجمن علمی کویرشناسی.svg"
+  "kooir-shenasi": LOGO_DIR + "لوگو انجمن علمی کویرشناسی.svg"
 };
 
 const LOGO_SUBDIR = "assets/images/SVG/";
