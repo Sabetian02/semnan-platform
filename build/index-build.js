@@ -43,7 +43,7 @@ const teleSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.
 
 /* لینک ایمن: URLهای مطلق (http/https/mailto/tel) یا مسیرهای داخلیِ موجود قبول می‌شوند؛
    هر مقدار زباله (اسپیس/فارسی/ناموجود) در محتوای CMS نباید publish را بشکند → به تلگرام برمی‌گردد. */
-const ABS_URI = /^(https?:|mailto:|tel:)/i;
+const ABS_URI = /^(https?:|mailto:|tel:|tg:)/i;
 const LOCAL_LINK = /^(#|\/?[\w.-]+\.html(?:#[A-Za-z0-9_-]*)?)/i;
 const safeLink = (link) => {
   if (!link) return "";
@@ -131,7 +131,7 @@ function renderHeaderN(prefix) {
 function renderFooterN(prefix) {
   const f = site.footer || {};
   const footLinks = (list) => (list || []).map(
-    (x) => `<li><a href="${hrefN(x.link, prefix)}">${esc(x.label)}</a></li>`
+    (x) => `<li><a href="${hrefN(tgHref(x.link), prefix)}">${esc(x.label)}</a></li>`
   ).join("\n            ");
   const teleUrl = tgHref(site.telegram_url || "https://t.me/PlatformSem");
   return `
@@ -178,7 +178,7 @@ function mdUrl(u, localPrefix) {
   if (localPrefix && /^[\w.\u0600-\u06FF-]+\.html(?:[?#].*)?$/i.test(s)) {
     return localPrefix + s.replace(/"/g, "%22").replace(/\s/g, "%20");
   }
-  return s.replace(/"/g, "%22").replace(/\s/g, "%20");
+  return tgHref(s).replace(/"/g, "%22").replace(/\s/g, "%20");
 }
 /* قالب‌بندی درون‌خطی — لینک/تصویر/کد جدا می‌شوند تا اسکیپ‌شدن به آن‌ها آسیب نزند */
 function inlineMd(raw, localPrefix) {

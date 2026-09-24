@@ -89,14 +89,14 @@ const mmLinks = (prefix) =>
 
 const href = (link, prefix) => {
   const l = esc(link);
-  if (/^(https?:|mailto:|tel:)/.test(link)) return l;
+  if (/^(https?:|mailto:|tel:|tg:)/.test(link)) return l;
   return prefix + l;
 };
 
 const footLinks = (list, prefix) =>
   list
     .map(
-      (n) => `<li><a href="${href(n.link, prefix)}">${esc(n.label)}</a></li>`
+      (n) => `<li><a href="${href(tgHref(n.link), prefix)}">${esc(n.label)}</a></li>`
     )
     .join("\n            ");
 
