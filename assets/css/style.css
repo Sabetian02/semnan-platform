@@ -1393,6 +1393,9 @@ img { max-width: 100%; display: block; }
   justify-content: space-between;
   gap: 8px;
 }
+.es-news-section .es-webinar-card-detail-avatar-container-wide {
+  justify-content: center;
+}
 .main-webinar-card-avatar-container { display: flex; align-items: center; }
 .wc-avatar {
   width: 30px; height: 30px;

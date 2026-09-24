@@ -766,7 +766,6 @@ const newsSlide = (n) => {
     ? `<img class="wc-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy">`
     : `<span class="wc-img wc-fallback" style="--c1:#102A71;--c2:#001840">${emoji}</span>`;
   const depth = "ettelaieh/" + n._slug + ".html";
-  const initial = esc(String(n.title || "خ").trim().charAt(0));
   return `
           <div class="swiper-slide" dir="rtl">
             <div class="es-main-webinar-card">
@@ -779,7 +778,6 @@ const newsSlide = (n) => {
                 <div class="webinarCard-content es__webinarCardMainContent">
                   <div class="webinarCard-title"><a href="${depth}"><h3>${esc(n.title)}</h3></a></div>
                   <div class="webinarCard-detail es-webinar-card-detail-avatar-container-wide">
-                    <div class="main-webinar-card-avatar-container"><span class="wc-avatar" aria-hidden="true">${initial}</span></div>
                     <div class="d-st1 m-w-56px wc-when" data-date="${esc(n.date || "")}"></div>
                   </div>
                 </div>

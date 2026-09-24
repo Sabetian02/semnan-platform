@@ -142,6 +142,22 @@
 .ap-topcover .ap-cover-img {
   border-radius: 0;
 }
+/* کاور اطلاعیه در صفحهٔ مجزای اطلاعیه: کوچک‌تر و مرکزی — الهام از باکس رسانه‌ای صفحهٔ دوره */
+.ap-topcover .ap-cover {
+  inline-size: fit-content;
+  max-inline-size: min(100%, 760px);
+  margin-inline: auto;
+}
+.ap-topcover .ap-cover-btn {
+  display: block;
+}
+.ap-topcover .ap-cover-img {
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: 100%;
+  max-block-size: 460px;
+  margin-inline: auto;
+}
 /* زیرنویس کاور: قرص شیشه‌ای شناور */
 .ap-topcover .ap-cover figcaption {
   display: table;
@@ -1792,6 +1808,11 @@
   border-color: var(--line);
   border-block-start: 3px solid var(--navy);
 }
+.ap-card--org .ap-org + .ap-org {
+  margin-block-start: 18px;
+  padding-block-start: 18px;
+  border-block-start: 1px dashed var(--line);
+}
 .ap-org {
   display: flex;
   align-items: center;
@@ -2917,6 +2938,61 @@
     font-size: clamp(1.35rem, 6.4vw, 1.7rem);
   }
 }
+
+/* موبایل: تایپوگرافی جمع‌وجورتر برای صفحات مجزای اطلاعیه و دوره */
+@media (max-width: 720px) {
+  .ap-lead {
+    font-size: 0.9rem;
+    line-height: 1.9;
+  }
+  .ap-block-h {
+    font-size: 1.12rem;
+  }
+  .ap-card-h {
+    font-size: 0.95rem;
+  }
+  .ap-kf li {
+    font-size: 0.85rem;
+  }
+  .ap-org-txt b {
+    font-size: 1rem;
+  }
+  .ap-org-txt span {
+    font-size: 0.78rem;
+  }
+  .ap-rich {
+    font-size: 0.94rem;
+    line-height: 1.95;
+  }
+  .ap-rich h2 {
+    font-size: 1.16rem;
+  }
+  .ap-rich h3 {
+    font-size: 1.05rem;
+  }
+  .ap-rich h4 {
+    font-size: 0.95rem;
+  }
+  .cp-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+  .cp-meta-item {
+    font-size: 0.8rem;
+  }
+  .cp-det i {
+    font-size: 0.82rem;
+  }
+  .cp-sched-title h4 {
+    font-size: 0.95rem;
+  }
+  .cp-tch-name {
+    font-size: 1.02rem;
+  }
+  .cp-prices {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 480px) {
   .ap-rich h3 {
     align-items: flex-start;
@@ -3197,8 +3273,8 @@
 .cp-hero-media { position: relative; margin: 0; }
 .cp-hero-media-box {
   display: block;
-  aspect-ratio: 16 / 10;
-  max-height: 410px;
+  width: 100%;
+  padding: 0;
   border-radius: 22px;
   overflow: hidden;
   box-shadow: var(--ap-shadow-lg);
@@ -3206,17 +3282,20 @@
   background:
     radial-gradient(420px 220px at 18% 0%, rgba(245, 196, 0, 0.22), transparent 60%),
     linear-gradient(135deg, var(--cp-a, #001840), var(--cp-b, #102a71));
+  cursor: zoom-in;
 }
 .cp-hero-media-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   display: block;
+  width: 100%;
+  height: auto;
 }
 .cp-hero-media-box.is-art {
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 16 / 10;
+  max-height: 410px;
+  cursor: default;
 }
 .cp-hero-media-tag {
   position: absolute;
@@ -3412,7 +3491,8 @@
 @media (max-width: 900px) {
   .cp-hero { grid-template-columns: 1fr; gap: 24px; }
   .cp-hero-media { order: -1; }
-  .cp-hero-media-box { max-height: 300px; aspect-ratio: 3 / 2; }
+  .cp-hero-media-box { max-height: none; aspect-ratio: auto; }
+  .cp-hero-media-box.is-art { max-height: 300px; aspect-ratio: 3 / 2; }
   .cp-det { flex: 1 1 46%; padding: 12px 14px; }
   .cp-det:first-child { border-inline-start: 0; }
   .cp-tab-panel[data-cp-tab-panel] { display: block !important; }

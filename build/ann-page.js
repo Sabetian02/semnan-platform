@@ -1571,9 +1571,9 @@ module.exports = function createAnnRenderer(ctx) {
     const img = pickImage(c);
     const heroMedia = img
       ? `<figure class="cp-hero-media">
-          <span class="cp-hero-media-box">
-            <img class="cp-hero-media-img" src="${escA(srcUrl(img, prefix))}" alt="${escA(c.title)}" loading="eager" decoding="async">
-          </span>
+          <button type="button" class="cp-hero-media-box" data-ap-gal="hero" data-src="${escA(srcUrl(img, prefix))}" data-cap="${escA(c.title || "")}" aria-label="بزرگ‌نمایی تصویر دوره">
+            ${figImg(img, prefix, c.title || "", "cp-hero-media-img", true)}
+          </button>
         </figure>`
       : `<figure class="cp-hero-media">
           <span class="cp-hero-media-box is-art"${artBg}><span class="ap-art-emoji cp-art-emoji">${esc(c.icon || "🎓")}</span></span>
