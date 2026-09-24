@@ -839,38 +839,70 @@ const courseSlide = (c, idx) => {
   const cover = img
     ? `<span class="cs-cover cs-cover--img" style="background-image:url('${escA(img)}')" aria-hidden="true"></span>`
     : `<span class="cs-cover" style="--c1:${escA(c.cover_a || "#102A71")};--c2:${escA(c.cover_b || "#001840")}" aria-hidden="true">${COURSE_ART_SVG}</span>`;
+  const emoji = CAT_EMOJI[c.category] || "🎓";
+  const flashCat = `${emoji} ${esc(c.category || "دوره")}`;
+  const flashCover = img
+    ? `<img class="wc-img" src="${escA(img)}" alt="${esc(c.title)}" loading="lazy">`
+    : `<span class="wc-img wc-fallback" style="--c1:${escA(c.cover_a || "#102A71")};--c2:${escA(c.cover_b || "#001840")}">${emoji}</span>`;
+  const flashOnCover = esc(c.lessons || c.subtitle || c.summary || "جزئیات دوره را مشاهده کنید");
   return `
           <div class="swiper-slide" dir="rtl">
-            <article class="main-page-slide-show-container">
-              <a class="main-page-slide-show-image-container" href="${detail}" id="slideshow_course_img_${idx}" aria-label="${esc(c.title)}">
-                ${cover}
-              </a>
-              <div class="main-page-slide-show-content-container">
-                <div class="main-page-slide-show-title-description-container">
-                  <div class="main-page-slide-show-title-container">
-                    <a href="${detail}" id="slideshow_course_title_${idx}">${esc(c.title)}</a>
+            <div class="cs-variant cs-desktop">
+              <article class="main-page-slide-show-container">
+                <a class="main-page-slide-show-image-container" href="${detail}" id="slideshow_course_img_${idx}" aria-label="${esc(c.title)}">
+                  ${cover}
+                </a>
+                <div class="main-page-slide-show-content-container">
+                  <div class="main-page-slide-show-title-description-container">
+                    <div class="main-page-slide-show-title-container">
+                      <a href="${detail}" id="slideshow_course_title_${idx}">${esc(c.title)}</a>
+                    </div>
+                    <div class="main-page-slide-show-description-container">${esc(c.summary || "")}</div>
                   </div>
-                  <div class="main-page-slide-show-description-container">${esc(c.summary || "")}</div>
+                  <div class="main-page-slide-show-detials-container">
+                    <div class="avatarBox avatarBox-lg">
+                      <div class="avatar-group is-webinar rtl">
+                        ${tphoto ? `<img class="avatar avatar--img" src="${escA(tphoto)}" alt="${escA(name)}" loading="lazy">` : `<span class="avatar" aria-hidden="true">${initial}</span>`}
+                        <span class="cs-teacher-name">${name}</span>
+                      </div>
+                    </div>
+                    <div class="main-page-slide-show-price-btn-container">
+                      <div class="main-page-slide-show-price-container">
+                        ${lessons}
+                        <div class="price main-slide-show-free-price">${esc(c.price || "رایگان")}</div>
+                      </div>
+                      <div class="main-page-slide-show-btn-container">
+                        <a class="eseminar-button eseminar-button--esmBtn-fill-gold eseminar-button--medium" href="${link}">ثبت‌نام دوره</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="main-page-slide-show-detials-container">
-                  <div class="avatarBox avatarBox-lg">
-                    <div class="avatar-group is-webinar rtl">
-                      ${tphoto ? `<img class="avatar avatar--img" src="${escA(tphoto)}" alt="${escA(name)}" loading="lazy">` : `<span class="avatar" aria-hidden="true">${initial}</span>`}
-                      <span class="cs-teacher-name">${name}</span>
-                    </div>
+              </article>
+            </div>
+            <div class="cs-variant cs-mobile es-main-webinar-card">
+              <article class="webinarCard">
+                <a class="webinarCard-cover" href="${detail}">
+                  ${flashCover}
+                  <span class="webinarCard-cover-onCover">${flashOnCover}</span>
+                </a>
+                <span class="wc-badge special-badge">${flashCat}</span>
+                <div class="webinarCard-content es__webinarCardMainContent">
+                  <div class="webinarCard-title"><a href="${detail}"><h3>${esc(c.title)}</h3></a></div>
+                  <div class="webinarCard-detail es-webinar-card-detail-avatar-container-wide">
+                    <div class="main-webinar-card-avatar-container">${tphoto ? `<img class="wc-avatar wc-avatar--img" src="${escA(tphoto)}" alt="${escA(name)}" loading="lazy">` : `<span class="wc-avatar" aria-hidden="true">${initial}</span>`}</div>
+                    <div class="d-st1 m-w-56px wc-when" data-date="${esc(c.date || "")}"></div>
                   </div>
-                  <div class="main-page-slide-show-price-btn-container">
-                    <div class="main-page-slide-show-price-container">
-                      ${lessons}
-                      <div class="price main-slide-show-free-price">${esc(c.price || "رایگان")}</div>
-                    </div>
-                    <div class="main-page-slide-show-btn-container">
-                      <a class="eseminar-button eseminar-button--esmBtn-fill-gold eseminar-button--medium" href="${link}">ثبت‌نام دوره</a>
+                </div>
+                <div class="webinarCard-detail stickToBottom">
+                  <div class="es__webinarCard-footer">
+                    <div class="es-webinar-card-footer-items-inner">
+                      <a class="eseminar-button eseminar-button--esmBtn-fill-navy eseminar-button--medium" href="${detail}">جزئیات</a>
+                      <div class="price-wrapper"><span class="wc-cat-mini">${esc(c.price || "رایگان")}</span></div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </div>
           </div>`;
 };
 

@@ -1040,6 +1040,10 @@ img { max-width: 100%; display: block; }
 }
 .featured-slider-stage { position: relative; margin-inline: auto; max-width: 1440px; padding: 0 50px 24px; overflow-x: clip; overflow-y: visible; }
 .featured-slider-scroller { display: flex; align-items: flex-start; }
+/* دو نمایش برای کارت دوره: دسکتاپ (hero) و موبایل (فلش‌کارت شبیه اطلاعیه‌ها) */
+.cs-desktop { min-width: 0; }
+.cs-mobile { display: none; }
+.wc-avatar--img { object-fit: cover; }
 
 /* کارت هیرو اسلایدشو */
 .main-page-slide-show-container {
@@ -1214,6 +1218,9 @@ img { max-width: 100%; display: block; }
   .main-page-slide-show-detials-container { justify-content: flex-end; }
   .main-page-slide-show-price-btn-container { gap: 4px; }
   .featured-slider-stage { padding: 0 34px 24px; }
+  .cs-desktop { display: none; }
+  .cs-mobile { display: block; }
+  .cs-mobile .webinarCard { width: 243px; }
 }
 
 /* ---------- اسلایدر اطلاعیه‌ها (es-main-page-slider-swiper-contianer) ---------- */

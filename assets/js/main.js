@@ -621,6 +621,10 @@
       spaceBetween: 30,
       centeredSlides: false,
       autoplay: { delay: 5e3, disableOnInteraction: false },
+      breakpoints: {
+        0: { spaceBetween: 16, slidesPerView: "auto" },
+        768: { spaceBetween: 30, slidesPerView: "auto" }
+      },
       navigation: {
         nextEl: coursesFrame.querySelector(".swiper-button-prev")
       }
