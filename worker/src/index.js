@@ -88,8 +88,14 @@ async function setIds(env, ids) {
 /* Payload دقیقاً همان قالب اعلان صفحه (main.js) — فقط از سمت SW نمایش داده می‌شود */
 function toPayload(it, origin) {
   const title = it.title || "";
-  const url =
-    it.link && /^https?:/.test(it.link) ? it.link : origin + (it.link || "/");
+  let url;
+  if (it.link && /^https?:/i.test(it.link)) {
+    url = it.link;
+  } else {
+    /* it.link مسیر نسبی است (مثل amoozesh/...html)؛ باید با اسلشِ درست
+       به origin وصله شود تا آدرسِ خراب مثل semnanplatform.ira moozesh ساخته نشود */
+    url = origin.replace(/\/+$/, "") + "/" + String(it.link || "").replace(/^\/+/, "");
+  }
   let ntitle, body;
   if (it.type === "course") {
     ntitle = "دوره‌ی آموزشی جدید 📚 " + title;

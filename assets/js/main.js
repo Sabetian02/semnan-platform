@@ -744,6 +744,16 @@
 
     function fireNotification(it) {
       if (!enabled || Notification.permission !== "granted") return;
+      var nurl = "/";
+      if (it.link) {
+        try {
+          nurl = /^https?:/i.test(it.link)
+            ? it.link
+            : location.origin + "/" + String(it.link).replace(/^\/+/, "");
+        } catch (_) {
+          nurl = it.link;
+        }
+      }
       var title;
       if (it.type === "course") title = "دوره‌ی آموزشی جدید 📚 " + (it.title || "");
       else if (it.type === "discount") title = "تخفیف جدید 🎁 " + (it.title || "");
@@ -757,12 +767,12 @@
           body: body,
           icon: "assets/images/SVG/logo.svg",
           tag: "spn-" + it.id,
-          data: { url: it.link || "/" }
+          data: { url: nurl }
         });
         n.onclick = function () {
           n.close();
           window.focus();
-          if (it.link) window.location.href = it.link;
+          window.location.href = nurl;
         };
       } catch (_) {}
     }
