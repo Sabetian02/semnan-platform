@@ -8,7 +8,12 @@
   "duration_label": "مدت",
   "price": "رایگان",
   "teacher_bio": "معرفی کوتاه مدرس",
-  "blocks_side": [],
+  "blocks_side": [
+    {
+      "type": "s-toc",
+      "_hint": "به‌صورت خودکار از عنوان بلوک‌های دارای سرتیتر ساخته می‌شود."
+    }
+  ],
   "blocks_main": [],
   "teacher_role": "سمت مدرس",
   "faq": [
