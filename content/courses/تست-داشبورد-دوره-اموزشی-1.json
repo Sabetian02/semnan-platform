@@ -9,7 +9,316 @@
   "price": "رایگان",
   "teacher_bio": "معرفی کوتاه مدرس",
   "blocks_side": [],
-  "blocks_main": [],
+  "blocks_main": [
+    {
+      "type": "text",
+      "heading": "عنوان بخش (متن)",
+      "markdown": "قسمت نوشتن متن"
+    },
+    {
+      "type": "highlights",
+      "heading": "در یک نگاه",
+      "items": [
+        {
+          "text": "جلسه اول - مقدمه"
+        },
+        {
+          "text": "جلسه دوم - متوسطه"
+        }
+      ]
+    },
+    {
+      "type": "facts",
+      "heading": "عنوان بخش (اطلاعات ( ردیفی))",
+      "items": [
+        {
+          "label": "امتیاز",
+          "value": "100"
+        },
+        {
+          "label": "رتبه",
+          "value": "150"
+        },
+        {
+          "label": "مرتبه",
+          "value": "500"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU_sAQ_bExl0MxnJfGo42PgrmMUw_h31IlyQCaEGQe0A&s=10",
+      "caption": "کپشن متن پیش نویسی",
+      "alt": "alt  اختیاری"
+    },
+    {
+      "type": "gallery",
+      "columns": "",
+      "heading": "عنوان (گالری)",
+      "items": [
+        {
+          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO-d-2Wh5xYCOc4GmYws8q4GWAn34dFusEPYTGecLY7w&s=10",
+          "caption": "کپشن اختیاری برا 2"
+        },
+        {
+          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdSwM99mLRKUy_Dt9c1Y-4DPJIK8QL6mUoYhQGOKLCMg&s=10",
+          "caption": "کپشن اختیاری در حالت دوم"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "heading": "عنوان ویدیو",
+      "url": "https://www.aparat.com/v/urvyxb9"
+    },
+    {
+      "type": "schedule",
+      "heading": "برنامهٔ دوره",
+      "items": [
+        {
+          "title": "جلسه اول ",
+          "time": "18 مهر",
+          "duration": "2 ساعت",
+          "note": "توضیحات "
+        },
+        {
+          "title": "جلسه دوم",
+          "time": "19 مهر",
+          "duration": "2 ساعت",
+          "note": "توضیحات"
+        }
+      ]
+    },
+    {
+      "type": "audience",
+      "heading": "مخاطبین دوره",
+      "good_title": "این دوره برای چه کسانی است؟",
+      "bad_title": "این دوره برای چه کسانی نیست؟",
+      "suitable": [
+        {
+          "text": "هست"
+        }
+      ],
+      "unsuitable": [
+        {
+          "text": "نیست"
+        }
+      ]
+    },
+    {
+      "type": "tabs",
+      "heading": "عنوان (تب)",
+      "tabs": [
+        {
+          "tab": "تب 1",
+          "markdown": "محتوای تب 1"
+        },
+        {
+          "tab": "تب 2",
+          "markdown": "محتوای متن تب 2"
+        }
+      ]
+    },
+    {
+      "type": "prices",
+      "heading": "بلیت‌های دوره",
+      "items": [
+        {
+          "hot": true,
+          "cta": "ثبت‌نام",
+          "name": "بلیت دانشگاه سمنان ",
+          "price": "500",
+          "features": [
+            {
+              "text": "مورد امکانات"
+            }
+          ],
+          "link": "لینک ثبت نام"
+        },
+        {
+          "hot": true,
+          "cta": "ثبت‌نام",
+          "name": "بلیت دانشگاه تهران",
+          "price": "600",
+          "features": [
+            {
+              "text": "مورد امکانات"
+            }
+          ],
+          "link": "لینک "
+        }
+      ]
+    },
+    {
+      "type": "teacher",
+      "kicker": "مدرس دوره",
+      "heading": "عنوان بخش کارت مدرس",
+      "name": "نام مدرس",
+      "role": "سمت مدرس",
+      "bio": "معرفی کوتاه",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRY6a1q8A2HfhcPVGrcp39C7jvpcpwst_SDVvgLY8kjg&s=10",
+      "link": "https://www.google.com/imgres?q=%D8%B9%DA%A9%D8%B3%20%D8%A7%D8%B3%D8%AA%D8%A7%D8%AF&imgurl=https%3A%2F%2Fwww.digikala.com%2Fmag%2Fwp-content%2Fuploads%2F2025%2F08%2Fmahmoud-farshchian-biography-works-digikalamag.jpg&imgrefurl=https%3A%2F%2Fwww.digikala.com%2Fmag%2Fmahmoud-farshchian-biography-selected-works%2F&docid=zk3UuUH9AhBYGM&tbnid=B8BjuotRqNJG-M&vet=12ahUKEwjRvbr1kIqXAxW-UaQEHWOHNL0QnPAOegUIlwEQAA..i&w=1200&h=760&hcb=2&ved=2ahUKEwjRvbr1kIqXAxW-UaQEHWOHNL0QnPAOegUIlwEQAA"
+    },
+    {
+      "type": "faq",
+      "heading": "سوالات متداول",
+      "items": [
+        {
+          "q": "سوال کن",
+          "a": "جواب بگیر"
+        },
+        {
+          "q": "سوال دوم ",
+          "a": "جواب دوم"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "tone": "info",
+      "heading": "عنوان بخش ( اعلان)",
+      "title": "عنوان اعلان",
+      "text": "متن اعلان"
+    },
+    {
+      "type": "stats",
+      "heading": "عنوان بخش (آمار)",
+      "items": [
+        {
+          "number": "50",
+          "label": "شرکت کننده"
+        },
+        {
+          "number": "70",
+          "label": "گواهی "
+        },
+        {
+          "number": "60",
+          "label": "#برداشت "
+        },
+        {
+          "number": "20",
+          "label": "#استخدامی"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "heading": "عنوان بخش (نقل قول)",
+      "text": "متن نقل قول",
+      "author": "نویسنده ",
+      "role": "سمت"
+    },
+    {
+      "type": "timeline",
+      "heading": "مراحل دوره عنوان بخش",
+      "items": [
+        {
+          "time": "زمان 15",
+          "title": "عنوان ",
+          "desc": "توضیح"
+        },
+        {
+          "time": "20",
+          "title": "عنوان",
+          "desc": "توضیح "
+        },
+        {
+          "time": "مرحله 3150 ",
+          "title": "عنوان 3",
+          "desc": "توضیح"
+        }
+      ]
+    },
+    {
+      "type": "files",
+      "heading": "عنوان بخش فایل ها",
+      "items": [
+        {
+          "title": "عنوان",
+          "note": "توضیحات فایل",
+          "file": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_1.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=2R9Lf_wwkaL-8M&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegQIQRAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegQIQRAA"
+        },
+        {
+          "file": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_1.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=2R9Lf_wwkaL-8M&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegQIQRAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegQIQRAA",
+          "title": "عنوان فایل اختیاری",
+          "note": "توضیحات اختایاری"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "heading": "عنوان بخش دکمه ها",
+      "text": "توضیح کوتاه",
+      "items": [
+        {
+          "style": "navy",
+          "label": "متن دکمه 1",
+          "link": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_3.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=sRCu8lfMTxIGPM&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA"
+        },
+        {
+          "style": "tele",
+          "label": "متن دکمه دوم",
+          "link": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_3.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=sRCu8lfMTxIGPM&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA"
+        },
+        {
+          "style": "ghost",
+          "label": "دکمه 3",
+          "link": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_3.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=sRCu8lfMTxIGPM&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA"
+        }
+      ]
+    },
+    {
+      "type": "cta",
+      "heading": "عنوان بخش فراخوان",
+      "text": "متن فراخوان ",
+      "items": [
+        {
+          "style": "gold",
+          "label": "متن دکمه فراخوان",
+          "link": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_3.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=sRCu8lfMTxIGPM&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA"
+        },
+        {
+          "style": "white",
+          "label": "متن دکمه فراخوان دوم ",
+          "link": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_3.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=sRCu8lfMTxIGPM&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA"
+        },
+        {
+          "style": "tele",
+          "label": "متن دکمه فراخوان سوم ",
+          "link": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Ffreepiker.ir%2Fwp-content%2Fuploads%2F2022%2F04%2Favatar_27234_3.jpg&imgrefurl=https%3A%2F%2Ffreepiker.ir%2Fwallpaper%2F%25D9%2585%25D8%25AC%25D9%2585%25D9%2588%25D8%25B9%25D9%2587-%25D8%25AA%25D8%25B5%25D9%2588%25DB%258C%25D8%25B1-%25D8%25B2%25D9%2585%25DB%258C%25D9%2586%25D9%2587-%25D9%2581%25D9%2588%25D9%2582-%25D8%25A7%25D9%2584%25D8%25B9%25D8%25A7%25D8%25AF%25D9%2587-%25D8%25A8%25D8%25A7-%25DA%25A9%25DB%258C%25D9%2581%25DB%258C-25%2F&docid=ujzKU2lmtJasnM&tbnid=sRCu8lfMTxIGPM&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA..i&w=430&h=688&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegUIhwEQAA"
+        }
+      ]
+    },
+    {
+      "type": "location",
+      "heading": "مکان برگزاری",
+      "name": "سینما حافظ",
+      "address": "بلوار معاک"
+    },
+    {
+      "type": "ads",
+      "_hint": "این بلوک فقط جای تبلیغات در دید موبایل را تعیین می‌کند؛ در کامپیوتر تبلیغات از بلوک سیستمی نوار کنار استفاده می‌شود."
+    },
+    {
+      "type": "form",
+      "heading": "ثبت‌نام",
+      "height": 479,
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfbKSBnKAIFakip1EIHfl0GezhEolg3C4J3pdXLlh48OFLp0g/viewform?usp=publish-editor",
+      "note": "توضیح بالا فرم"
+    },
+    {
+      "type": "form",
+      "heading": "ثبت‌نام",
+      "height": 1080,
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfbKSBnKAIFakip1EIHfl0GezhEolg3C4J3pdXLlh48OFLp0g/viewform?usp=publish-editor",
+      "note": "توضیه ابعاد بالا"
+    },
+    {
+      "type": "divider",
+      "text": "جدا شد"
+    }
+  ],
   "teacher_role": "سمت مدرس",
   "faq": [
     {
