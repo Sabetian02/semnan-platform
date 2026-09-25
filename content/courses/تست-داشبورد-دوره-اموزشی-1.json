@@ -8,7 +8,7 @@
   "duration_label": "مدت",
   "price": "رایگان",
   "teacher_bio": "معرفی کوتاه مدرس",
-  "date": "2026-09-25T22:59:00.000+03:30",
+  "date": "2026-09-25T23:00:00.000+03:30",
   "blocks_side": [
     {
       "type": "s-ticket",
@@ -347,6 +347,6 @@
   "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLphL_ur4xeBhZW3Apcym9iLDYgqf1bNSqxbgflrcKA&s=10",
   "lessons": "جلسات",
   "category": "نرم‌افزار",
-  "sort": 1,
+  "sort": 2,
   "teacher_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2Yu9tmPjxIRNSsafjmuLQ6v-bhiUTyjm4OmvATG3_zA&s=10"
 }
