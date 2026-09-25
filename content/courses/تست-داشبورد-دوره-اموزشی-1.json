@@ -1,0 +1,62 @@
+{
+  "teacher": "مدرس",
+  "active": true,
+  "summary": "قسمت توضیحات ",
+  "hashtags": [
+    "#دانشجو"
+  ],
+  "duration_label": "مدت",
+  "price": "رایگان",
+  "teacher_bio": "معرفی کوتاه مدرس",
+  "blocks_side": [
+    {
+      "type": "s-ticket"
+    },
+    {
+      "type": "s-toc"
+    },
+    {
+      "type": "s-ads"
+    },
+    {
+      "type": "s-facts"
+    },
+    {
+      "type": "s-teacher"
+    },
+    {
+      "type": "s-share"
+    }
+  ],
+  "blocks_main": [
+    {
+      "type": "text",
+      "heading": "دربارهٔ دوره",
+      "markdown": "توضیح کوتاهی دربارهٔ دوره بنویسید."
+    }
+  ],
+  "teacher_role": "سمت مدرس",
+  "faq": [
+    {
+      "q": "سوالات متدوال بلوک جدا",
+      "a": "ستون"
+    },
+    {
+      "q": "سوالات متداول بلوک جدا 4",
+      "a": "یی"
+    },
+    {
+      "q": "سوالات متداول بلوک جدا 5",
+      "a": "بببب"
+    }
+  ],
+  "teacher_link": "https://www.google.com/imgres?q=%D8%A7%D8%B3%D8%AA%D8%A7%D8%AF%20%D8%AF%D8%A7%D9%86%D8%B4%DA%AF%D8%A7%D9%87%20%D8%B3%D9%85%D9%86%D8%A7%D9%86&imgurl=https%3A%2F%2Fprofile.semnan.ac.ir%2Fimages%2Fcollages%2Fprofiles%2Fa-asghari&imgrefurl=https%3A%2F%2Fprofile.semnan.ac.ir%2Fprofiles%3Fpage%3D6&docid=VpJEVRrSc5V6gM&tbnid=k1BkmJETiRDuyM&vet=12ahUKEwj_pL7D-YmXAxUlP_sDHSFyFsAQnPAOegUIjAEQAA..i&w=187&h=140&hcb=2&ved=2ahUKEwj_pL7D-YmXAxUlP_sDHSFyFsAQnPAOegUIjAEQAA",
+  "subtitle": "قسمت زیر عنوان ",
+  "title": "تست داشبورد دوره اموزشی 1",
+  "link": "لینک",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcbRmNMgqm90tj_GbzDvKJhILDigIHqAbA4iM1gCZJFQ&s=10",
+  "lessons": "جلسات",
+  "category": "نرم‌افزار",
+  "sort": 1,
+  "teacher_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2Yu9tmPjxIRNSsafjmuLQ6v-bhiUTyjm4OmvATG3_zA&s=10"
+}
