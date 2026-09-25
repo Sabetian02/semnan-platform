@@ -8,12 +8,7 @@
   "duration_label": "مدت",
   "price": "رایگان",
   "teacher_bio": "معرفی کوتاه مدرس",
-  "blocks_side": [
-    {
-      "type": "s-ticket",
-      "_hint": "کارت قیمت و دکمهٔ ثبت‌نام — از فیلدهای «قیمت» و «لینک» خود دوره ساخته می‌شود."
-    }
-  ],
+  "blocks_side": [],
   "blocks_main": [],
   "teacher_role": "سمت مدرس",
   "faq": [
