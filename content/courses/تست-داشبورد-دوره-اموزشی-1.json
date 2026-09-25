@@ -28,6 +28,16 @@
           "markdown": "فغبعارالرالر"
         }
       ]
+    },
+    {
+      "type": "audience",
+      "heading": "مخاطبین دوره",
+      "good_title": "این دوره برای چه کسانی است؟",
+      "bad_title": "این دوره برای چه کسانی نیست؟"
+    },
+    {
+      "type": "divider",
+      "text": "جدا شد"
     }
   ],
   "blocks_main": [],
