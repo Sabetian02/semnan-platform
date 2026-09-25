@@ -8,33 +8,8 @@
   "duration_label": "مدت",
   "price": "رایگان",
   "teacher_bio": "معرفی کوتاه مدرس",
-  "blocks_side": [
-    {
-      "type": "s-ticket"
-    },
-    {
-      "type": "s-toc"
-    },
-    {
-      "type": "s-ads"
-    },
-    {
-      "type": "s-facts"
-    },
-    {
-      "type": "s-teacher"
-    },
-    {
-      "type": "s-share"
-    }
-  ],
-  "blocks_main": [
-    {
-      "type": "text",
-      "heading": "دربارهٔ دوره",
-      "markdown": "توضیح کوتاهی دربارهٔ دوره بنویسید."
-    }
-  ],
+  "blocks_side": [],
+  "blocks_main": [],
   "teacher_role": "سمت مدرس",
   "faq": [
     {
