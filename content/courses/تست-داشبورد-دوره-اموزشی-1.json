@@ -8,50 +8,8 @@
   "duration_label": "مدت",
   "price": "رایگان",
   "teacher_bio": "معرفی کوتاه مدرس",
-  "blocks_side": [
-    {
-      "type": "s-ticket",
-      "_hint": "کارت قیمت و دکمهٔ ثبت‌نام — از فیلدهای «قیمت» و «لینک» خود دوره ساخته می‌شود."
-    },
-    {
-      "type": "tabs",
-      "heading": "تب ها",
-      "tabs": [
-        {
-          "tab": "تب یک",
-          "icon": "download",
-          "markdown": "فبقیفقبلغب"
-        },
-        {
-          "tab": "تب 2",
-          "icon": "users",
-          "markdown": "فغبعارالرالر"
-        }
-      ]
-    },
-    {
-      "type": "audience",
-      "heading": "مخاطبین دوره",
-      "good_title": "این دوره برای چه کسانی است؟",
-      "bad_title": "این دوره برای چه کسانی نیست؟"
-    },
-    {
-      "type": "divider",
-      "text": "جدا شد"
-    }
-  ],
-  "blocks_main": [
-    {
-      "type": "stats",
-      "heading": "آمارز",
-      "items": [
-        {
-          "number": "20",
-          "label": "برسب"
-        }
-      ]
-    }
-  ],
+  "blocks_side": [],
+  "blocks_main": [],
   "teacher_role": "سمت مدرس",
   "faq": [
     {
