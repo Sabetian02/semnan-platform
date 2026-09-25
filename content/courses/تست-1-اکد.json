@@ -1,0 +1,361 @@
+{
+  "teacher": "مدرس",
+  "active": true,
+  "summary": "توضیح ",
+  "hashtags": [
+    "#سمنان"
+  ],
+  "duration_label": "مدت 56 ساعت",
+  "price": "152200 تومان",
+  "teacher_bio": "معرفی کوتاه مدرس",
+  "date": "2026-09-26T00:02:00.000+03:30",
+  "blocks_side": [],
+  "blocks_main": [
+    {
+      "type": "text",
+      "heading": "عنوان بخش متن",
+      "markdown": "توضیح کوتاهی دربارهٔ دوره بنویسید."
+    },
+    {
+      "type": "highlights",
+      "heading": "در یک نگاه",
+      "items": [
+        {
+          "text": "درنگاه 1"
+        },
+        {
+          "text": "در نگاه دو"
+        },
+        {
+          "text": "در نگاه سه"
+        }
+      ]
+    },
+    {
+      "type": "facts",
+      "heading": "عنوان بخش اطلاعات ردیفی",
+      "items": [
+        {
+          "label": "ردیف 1",
+          "value": "12"
+        },
+        {
+          "label": "ردیف دوم",
+          "value": "15"
+        },
+        {
+          "label": "ردیف 3",
+          "value": "20"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOyJm5zmBuOjb9xX5EszSZL7TsgaoH23KsSLpaTvjA9w&s=10",
+      "caption": "کپشن اختیاری",
+      "alt": "ا ال تی اختیاریی"
+    },
+    {
+      "type": "gallery",
+      "columns": "",
+      "heading": "عنوان بخش گالری ",
+      "items": [
+        {
+          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDENMwBU6910eYOiyKQ41EniNk04FNqlhzGooQ53fV1g&s=10",
+          "caption": "کپشن اختیاری "
+        },
+        {
+          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJFC71GhrWP0NgNJ5KoaKqy_Yjv7Fexyg-kDAyEZaxtg&s=10",
+          "caption": "کپشن دوم اختیاری"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "heading": "عنوان بخش اپارات",
+      "url": "https://www.aparat.com/v/urvyxb9",
+      "file": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyzZlMesESg1B8uT482gTVsOdRNBMEisyEgZ8ludodlg&s=10",
+      "title": "عنوان ویدیو ",
+      "caption": "توضیح ",
+      "poster": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6UI-Xe8hR0RQnZQhFeEfjDe9X1jy4_7DxuPKiHxbdUg&s=10"
+    },
+    {
+      "type": "schedule",
+      "heading": "برنامهٔ دوره",
+      "items": [
+        {
+          "title": "عنوان جلسه 1",
+          "time": "زمان مهر",
+          "duration": "2 ساعت",
+          "note": "توضیح سر فصل"
+        },
+        {
+          "title": "عنوان جلسه دوم",
+          "time": "16 مهر",
+          "duration": "2 ساعت",
+          "note": "توضیح "
+        },
+        {
+          "title": "عنوان جلسه سوم",
+          "time": "زمان 50 مهر",
+          "duration": "2 ساعت",
+          "note": "توضیح "
+        }
+      ]
+    },
+    {
+      "type": "audience",
+      "heading": "مخاطبین دوره",
+      "good_title": "این دوره برای چه کسانی است؟",
+      "bad_title": "این دوره برای چه کسانی نیست؟",
+      "suitable": [
+        {
+          "text": "مورد مناسب"
+        }
+      ],
+      "unsuitable": [
+        {
+          "text": "مورد نامناسب"
+        }
+      ]
+    },
+    {
+      "type": "tabs",
+      "heading": "عنوان بخش تب",
+      "tabs": [
+        {
+          "tab": "عنوان تب 1",
+          "markdown": "متن تب یک"
+        },
+        {
+          "tab": "عنوان تب 2",
+          "markdown": "متن عنوان تب دوم"
+        },
+        {
+          "tab": "عنوان تب سوم",
+          "markdown": "متن تب سوم"
+        }
+      ]
+    },
+    {
+      "type": "prices",
+      "heading": "بلیت‌های دوره",
+      "items": [
+        {
+          "hot": true,
+          "cta": "ثبت‌نام",
+          "name": "بلیت یک",
+          "price": "5200 تومان",
+          "features": [
+            {
+              "text": "امکانات مورد یک"
+            }
+          ],
+          "link": "https://semnanplatform.ir/amoozesh.html"
+        },
+        {
+          "hot": true,
+          "cta": "ثبت‌نام",
+          "name": "بیلیت دوم",
+          "price": "25520 تومان",
+          "features": [
+            {
+              "text": "امکانات مورد یک"
+            },
+            {
+              "text": "امکنات مورد دوم"
+            }
+          ],
+          "link": "https://semnanplatform.ir/amoozesh.html"
+        },
+        {
+          "hot": true,
+          "cta": "ثبت‌نام",
+          "name": "بلیت سوم",
+          "price": "635 تومان",
+          "features": [],
+          "link": "https://semnanplatform.ir/amoozesh.html"
+        }
+      ]
+    },
+    {
+      "type": "teacher",
+      "kicker": "مدرس دوره",
+      "heading": "عنوان بخش کارت مدرس",
+      "name": "مدرس",
+      "role": "سمت ",
+      "bio": "معرفی کوتاه",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqDZEdpiiTom-lT5k6TtrLFUyKM252twO1iEPY0LwZuQ&s=10",
+      "link": "https://semnanplatform.ir/amoozesh.html"
+    },
+    {
+      "type": "faq",
+      "heading": "سوالات متداول",
+      "items": [
+        {
+          "q": "سوال",
+          "a": "پاسخ"
+        },
+        {
+          "q": "پرسسش",
+          "a": "پاسخ"
+        },
+        {
+          "q": "سوال یک",
+          "a": "پرسش پاسخ"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "tone": "info",
+      "heading": "عنوان بخش اعلان",
+      "title": "عنوان اعلان",
+      "text": "متن "
+    },
+    {
+      "type": "stats",
+      "heading": "عنوان بخش آمار",
+      "items": [
+        {
+          "number": "10",
+          "label": "برچسب 1"
+        },
+        {
+          "number": "20",
+          "label": "برجسب دوم",
+          "icon": "calendar"
+        },
+        {
+          "number": "30",
+          "label": "برسب 3",
+          "icon": "file"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "heading": "عنوان بخش نقل و گل",
+      "text": "متن نقل قول",
+      "author": "نویسنده",
+      "role": "سمت",
+      "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10"
+    },
+    {
+      "type": "timeline",
+      "heading": "مراحل دوره عنوان بخش خط زمانی",
+      "items": [
+        {
+          "time": "زمان",
+          "title": "عنوان",
+          "desc": "توضیحات"
+        },
+        {
+          "time": "زمان 2",
+          "title": "عنوان 2",
+          "desc": "توضیحات 2"
+        }
+      ]
+    },
+    {
+      "type": "files",
+      "heading": "عنوان بخش فایل",
+      "items": [
+        {
+          "file": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10",
+          "title": "عنوان فایل",
+          "note": "توضیحات"
+        },
+        {
+          "file": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10",
+          "title": "عنوان فایل 2",
+          "note": "توضیحات دوم"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "heading": "عنوان بخش دکمه ها",
+      "text": "توضیح کوتاه ",
+      "items": [
+        {
+          "style": "navy",
+          "label": "متن دکمه یک",
+          "link": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10"
+        },
+        {
+          "style": "ghost",
+          "label": "متن دکمه دوم ",
+          "link": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10"
+        },
+        {
+          "style": "white",
+          "label": "متن دکمه سوم",
+          "link": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10",
+          "icon": "whatsapp"
+        }
+      ]
+    },
+    {
+      "type": "cta",
+      "heading": "عنوان بخش فراخوان ",
+      "text": "متن فراخوان",
+      "items": [
+        {
+          "style": "gold",
+          "label": "متن دکمه فراخوان",
+          "link": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10"
+        },
+        {
+          "style": "navy",
+          "label": "متن دکمه فراخوان دوکم",
+          "link": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10"
+        },
+        {
+          "style": "ghost",
+          "label": "متن دکمه فراخوان سوم",
+          "link": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10"
+        }
+      ]
+    },
+    {
+      "type": "location",
+      "heading": "مکان برگزاری",
+      "name": "سینما نام مکان",
+      "address": "معلم نشانی",
+      "map_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7LqiGnHieZ1tcMvBc0fqy9cohjxlJLrXggVgY3nItYA&s=10"
+    },
+    {
+      "type": "ads",
+      "_hint": "این بلوک فقط جای تبلیغات در دید موبایل را تعیین می‌کند؛ در کامپیوتر تبلیغات از بلوک سیستمی نوار کنار استفاده می‌شود."
+    },
+    {
+      "type": "form",
+      "heading": "ثبت‌نام",
+      "height": 480,
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfbKSBnKAIFakip1EIHfl0GezhEolg3C4J3pdXLlh48OFLp0g/viewform?usp=publish-editor",
+      "note": "توضیحات بالا"
+    },
+    {
+      "type": "form",
+      "heading": "ثبت‌نام",
+      "height": 1080,
+      "note": "توضیحات بالا 2",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfbKSBnKAIFakip1EIHfl0GezhEolg3C4J3pdXLlh48OFLp0g/viewform?usp=publish-editor"
+    },
+    {
+      "type": "divider",
+      "text": "جدا شد"
+    }
+  ],
+  "teacher_role": "سمت مدرس",
+  "teacher_link": "https://www.google.com/imgres?q=%D8%A2%D9%88%D8%A7%D8%AA%D8%A7%D8%B1%20%D8%B9%DA%A9%D8%B3%DB%8C&imgurl=https%3A%2F%2Fcdn.tarhpik.com%2F5_Preview%2F1404%2F6%2F27%2F232115%2F3d-character-people-close-up-portrait-smiling-nice-3d-avartar-or-icon-png-400.webp&imgrefurl=https%3A%2F%2Ftarhpik.com%2Fphotos%2Favatar&docid=y7zfphTh9O71FM&tbnid=vC-vAf_CUES9qM&vet=12ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegQIThAA..i&w=400&h=400&hcb=2&ved=2ahUKEwiPrKarkoqXAxXB4wIHHRwoDj4QnPAOegQIThAA",
+  "subtitle": "زیر عنوان ",
+  "title": "تست 1 اکد",
+  "link": "لینک",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThvHYzmvgmlcMdCLvrfrx1qbB6fvkER89lnxA0_8sOOw&s=10",
+  "lessons": "جلسات 6",
+  "category": "مهارت نرم",
+  "sort": 1,
+  "teacher_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMC9Kw_rlXAHOj8cwxsICW2WdG7YGK77ggTUCMJMQFmQ&s=10"
+}
