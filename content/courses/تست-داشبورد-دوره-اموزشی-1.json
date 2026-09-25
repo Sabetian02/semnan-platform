@@ -40,7 +40,18 @@
       "text": "جدا شد"
     }
   ],
-  "blocks_main": [],
+  "blocks_main": [
+    {
+      "type": "stats",
+      "heading": "آمارز",
+      "items": [
+        {
+          "number": "20",
+          "label": "برسب"
+        }
+      ]
+    }
+  ],
   "teacher_role": "سمت مدرس",
   "faq": [
     {
