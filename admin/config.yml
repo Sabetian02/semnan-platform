@@ -956,11 +956,6 @@ collections:
         required: false
         value_type: string
         hint: "هر کلمه را تایپ و Enter بزن؛ بالای تیتر نمایش داده می‌شود و با کلیک در سایت جستجو می‌شود."
-      - label: لینک فرم عضویت
-        name: form_url
-        widget: string
-        required: false
-        hint: "https://docs.google.com/forms/… — دکمهٔ طلایی صفحه روی بلوک «📋 فرم گوگل» اسکرول می‌کند؛ اگر بلوک فرم نباشد به همین لینک می‌رود."
       - label: متن دکمهٔ عضویت
         name: cta_label
         widget: string

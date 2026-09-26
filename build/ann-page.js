@@ -1781,10 +1781,7 @@ module.exports = function createAnnRenderer(ctx) {
   }
 
   function membershipRegister(m) {
-    const rawLink = safeLink(m.form_url);
-    if (rawLink && ABS_URI.test(rawLink)) {
-      return { label: m.cta_label || m.button_label || "تکمیل فرم عضویت", href: tgHref(rawLink), style: "gold", external: true };
-    }
+    /* لینک فرم فقط از بلوک «📋 فرم گوگل» می‌آید؛ اگر فرمی در صفحه نباشد، دکمه به کانال می‌رود */
     return { label: m.cta_label || "عضویت از طریق کانال پلتفرم", href: TELE_URL, style: "gold", external: true, ico: "telegram" };
   }
 
@@ -1794,8 +1791,6 @@ module.exports = function createAnnRenderer(ctx) {
     const auto = [];
     if (String(m.body || "").trim()) auto.push({ type: "text", heading: "دربارهٔ عضویت", markdown: m.body });
     else if (String(m.summary || "").trim()) auto.push({ type: "text", heading: "دربارهٔ عضویت", markdown: m.summary });
-    const fUrl = String(m.form_url || "").trim();
-    if (fUrl) auto.push({ type: "form", heading: "فرم عضویت", url: fUrl, note: "فرم را با دقت کامل کن؛ اطلاعات تماس برای هماهنگی لازم است.", height: 640 });
     return auto;
   }
 

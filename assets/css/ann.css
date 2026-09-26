@@ -639,6 +639,14 @@ html:has(.ap[data-ap-layout="membership"]) { scroll-behavior: smooth; }
 /* صفحهٔ عضویت کاور ندارد؛ تیتر مستقیم زیر هدرِ سایت می‌نشیند */
 .ap[data-ap-layout="membership"] .ap-head { padding-block: 30px 22px; }
 .ap[data-ap-layout="membership"] .ap-head .ap-title { font-size: clamp(1.7rem, 4.4vw, 2.5rem); }
+/* در سیستم (دسکتاپ) سربرگ صفحهٔ عضویت وسط‌چین می‌شود */
+@media (min-width: 901px) {
+  .ap[data-ap-layout="membership"] .ap-head .container { text-align: center; }
+  .ap[data-ap-layout="membership"] .ap-head .ap-crumbs,
+  .ap[data-ap-layout="membership"] .ap-head .ap-chips,
+  .ap[data-ap-layout="membership"] .ap-head .ap-actions { justify-content: center; }
+  .ap[data-ap-layout="membership"] .ap-head .ap-lead { margin-inline: auto; }
+}
 .ap-body {
   padding: 34px 0 70px;
 }
@@ -3238,6 +3246,7 @@ html:has(.ap[data-ap-layout="membership"]) { scroll-behavior: smooth; }
   margin-block: 8px 24px;
 }
 /* جاسازی مشترک موبایل و دسکتاپ — صفحه‌های بدون نوار کنار (عضویت) */
+/* موبایل: زیر هم • دسکتاپ: کنار هم */
 .ap-ads--flow {
   grid-template-columns: 1fr;
   gap: 12px;
@@ -3245,6 +3254,7 @@ html:has(.ap[data-ap-layout="membership"]) { scroll-behavior: smooth; }
 }
 @media (min-width: 901px) {
   .ap-ads--inline { display: none; }
+  .ap-ads--flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
   .ap-ads--side { display: none; }
