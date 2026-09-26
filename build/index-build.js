@@ -1185,13 +1185,14 @@ const close = P("index-99-close.html");
 
 const newsList = loadFolder("news");
 const courseList = loadFolder("courses");
+const membershipList = loadFolder("membership");
 const discountList = loadFolder("discounts", true);
 const bySort = (a, b) => (a.sort || 0) - (b.sort || 0) || String(a.name || "").localeCompare(String(b.name || ""), "fa");
 const kanonhaList = loadFolder("kanonha").sort(bySort);
 const anjomanhaList = loadFolder("anjomanha").sort(bySort);
 
 /* ---------- قالب اطلاعیه و دوره (ann-page.js) با ابزارهای همین فایل ساخته می‌شود ---------- */
-const { renderAnnPage, renderCoursePage } = require("./ann-page")({
+const { renderAnnPage, renderCoursePage, renderMembershipPage } = require("./ann-page")({
   esc,
   escA,
   faNum,
@@ -1310,6 +1311,17 @@ courseList.forEach((c) => {
 const amoRemoved = cleanPages(AMO_DIR, amoKeep);
 console.log("✔ صفحات دوره:", courseList.length, "فایل" + (amoRemoved ? " (" + amoRemoved + " یتیم حذف شد)" : ""));
 
+/* ---------- صفحات عضویت (کانون‌ها / انجمن‌ها) ---------- */
+const MEMB_DIR = path.join(ROOT, "membership");
+fs.mkdirSync(MEMB_DIR, { recursive: true });
+const membKeep = new Set();
+membershipList.forEach((m) => {
+  membKeep.add(m._slug + ".html");
+  fs.writeFileSync(path.join(MEMB_DIR, m._slug + ".html"), renderMembershipPage(m), "utf8");
+});
+const membRemoved = cleanPages(MEMB_DIR, membKeep);
+console.log("✔ صفحات عضویت:", membershipList.length, "فایل" + (membRemoved ? " (" + membRemoved + " یتیم حذف شد)" : ""));
+
 /* ---------- latest.json: فهرست آخرین اطلاعیه‌ها و دوره‌ها (برای اعلان مرورگر) ---------- */
 (function writeLatest() {
   const items = [];
@@ -1366,6 +1378,7 @@ console.log("✔ صفحات دوره:", courseList.length, "فایل" + (amoRemo
   courseList.forEach((c) => items.push({ t: c.title || "", s: c.summary || "", h: normTags(c), u: "amoozesh/" + c._slug + ".html", k: "دوره" }));
   kanonhaList.forEach((p) => items.push({ t: p.name || p.title || "", s: p.desc || "", h: normTags(p), u: "kanonha/" + (p.slug || p._slug) + ".html", k: "کانون" }));
   anjomanhaList.forEach((p) => items.push({ t: p.name || p.title || "", s: p.desc || "", h: normTags(p), u: "anjomanha/" + (p.slug || p._slug) + ".html", k: "انجمن" }));
+  membershipList.forEach((m) => items.push({ t: m.title || "", s: m.summary || "", h: normTags(m), u: "membership/" + m._slug + ".html", k: "عضویت" }));
   loadFolder("discounts").forEach((d) => items.push({ t: d.title || "", s: d.description || "", h: normTags(d), u: safeLink(d.link) || "ettelaieh.html", k: "تخفیف" }));
   fs.writeFileSync(path.join(ROOT, "search-index.json"), JSON.stringify({ updated: new Date().toISOString(), items }), "utf8");
   console.log("✔ search-index.json (" + items.length + " مورد)");
@@ -1397,6 +1410,7 @@ const isoDay = (d) => {
   courseList.forEach((c) => add("amoozesh/" + c._slug + ".html", "", "0.6", "monthly"));
   kanonhaList.forEach((k) => add("kanonha/" + k.slug + ".html", "", "0.6", "monthly"));
   anjomanhaList.forEach((a) => add("anjomanha/" + a.slug + ".html", "", "0.6", "monthly"));
+  membershipList.forEach((m) => add("membership/" + m._slug + ".html", "", "0.6", "monthly"));
   const xml =
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +

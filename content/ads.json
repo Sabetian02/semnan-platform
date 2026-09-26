@@ -17,6 +17,7 @@
   "show_home": true,
   "show_courses": true,
   "show_announcements": true,
+  "show_membership": true,
   "banner_size": {
     "width": 388,
     "height": 70

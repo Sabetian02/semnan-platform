@@ -310,6 +310,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
   const tele = teleSafe(item.telegram);
   const joinHref = tele || TELE_URL;
   const joinLabel = tele ? "عضویت در مجموعه" : "پیگیری از کانال پلتفرم";
+  const membershipHref = orgKind === "anjoman" ? "../membership/anjoman.html" : "../membership/kanon.html";
   const myNews = newsForOrg(item.slug, orgKind);
   const recentNews = myNews.filter(isRecent);
   const courseNews = myNews.filter((n) => String(n.category || "").trim() === "دوره");
@@ -673,7 +674,7 @@ function renderProfile(prefix, item, kindTitle, backHref, kindShort, orgKind) {
             <span class="op-type">${esc(kindShort)} · دانشگاه سمنان</span>
             <h1>${esc(item.name)}</h1>
             <div class="op-hero-actions">
-              <a class="btn btn-gold" href="${esc(joinHref)}" target="_blank" rel="noopener">${esc(joinLabel)}</a>
+              <a class="btn btn-gold" href="${esc(membershipHref)}">${esc("عضویت در مجموعه")}</a>
               ${recentNews.length ? `<a class="btn btn-outline-light" href="#flash">فعالیت‌های ماه اخیر</a>` : myNews.length ? `<a class="btn btn-outline-light" href="#news">اطلاعیه‌ها</a>` : ""}
             </div>
           </div>
