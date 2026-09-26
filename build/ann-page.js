@@ -1790,31 +1790,13 @@ module.exports = function createAnnRenderer(ctx) {
 
   /* بلوک‌های خودکار وقتی صفحهٔ عضویت بلوک محتوایی ندارد */
   function membershipAutoBlocks(m) {
+    /* وقتی لیست بلوک‌ها خالی است، صفحه از داده‌های پایه ساخته می‌شود */
     const auto = [];
     if (String(m.body || "").trim()) auto.push({ type: "text", heading: "دربارهٔ عضویت", markdown: m.body });
     else if (String(m.summary || "").trim()) auto.push({ type: "text", heading: "دربارهٔ عضویت", markdown: m.summary });
-    const ben = (Array.isArray(m.benefits) ? m.benefits : [])
-      .map((b) => (b && typeof b === "object" ? b.text : b))
-      .filter(Boolean);
-    if (ben.length) auto.push({ type: "highlights", heading: "مزایای عضویت", items: ben.map((t) => ({ text: t })) });
-    const facts = (Array.isArray(m.facts) ? m.facts : []).filter((f) => f && (f.label || f.value));
-    if (facts.length) auto.push({ type: "facts", heading: "اطلاعات عضویت", items: facts });
-    if (Array.isArray(m.faq) && m.faq.length) auto.push({ type: "faq", heading: "پرسش‌های پرتکرار", items: m.faq });
     const fUrl = String(m.form_url || "").trim();
     if (fUrl) auto.push({ type: "form", heading: "فرم عضویت", url: fUrl, note: "فرم را با دقت کامل کن؛ اطلاعات تماس برای هماهنگی لازم است.", height: 640 });
     return auto;
-  }
-
-  function membershipFactRows(m) {
-    const rows = [];
-    const row = (icon, label, val) => {
-      if (!val) return "";
-      return `<li><span class="ap-kf-ico">${ico(icon, "ap-i-sm")}</span><span class="ap-kf-l">${esc(label)}</span><span class="ap-kf-v">${esc(val)}</span></li>`;
-    };
-    (Array.isArray(m.facts) ? m.facts : []).forEach((f) => {
-      if (f && (f.label || f.value)) row(f.icon || "check", f.label, f.value);
-    });
-    return rows.join("");
   }
 
   function membershipHeadExtras(m, url, toc) {
@@ -1912,11 +1894,17 @@ module.exports = function createAnnRenderer(ctx) {
     /* فقط بلوک‌های اصلی — بدون نوار کنار، چیدمان تک‌ستونی بلاگ */
     const mainHtml = [];
     let adPlaced = false;
+    let adStart = false;
+    let adEnd = false;
     let bid = 0;
     const emit = (raw) => {
       if (!raw || !raw.type) return;
       if (raw.type === "ads") {
-        if (adsMain && !adPlaced) {
+        /* جانمایی تبلیغات: here = همین‌جا، start = ابتدای صفحه، end = انتهای صفحه */
+        const pos = String(raw.position || "here").trim();
+        if (pos === "start") adStart = true;
+        else if (pos === "end") adEnd = true;
+        else if (adsMain && !adPlaced) {
           mainHtml.push(adsMain);
           adPlaced = true;
         }
@@ -1942,7 +1930,11 @@ module.exports = function createAnnRenderer(ctx) {
     const real = raw.filter((b) => b.type !== "ads");
     if (real.length) raw.forEach(emit);
     else membershipAutoBlocks(m).forEach(emit);
-    if (adsMain && !adPlaced) mainHtml.push(adsMain);
+    /* تبلیغات: اول ابتدای صفحه، بعد انتهای صفحه، و در نبود بلوک تبلیغات انتهای صفحه */
+    if (adsMain && !adPlaced) {
+      if (adStart) mainHtml.unshift(adsMain);
+      else mainHtml.push(adsMain);
+    } else if (adsMain && adEnd) mainHtml.push(adsMain);
 
     /* دکمهٔ اصلی: اسکرول به فرم؛ اگر بلوک فرمی در صفحه نبود، همان لینک بیرونی */
     const cta = formAnchor

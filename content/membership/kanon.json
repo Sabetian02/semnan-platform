@@ -1,70 +1,14 @@
 {
-  "active": true,
   "title": "عضویت در کانون‌های فرهنگی",
-  "badge": "ثبت‌نام باز است",
   "summary": "به جمع کانون‌های فرهنگی دانشگاه سمنان بپیوند؛ فعالیت کن، رفیق پیدا کن و مهارت بیاموز. فرم عضویت را پر کن تا مسئولان کانون با تو تماس بگیرند.",
-  "icon": "🎭",
-  "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSfbKSBnKAIFakip1EIHfl0GezhEolg3C4J3pdXLlh48OFLp0g/viewform?usp=publish-editor",
-  "cta_label": "تکمیل فرم عضویت",
-  "price": "رایگان",
-  "audience": "همهٔ دانشجویان",
-  "mode": "حضوری و آنلاین",
-  "deadline": "مهر ۱۴۰۵",
   "hashtags": [
     "کانون",
     "فرهنگی",
     "عضویت"
   ],
-  "benefits": [
-    {
-      "text": "دسترسی به فضای فعالیت و امکانات کانون"
-    },
-    {
-      "text": "همراهی اساتید و مشاورهٔ فرهنگی"
-    },
-    {
-      "text": "فرصت برگزاری برنامه و اجرای ایده"
-    },
-    {
-      "text": "صدور گواهی فعالیت برای دانشجویان فعال"
-    }
-  ],
-  "facts": [
-    {
-      "icon": "money",
-      "label": "هزینهٔ عضویت",
-      "value": "رایگان"
-    },
-    {
-      "icon": "users",
-      "label": "مخاطب",
-      "value": "همهٔ دانشجویان"
-    },
-    {
-      "icon": "monitor",
-      "label": "شکل برگزاری",
-      "value": "حضوری و آنلاین"
-    },
-    {
-      "icon": "calendar",
-      "label": "مهلت ثبت‌نام",
-      "value": "مهر ۱۴۰۵"
-    }
-  ],
-  "faq": [
-    {
-      "q": "عضویت در کانون چقدر هزینه دارد؟",
-      "a": "هزینهٔ عضویت در کانون‌های فرهنگی رایگان است."
-    },
-    {
-      "q": "پس از پر کردن فرم چه اتفاقی می‌افتد؟",
-      "a": "مسئولان کانون انتخابی شما طی چند روز کاری با شما تماس می‌گیرند و هماهنگی‌های لازم انجام می‌شود."
-    },
-    {
-      "q": "اگر در چند کانون ثبت‌نام کنم؟",
-      "a": "بهتر است ابتدا از کانون‌های فهرست، یک یا دو مورد را که بیشتر به علاقه‌تان نزدیک است انتخاب کنید."
-    }
-  ],
+  "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSfbKSBnKAIFakip1EIHfl0GezhEolg3C4J3pdXLlh48OFLp0g/viewform?usp=publish-editor",
+  "cta_label": "تکمیل فرم عضویت",
+  "active": true,
   "blocks_main": [
     {
       "type": "text",
@@ -134,11 +78,41 @@
       ]
     },
     {
+      "type": "facts",
+      "heading": "اطلاعات عضویت",
+      "items": [
+        {
+          "label": "هزینه عضویت",
+          "value": "رایگان",
+          "icon": "money"
+        },
+        {
+          "label": "مخاطب",
+          "value": "همهٔ دانشجویان دانشگاه سمنان",
+          "icon": "users"
+        },
+        {
+          "label": "شکل برگزاری",
+          "value": "حضوری",
+          "icon": "monitor"
+        },
+        {
+          "label": "ثبت‌نام",
+          "value": "تا پایان ترم تحصیلی",
+          "icon": "clock"
+        }
+      ]
+    },
+    {
       "type": "form",
       "heading": "فرم عضویت کانون‌های فرهنگی",
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSfbKSBnKAIFakip1EIHfl0GezhEolg3C4J3pdXLlh48OFLp0g/viewform?usp=publish-editor",
       "note": "فرم را با دقت کامل کن؛ اطلاعات تماس برای هماهنگی لازم است.",
       "height": 640
+    },
+    {
+      "type": "ads",
+      "position": "end"
     },
     {
       "type": "notice",

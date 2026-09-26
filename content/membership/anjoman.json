@@ -1,70 +1,14 @@
 {
-  "active": true,
   "title": "عضویت در انجمن‌های علمی",
-  "badge": "ثبت‌نام باز است",
   "summary": "به جمع انجمن‌های علمی دانشگاه سمنان بپیوند؛ در نشست‌های تخصصی، کارگاه‌ها و رویدادهای علمی شرکت کن و در کنار هم‌رشته‌ای‌هایت رشد کن.",
-  "icon": "🔬",
-  "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSeWcgIF-mC-l426-krF7IY0QoMJRUG825JCRXLUPnHh99dv5A/viewform?usp=publish-editor",
-  "cta_label": "تکمیل فرم عضویت",
-  "price": "رایگان",
-  "audience": "دانشجویان همهٔ رشته‌ها",
-  "mode": "حضوری و آنلاین",
-  "deadline": "مهر ۱۴۰۵",
   "hashtags": [
     "انجمن",
     "علمی",
     "عضویت"
   ],
-  "benefits": [
-    {
-      "text": "شرکت در نشست‌ها و کارگاه‌های تخصصی"
-    },
-    {
-      "text": "کار در تیم‌های علمی و پژوهشی"
-    },
-    {
-      "text": "ارتباط با اساتید و فعالان حوزهٔ تخصصی"
-    },
-    {
-      "text": "صدور گواهی مشارکت برای حضور در رویدادها"
-    }
-  ],
-  "facts": [
-    {
-      "icon": "money",
-      "label": "هزینهٔ عضویت",
-      "value": "رایگان"
-    },
-    {
-      "icon": "users",
-      "label": "مخاطب",
-      "value": "دانشجویان همهٔ رشته‌ها"
-    },
-    {
-      "icon": "monitor",
-      "label": "شکل برگزاری",
-      "value": "حضوری و آنلاین"
-    },
-    {
-      "icon": "calendar",
-      "label": "مهلت ثبت‌نام",
-      "value": "مهر ۱۴۰۵"
-    }
-  ],
-  "faq": [
-    {
-      "q": "عضویت در انجمن علمی هزینه دارد؟",
-      "a": "هزینهٔ عضویت در انجمن‌های علمی رایگان است."
-    },
-    {
-      "q": "پس از پر کردن فرم چه اتفاقی می‌افتد؟",
-      "a": "دبیر انجمن رشتهٔ شما طی چند روز کاری با شما تماس می‌گیرد و هماهنگی‌های لازم انجام می‌شود."
-    },
-    {
-      "q": "اگر از رشتهٔ دیگری هستم می‌توانم عضو شوم؟",
-      "a": "بله؛ انجمن‌ها از مشارکت دانشجویان رشته‌های هم‌خانواده هم استقبال می‌کنند."
-    }
-  ],
+  "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSeWcgIF-mC-l426-krF7IY0QoMJRUG825JCRXLUPnHh99dv5A/viewform?usp=publish-editor",
+  "cta_label": "تکمیل فرم عضویت",
+  "active": true,
   "blocks_main": [
     {
       "type": "text",
@@ -134,11 +78,41 @@
       ]
     },
     {
+      "type": "facts",
+      "heading": "اطلاعات عضویت",
+      "items": [
+        {
+          "label": "هزینه عضویت",
+          "value": "رایگان",
+          "icon": "money"
+        },
+        {
+          "label": "مخاطب",
+          "value": "دانشجویان و دانش‌آموختگان",
+          "icon": "users"
+        },
+        {
+          "label": "شکل برگزاری",
+          "value": "حضوری و آنلاین",
+          "icon": "monitor"
+        },
+        {
+          "label": "ثبت‌نام",
+          "value": "تا پایان ترم تحصیلی",
+          "icon": "clock"
+        }
+      ]
+    },
+    {
       "type": "form",
       "heading": "فرم عضویت",
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSeWcgIF-mC-l426-krF7IY0QoMJRUG825JCRXLUPnHh99dv5A/viewform?usp=publish-editor",
       "note": "فرم را با دقت کامل کن؛ اطلاعات تماس برای هماهنگی لازم است.",
       "height": 640
+    },
+    {
+      "type": "ads",
+      "position": "end"
     },
     {
       "type": "notice",
