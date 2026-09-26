@@ -684,8 +684,9 @@ module.exports = function createAnnRenderer(ctx) {
           const feats = (Array.isArray(t.features) ? t.features : []).filter(Boolean);
           const isHot = t.hot === true;
           const price = String(t.price || "").trim();
-          const cta = t.link
-            ? (ABS_URI.test(t.link) ? { label: t.cta || "ثبت‌نام", href: t.link, style: "gold", external: true } : { label: t.cta || "ثبت‌نام", href: prefix + t.link.replace(/^\.\//, ""), style: "gold", external: false })
+          const ctaLink = safeLink(t.link);
+          const cta = ctaLink
+            ? (ABS_URI.test(ctaLink) ? { label: t.cta || "ثبت‌نام", href: ctaLink, style: "gold", external: true } : { label: t.cta || "ثبت‌نام", href: prefix + ctaLink.replace(/^\.\//, ""), style: "gold", external: false })
             : null;
           return `<div class="cp-price${isHot ? " is-hot" : ""}">
             <div class="cp-price-head">
@@ -716,7 +717,7 @@ module.exports = function createAnnRenderer(ctx) {
         <h4 class="cp-tch-name">${esc(name)}</h4>
         ${b.role ? `<p class="cp-tch-role">${esc(b.role)}</p>` : ""}
         ${b.bio ? `<p class="cp-tch-bio">${esc(b.bio)}</p>` : ""}
-        ${b.link ? `<a class="cp-tch-link" href="${escA(ctaHref(b.link) || b.link)}" target="_blank" rel="noopener">${ico("link", "ap-i-sm")} اطلاعات بیشتر</a>` : ""}
+        ${(function () { const tl = b.link ? ctaHref(b.link) : ""; return tl ? `<a class="cp-tch-link" href="${escA(tl)}" target="_blank" rel="noopener">${ico("link", "ap-i-sm")} اطلاعات بیشتر</a>` : ""; })()}
       </div>
     </div>`;
   }
