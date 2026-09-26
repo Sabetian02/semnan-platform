@@ -1,11 +1,10 @@
 {
   "active": true,
   "title": "عضویت در انجمن‌های علمی",
-  "subtitle": "پل میان کلاس و پژوهش",
   "badge": "ثبت‌نام باز است",
   "summary": "به جمع انجمن‌های علمی دانشگاه سمنان بپیوند؛ در نشست‌های تخصصی، کارگاه‌ها و رویدادهای علمی شرکت کن و در کنار هم‌رشته‌ای‌هایت رشد کن.",
   "icon": "🔬",
-  "form_url": "",
+  "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSeWcgIF-mC-l426-krF7IY0QoMJRUG825JCRXLUPnHh99dv5A/viewform?usp=publish-editor",
   "cta_label": "تکمیل فرم عضویت",
   "price": "رایگان",
   "audience": "دانشجویان همهٔ رشته‌ها",
@@ -133,6 +132,13 @@
           "a": "بله؛ مشارکت دانشجویان رشته‌های هم‌خانواده نیز پذیرفته است."
         }
       ]
+    },
+    {
+      "type": "form",
+      "heading": "فرم عضویت",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSeWcgIF-mC-l426-krF7IY0QoMJRUG825JCRXLUPnHh99dv5A/viewform?usp=publish-editor",
+      "note": "فرم را با دقت کامل کن؛ اطلاعات تماس برای هماهنگی لازم است.",
+      "height": 640
     },
     {
       "type": "notice",

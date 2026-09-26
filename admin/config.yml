@@ -942,8 +942,7 @@ collections:
     summary: "{{title}}"
     fields:
       - { label: عنوان, name: title, widget: string, required: true }
-      - { label: زیرعنوان, name: subtitle, widget: string, required: false, hint: "مثل «به جمع کانون‌های فرهنگی بپیوند»" }
-      - { label: خلاصه, name: summary, widget: text, required: true }
+      - { label: خلاصه, name: summary, widget: text, required: true, hint: "یک یا دو جمله که زیر تیتر نمایش داده می‌شود." }
       - { label: بج (برچسب بالای عنوان), name: badge, widget: string, required: false }
       - { label: ایموجی, name: icon, widget: string, required: false, default: "🎭", hint: "اگر تصویر نگذارید از همین ایموجی استفاده می‌شود" }
       - { label: تصویر, name: image, widget: image, required: false }
@@ -1213,7 +1212,7 @@ collections:
             name: ads
             widget: object
             fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "این بلوک فقط جای تبلیغات را در جریان صفحه مشخص می‌کند؛ اگر در صفحه نباشد، تبلیغات انتهای صفحه قرار می‌گیرد." }
+              - { label: راهنما, name: _hint, widget: hidden, default: "جای نمایش تبلیغات در همین صفحه — برای موبایل و کامپیوتر یکسان است. اگر در صفحه نباشد، تبلیغات انتهای صفحه نمایش داده می‌شود." }
 
   - name: kanonha
     label: کانون‌ها

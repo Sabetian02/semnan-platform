@@ -1800,6 +1800,8 @@ module.exports = function createAnnRenderer(ctx) {
     const facts = (Array.isArray(m.facts) ? m.facts : []).filter((f) => f && (f.label || f.value));
     if (facts.length) auto.push({ type: "facts", heading: "اطلاعات عضویت", items: facts });
     if (Array.isArray(m.faq) && m.faq.length) auto.push({ type: "faq", heading: "پرسش‌های پرتکرار", items: m.faq });
+    const fUrl = String(m.form_url || "").trim();
+    if (fUrl) auto.push({ type: "form", heading: "فرم عضویت", url: fUrl, note: "فرم را با دقت کامل کن؛ اطلاعات تماس برای هماهنگی لازم است.", height: 640 });
     return auto;
   }
 
@@ -1897,60 +1899,36 @@ module.exports = function createAnnRenderer(ctx) {
     const kind = membershipKinds(m._slug);
     const toc = [];
 
+    /* تبلیغات: این صفحه نوار کناری ندارد، پس یک جای مشترک برای موبایل و دسکتاپ */
     const adsSlots = ads && ads.show_membership !== false ? adsMarkup(ads) : "";
-    const adsMain = adsSlots ? `<div class="ap-ads ap-ads--inline">${adsSlots}</div>` : "";
+    const adsMain = adsSlots ? `<div class="ap-ads ap-ads--flow">${adsSlots}</div>` : "";
 
     const register = membershipRegister(m);
+    /* لنگر دکمهٔ اصلی: اگر بلوک فرم در صفحه باشد، دکمه روی همان اسکرول می‌کند */
+    let formAnchor = "";
 
-    /* چیپ‌ها و متادیتای بالای صفحه — همان الگوی بلاگ/اطلاعیه */
-    const chips = [];
-    if (m.badge) chips.push(`<span class="ap-chip is-badge">${ico("bolt", "ap-i-xs")} ${esc(m.badge)}</span>`);
-    chips.push(`<span class="ap-chip is-cat">${esc(m.icon || "🎭")} عضویت</span>`);
-    chips.push(hashChips(Array.isArray(m.hashtags) && m.hashtags.length ? m.hashtags : []));
-
-    const metaBits = [];
-    const mb = (icon, label, val) =>
-      val ? `<span class="ap-meta-i">${ico(icon, "ap-i-sm")} <b>${esc(label)}:</b> ${esc(val)}</span>` : "";
-    metaBits.push(mb("money", "هزینه", m.price));
-    metaBits.push(mb("users", "مخاطب", m.audience));
-    metaBits.push(mb("monitor", "شکل برگزاری", m.mode));
-    metaBits.push(mb("calendar", "مهلت", m.deadline));
-    const metaLine = metaBits.length
-      ? `<div class="ap-metaline">${metaBits.join(`<span class="ap-meta-sep" aria-hidden="true"></span>`)}</div>`
-      : "";
-
-    /* کاور تمام‌عرض بالای صفحه — همان الگوی بلاگ (تصویر یا آرت ایموجی) */
-    const coverImg = pickImage(m);
-    const topCover = coverFigure(m, prefix) || `<figure class="ap-cover ap-cover--art">${heroArt(m)}</figure>`;
-    const topCoverBlock = `<div class="ap-topcover"><div class="container">${topCover}</div></div>`;
-
-    const headInner = `
-        <nav class="ap-crumbs" aria-label="مسیر صفحه">
-          <a href="${prefix}index.html">خانه</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
-          <a href="${prefix}${kind.base}.html">${esc(kind.title)}</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
-          <span aria-current="page">عضویت</span>
-        </nav>
-        <div class="ap-chips">${chips.join("\n          ")}</div>
-        <h1 class="ap-title">${esc(m.title || "")}</h1>
-        ${m.subtitle ? `<p class="ap-lead">${esc(m.subtitle)}</p>` : ""}
-        ${m.summary ? `<p class="ap-lead">${esc(m.summary)}</p>` : ""}
-        ${metaLine}
-        ${register ? `<div class="ap-actions">${btn(register)}</div>` : ""}`;
-    const head = `<header class="ap-head"><div class="container">${headInner}</div></header>`;
+    const chips = hashChips(Array.isArray(m.hashtags) && m.hashtags.length ? m.hashtags : []);
 
     /* فقط بلوک‌های اصلی — بدون نوار کنار، چیدمان تک‌ستونی بلاگ */
     const mainHtml = [];
     let adPlaced = false;
     let bid = 0;
-    const emit = (b) => {
-      if (b.type === "ads") {
+    const emit = (raw) => {
+      if (!raw || !raw.type) return;
+      if (raw.type === "ads") {
         if (adsMain && !adPlaced) {
           mainHtml.push(adsMain);
           adPlaced = true;
         }
         return;
       }
-      const r = renderBlock(b, bid++, { prefix, n: m, cover: coverImg, toc });
+      let b = raw;
+      /* بلوک فرم همیشه سرتیتر و لنگر دارد تا دکمهٔ بالای صفحه روی آن اسکرول کند */
+      if (b.type === "form") {
+        b = { ...b, heading: String(b.heading || "").trim() || "فرم عضویت" };
+        formAnchor = "ap-blk-" + bid;
+      }
+      const r = renderBlock(b, bid++, { prefix, n: m, cover: pickImage(m), toc });
       if (typeof r.html === "object" && r.html) {
         mainHtml.push(r.html.section);
         if (r.html.entry) toc.push(r.html.entry);
@@ -1966,10 +1944,29 @@ module.exports = function createAnnRenderer(ctx) {
     else membershipAutoBlocks(m).forEach(emit);
     if (adsMain && !adPlaced) mainHtml.push(adsMain);
 
+    /* دکمهٔ اصلی: اسکرول به فرم؛ اگر بلوک فرمی در صفحه نبود، همان لینک بیرونی */
+    const cta = formAnchor
+      ? { label: register.label, href: "#" + formAnchor, style: "gold", external: false }
+      : register;
+    const ctaHtml = cta
+      ? `<div class="ap-actions">${btn(cta)}</div>`
+      : "";
+
+    const headInner = `
+        <nav class="ap-crumbs" aria-label="مسیر صفحه">
+          <a href="${prefix}index.html">خانه</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
+          <a href="${prefix}${kind.base}.html">${esc(kind.title)}</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">عضویت</span>
+        </nav>
+        ${chips ? `<div class="ap-chips">${chips}</div>` : ""}
+        <h1 class="ap-title">${esc(m.title || "")}</h1>
+        ${m.summary ? `<p class="ap-lead">${esc(m.summary)}</p>` : ""}
+        ${ctaHtml}`;
+    const head = `<header class="ap-head"><div class="container">${headInner}</div></header>`;
+
     const body = `
   <main class="ap" data-ap-layout="membership">
     <div class="ap-readbar" aria-hidden="true"><span data-ap-progress></span></div>
-    ${topCoverBlock}
     ${head}
     <div class="ap-body">
       <div class="container ap-grid is-single">
@@ -1980,7 +1977,7 @@ module.exports = function createAnnRenderer(ctx) {
       </div>
     </div>
     <div class="ap-mobilebar">
-      ${register ? `<a class="ap-mb-cta" href="${escA(register.href)}"${register.external ? ' target="_blank" rel="noopener"' : ""}>${ico("edit", "ap-i-sm")} ${esc(register.label)}</a>` : ""}
+      ${cta ? `<a class="ap-mb-cta" href="${escA(cta.href)}"${cta.external ? ' target="_blank" rel="noopener"' : ""}>${ico("edit", "ap-i-sm")} ${esc(cta.label)}</a>` : ""}
       <button type="button" class="ap-mb-btn" data-ap-native data-ap-url="${escA(url)}" data-ap-title="${escA(m.title || "")}" aria-label="اشتراک‌گذاری">${ico("share", "ap-i-sm")}</button>
       <button type="button" class="ap-mb-btn" data-ap-copy="${escA(url)}" aria-label="کپی نشانی">${ico("copy", "ap-i-sm")}</button>
       <button type="button" class="ap-mb-btn" data-ap-top aria-label="بازگشت به بالا">${ico("top", "ap-i-sm")}</button>
