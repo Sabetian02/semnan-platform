@@ -947,8 +947,6 @@ collections:
       - { label: بج (برچسب بالای عنوان), name: badge, widget: string, required: false }
       - { label: ایموجی, name: icon, widget: string, required: false, default: "🎭", hint: "اگر تصویر نگذارید از همین ایموجی استفاده می‌شود" }
       - { label: تصویر, name: image, widget: image, required: false }
-      - { label: رنگ پس‌زمینه ۱, name: color_a, widget: string, required: false, default: "#001840" }
-      - { label: رنگ پس‌زمینه ۲, name: color_b, widget: string, required: false, default: "#102A71" }
       - { label: لینک فرم عضویت, name: form_url, widget: string, required: false, hint: "https://docs.google.com/forms/… — اگر خالی باشد دکمه به کانال پلتفرم می‌رود" }
       - { label: متن دکمه فرم, name: cta_label, widget: string, required: false, default: "تکمیل فرم عضویت" }
       - { label: هزینه (نمایشی), name: price, widget: string, required: false, default: "رایگان" }
@@ -987,14 +985,14 @@ collections:
           - { label: سوال, name: q, widget: string }
           - { label: پاسخ, name: a, widget: text }
       - { label: فعال, name: active, widget: boolean, default: true }
-      - label: بلوک‌های ستون اصلی
+      - label: بلوک‌های صفحه
         name: blocks_main
         widget: list
         required: false
-        label_singular: بلوک اصلی
+        label_singular: بلوک
         collapsed: true
         summary: "{{fields.heading}} — {{type}}"
-        hint: "محتوای ستون اصلی (متن صفحه عضویت) را با ▲▼ بچین. هر آیتم یک بلوک مستقل است؛ اگر خالی باشد از فیلدهای «خلاصه، مزایا، اطلاعات، سوالات متداول» ترتیب پیش‌فرض ساخته می‌شود."
+        hint: "بخش‌های صفحهٔ عضویت را در این لیست با ▲▼ بچین؛ همه در یک ستون و پشت‌سرهم نمایش داده می‌شوند. اگر لیست خالی باشد از فیلدهای «خلاصه، مزایا، اطلاعات، سوالات متداول» صفحه ساخته می‌شود."
         default:
           - type: text
             heading: دربارهٔ عضویت
@@ -1005,13 +1003,6 @@ collections:
             widget: object
             fields:
               - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - label: جای نمایش
-                name: place
-                widget: select
-                options:
-                  - { label: ستون اصلی, value: "main" }
-                  - { label: کنار, value: "side" }
-                default: "main"
               - { label: متن, name: markdown, widget: markdown }
           - label: ⭐ مزایا / در یک نگاه
             name: highlights
@@ -1218,135 +1209,11 @@ collections:
             widget: object
             fields:
               - { label: متن روی خط, name: text, widget: string, required: false }
-          - label: 📱 جای تبلیغات (موبایل)
+          - label: 📱 جای تبلیغات
             name: ads
             widget: object
             fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "این بلوک فقط جای تبلیغات در دید موبایل را تعیین می‌کند؛ در کامپیوتر تبلیغات از بلوک سیستمی نوار کنار استفاده می‌شود." }
-      - label: بلوک‌های نوار کنار
-        name: blocks_side
-        widget: list
-        required: false
-        label_singular: بلوک کناری
-        collapsed: true
-        summary: "{{fields.heading}} — {{type}}"
-        hint: "ترتیب ستون کنار را با ▲▼ بچین. بلوک‌های «s-» سیستمی‌اند (فرم عضویت، فهرست، تبلیغ، اطلاعات، اشتراک‌گذاری) و همین‌جا جابه‌جا/حذف می‌شوند."
-        default:
-          - type: s-form
-          - type: s-toc
-          - type: s-ads
-          - type: s-facts
-          - type: s-share
-        types:
-          - label: 📋 کارت فرم عضویت (سیستم)
-            name: s-form
-            widget: object
-            fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "کارت ثابت فرم عضویت — از فیلدهای «لینک فرم عضویت» و «متن دکمه فرم» ساخته می‌شود." }
-          - label: 🧭 فهرست مطالب (سیستم)
-            name: s-toc
-            widget: object
-            fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "به‌صورت خودکار از عنوان بلوک‌های دارای سرتیتر ساخته می‌شود." }
-          - label: 🎯 تبلیغات (سیستم)
-            name: s-ads
-            widget: object
-            fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "بنرهای تعریف‌شده در بخش «تبلیغات»." }
-          - label: 🧾 اطلاعات عضویت (سیستم)
-            name: s-facts
-            widget: object
-            fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "ردیف‌های مختصر (هزینه، مخاطب، شکل برگزاری، مهلت…)." }
-          - label: 📤 اشتراک‌گذاری (سیستم)
-            name: s-share
-            widget: object
-            fields:
-              - { label: راهنما, name: _hint, widget: hidden, default: "دکمه‌های شبکه‌های اجتماعی + دکمهٔ چاپ." }
-          - label: 📝 متن
-            name: text
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - { label: متن, name: markdown, widget: markdown }
-          - label: ⭐ مزایا / در یک نگاه
-            name: highlights
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "مزایای عضویت" }
-              - label: موارد
-                name: items
-                widget: list
-                summary: "{{fields.text}}"
-                fields:
-                  - { label: مورد, name: text, widget: string }
-          - label: 🧾 اطلاعات (ردیفی)
-            name: facts
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - label: ردیف‌ها
-                name: items
-                widget: list
-                summary: "{{fields.label}} — {{fields.value}}"
-                collapsed: true
-                fields:
-                  - { label: عنوان, name: label, widget: string, required: false }
-                  - { label: مقدار, name: value, widget: string, required: false }
-                  - label: آیکن
-                    name: icon
-                    widget: select
-                    required: false
-                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
-          - label: 🖼 عکس
-            name: image
-            widget: object
-            fields:
-              - { label: تصویر, name: image, widget: image }
-              - { label: کپشن, name: caption, widget: string, required: false }
-              - { label: alt, name: alt, widget: string, required: false }
-          - label: 📋 فرم گوگل
-            name: form
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "ثبت‌نام" }
-              - { label: لینک فرم, name: url, widget: string, required: false }
-              - { label: توضیح بالا, name: note, widget: text, required: false }
-              - { label: ارتفاع (پیکسل), name: height, widget: number, required: false, default: 520 }
-          - label: 👥 سوالات متداول (بلوک)
-            name: faq
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false, default: "سوالات متداول" }
-              - label: سوالات
-                name: items
-                widget: list
-                summary: "{{fields.q}}"
-                fields:
-                  - { label: سوال, name: q, widget: string }
-                  - { label: پاسخ, name: a, widget: text }
-          - label: 📊 آمار
-            name: stats
-            widget: object
-            fields:
-              - { label: عنوان بخش, name: heading, widget: string, required: false }
-              - label: آیتم‌ها
-                name: items
-                widget: list
-                summary: "{{fields.number}} {{fields.label}}"
-                fields:
-                  - { label: عدد, name: number, widget: string }
-                  - { label: برچسب, name: label, widget: string, required: false }
-                  - label: آیکن
-                    name: icon
-                    widget: select
-                    required: false
-                    options: [ "", "check", "clock", "calendar", "users", "spark", "file", "download", "play", "bell", "money", "list", "layers", "monitor", "pin", "quote", "chart", "link", "telegram", "whatsapp" ]
-          - label: ➖ جداکننده
-            name: divider
-            widget: object
-            fields:
-              - { label: متن روی خط, name: text, widget: string, required: false }
+              - { label: راهنما, name: _hint, widget: hidden, default: "این بلوک فقط جای تبلیغات را در جریان صفحه مشخص می‌کند؛ اگر در صفحه نباشد، تبلیغات انتهای صفحه قرار می‌گیرد." }
 
   - name: kanonha
     label: کانون‌ها

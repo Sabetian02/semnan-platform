@@ -1897,175 +1897,86 @@ module.exports = function createAnnRenderer(ctx) {
     const kind = membershipKinds(m._slug);
     const toc = [];
 
-    const adsSlots = ads && ads.show_membership !== false && ads.show_courses !== false ? adsMarkup(ads) : "";
-    const memAdsSide = adsSlots ? `<div class="ap-ads ap-ads--side">${adsSlots}</div>` : "";
+    const adsSlots = ads && ads.show_membership !== false ? adsMarkup(ads) : "";
     const adsMain = adsSlots ? `<div class="ap-ads ap-ads--inline">${adsSlots}</div>` : "";
 
     const register = membershipRegister(m);
-    const price = String(m.price || "رایگان").trim();
 
+    /* چیپ‌ها و متادیتای بالای صفحه — همان الگوی بلاگ/اطلاعیه */
     const chips = [];
     if (m.badge) chips.push(`<span class="ap-chip is-badge">${ico("bolt", "ap-i-xs")} ${esc(m.badge)}</span>`);
+    chips.push(`<span class="ap-chip is-cat">${esc(m.icon || "🎭")} عضویت</span>`);
     chips.push(hashChips(Array.isArray(m.hashtags) && m.hashtags.length ? m.hashtags : []));
 
-    const metaItems = [];
-    const mt = (icon, label, val) => (val ? `<span class="cp-meta-item">${ico(icon, "ap-i-sm")}<b>${esc(label)}:</b> ${esc(val)}</span>` : "");
-    metaItems.push(mt("money", "هزینه", price));
-    metaItems.push(mt("users", "مخاطب", m.audience));
-    metaItems.push(mt("monitor", "شکل برگزاری", m.mode));
-    metaItems.push(mt("calendar", "مهلت", m.deadline));
+    const metaBits = [];
+    const mb = (icon, label, val) =>
+      val ? `<span class="ap-meta-i">${ico(icon, "ap-i-sm")} <b>${esc(label)}:</b> ${esc(val)}</span>` : "";
+    metaBits.push(mb("money", "هزینه", m.price));
+    metaBits.push(mb("users", "مخاطب", m.audience));
+    metaBits.push(mb("monitor", "شکل برگزاری", m.mode));
+    metaBits.push(mb("calendar", "مهلت", m.deadline));
+    const metaLine = metaBits.length
+      ? `<div class="ap-metaline">${metaBits.join(`<span class="ap-meta-sep" aria-hidden="true"></span>`)}</div>`
+      : "";
 
-    const detbarCells = [];
-    const det = (icon, label, val) => (val ? `<span class="cp-det"><span class="cp-det-ico">${ico(icon)}</span><span><b>${esc(label)}</b><i>${esc(val)}</i></span></span>` : "");
-    detbarCells.push(det("money", "هزینه", price));
-    detbarCells.push(det("users", "مخاطب", m.audience));
-    detbarCells.push(det("monitor", "شکل برگزاری", m.mode));
-    detbarCells.push(det("calendar", "مهلت", m.deadline));
-
-    const artBg = m.color_a || m.color_b ? ` style="--cp-a:${escA(m.color_a || "#001840")};--cp-b:${escA(m.color_b || "#102A71")}"` : "";
-    const img = pickImage(m);
-    const heroMedia = img
-      ? `<figure class="cp-hero-media">
-          <button type="button" class="cp-hero-media-box" data-ap-gal="hero" data-src="${escA(srcUrl(img, prefix))}" data-cap="${escA(m.title || "")}" aria-label="بزرگ‌نمایی تصویر">
-            ${figImg(img, prefix, m.title || "", "cp-hero-media-img", true)}
-          </button>
-        </figure>`
-      : `<figure class="cp-hero-media">
-          <span class="cp-hero-media-box is-art"${artBg}><span class="ap-art-emoji cp-art-emoji">${esc(m.icon || "🎭")}</span></span>
-        </figure>`;
+    /* کاور تمام‌عرض بالای صفحه — همان الگوی بلاگ (تصویر یا آرت ایموجی) */
+    const coverImg = pickImage(m);
+    const topCover = coverFigure(m, prefix) || `<figure class="ap-cover ap-cover--art">${heroArt(m)}</figure>`;
+    const topCoverBlock = `<div class="ap-topcover"><div class="container">${topCover}</div></div>`;
 
     const headInner = `
         <nav class="ap-crumbs" aria-label="مسیر صفحه">
           <a href="${prefix}index.html">خانه</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
-          <a href="${prefix}${kind.base}.html" data-mem-list>${esc(kind.title)}</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
-          <span aria-current="page">${esc(String(m.title || "").slice(0, 46))}${String(m.title || "").length > 46 ? "…" : ""}</span>
+          <a href="${prefix}${kind.base}.html">${esc(kind.title)}</a><span class="ap-crumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">عضویت</span>
         </nav>
-        <div class="cp-hero">
-          <div class="cp-hero-info">
-            ${chips.length ? `<div class="ap-chips">${chips.join("\n          ")}</div>` : ""}
-            <h1 class="ap-title cp-title">${esc(m.title || "")}</h1>
-            ${m.subtitle ? `<p class="cp-subtitle">${esc(m.subtitle)}</p>` : ""}
-            ${m.summary ? `<p class="ap-lead">${esc(m.summary)}</p>` : ""}
-            ${metaItems.length ? `<div class="cp-meta">${metaItems.join("\n          ")}</div>` : ""}
-            ${register ? `<div class="ap-actions">
-              ${btn(register)}
-              <a class="ap-back cp-hero-back" href="${prefix}${kind.base}.html">${ico("arrow", "ap-back-i")} همهٔ ${esc(kind.title === "انجمن‌های علمی" ? "انجمن‌ها" : "کانون‌ها")}</a>
-            </div>` : ""}
-          </div>
-          ${heroMedia}
-        </div>`;
+        <div class="ap-chips">${chips.join("\n          ")}</div>
+        <h1 class="ap-title">${esc(m.title || "")}</h1>
+        ${m.subtitle ? `<p class="ap-lead">${esc(m.subtitle)}</p>` : ""}
+        ${m.summary ? `<p class="ap-lead">${esc(m.summary)}</p>` : ""}
+        ${metaLine}
+        ${register ? `<div class="ap-actions">${btn(register)}</div>` : ""}`;
+    const head = `<header class="ap-head"><div class="container">${headInner}</div></header>`;
 
-    const head = `<header class="ap-head cp-head"><div class="container">${headInner}</div></header>`;
-
-    const detbar = detbarCells.filter(Boolean).length
-      ? `<div class="cp-detbar"><div class="container"><div class="cp-detbar-in">${detbarCells.join("")}</div></div></div>`
-      : "";
-
-    const tocCard = (toc) => `
-      <section class="ap-card ap-card--toc" data-ap-toc aria-label="فهرست مطالب">
-        <h2 class="ap-card-h">${ico("spark", "ap-card-i")} فهرست مطالب</h2>
-        <ul class="ap-toc">
-          ${toc.map((t) => `<li><a href="#${t.id}" data-ap-toc-link><span class="ap-toc-arrow" aria-hidden="true"></span>${esc(t.text)}</a></li>`).join("")}
-        </ul>
-        <span class="ap-toc-bar"><i data-ap-toc-progress aria-hidden="true"></i></span>
-      </section>`;
-
-    const ticketThumb = img
-      ? `<span class="cp-ticket-media"><img src="${escA(srcUrl(img, prefix))}" alt="" loading="lazy"></span>`
-      : `<span class="cp-ticket-media is-art"${artBg}>${esc(m.icon || "🎭")}</span>`;
-
-    const ticket = `<section class="cp-ticket">
-        ${ticketThumb}
-        <div class="cp-ticket-head">
-          <span class="cp-ticket-cat">فرم عضویت</span>
-          <b class="cp-ticket-price">${esc(price)}</b>
-        </div>
-        <ul class="cp-ticket-facts">
-          ${m.audience ? `<li>${ico("users", "ap-i-sm")} ${esc(m.audience)}</li>` : ""}
-          ${m.mode ? `<li>${ico("monitor", "ap-i-sm")} ${esc(m.mode)}</li>` : ""}
-          ${m.deadline ? `<li>${ico("calendar", "ap-i-sm")} ${esc(m.deadline)}</li>` : ""}
-        </ul>
-        ${register ? btn(register, "cp-ticket-cta") : ""}
-        <a class="cp-ticket-back" href="${prefix}${kind.base}.html" data-mem-list>→ ${esc(kind.back)}</a>
-      </section>`;
-
-    const factsCard = `<section class="ap-card ap-card--facts">
-        <h2 class="ap-card-h">${ico("layers", "ap-card-i")} اطلاعات عضویت</h2>
-        <ul class="ap-kf">${membershipFactRows(m)}</ul>
-      </section>`;
-
-    /* ---------- چیدمان بلوک‌محور دو ستونه (مانند دوره‌ها) ---------- */
-    const SYSTEM = { form: ticket, toc: () => (toc.length > 1 ? tocCard(toc) : ""), ads: memAdsSide, facts: factsCard, share: sideShare(url, m.title || "") };
-    const defaultSide = () => [{ type: "s-form" }, { type: "s-toc" }, { type: "s-ads" }, { type: "s-facts" }, { type: "s-share" }];
-
-    const hasNew = Array.isArray(m.blocks_main) || Array.isArray(m.blocks_side);
-    let mainRaw, sideRaw;
-    if (hasNew) {
-      mainRaw = (Array.isArray(m.blocks_main) ? m.blocks_main : []).filter((b) => b && b.type);
-      const side = (Array.isArray(m.blocks_side) ? m.blocks_side : []).filter((b) => b && b.type);
-      sideRaw = side.length ? side : defaultSide();
-    } else {
-      mainRaw = membershipAutoBlocks(m);
-      sideRaw = defaultSide();
-    }
-
-    const mainTokens = [];
-    const sideTokens = [];
+    /* فقط بلوک‌های اصلی — بدون نوار کنار، چیدمان تک‌ستونی بلاگ */
+    const mainHtml = [];
     let adPlaced = false;
     let bid = 0;
-    const emit = (b, target) => {
+    const emit = (b) => {
       if (b.type === "ads") {
-        if (target === "main") {
-          if (adsMain && !adPlaced) {
-            mainTokens.push(adsMain);
-            adPlaced = true;
-          }
-        } else if (memAdsSide) sideTokens.push(memAdsSide);
+        if (adsMain && !adPlaced) {
+          mainHtml.push(adsMain);
+          adPlaced = true;
+        }
         return;
       }
-      if (b.type.indexOf("s-") === 0 && Object.prototype.hasOwnProperty.call(SYSTEM, b.type.slice(2))) {
-        const markup = b.type === "s-toc" ? { toc: true } : SYSTEM[b.type.slice(2)];
-        if (markup === "" || markup === null || markup === undefined) return;
-        (target === "side" ? sideTokens : mainTokens).push(markup);
-        return;
-      }
-      const r = renderBlock({ ...b, place: target }, bid++, { prefix, n: m, cover: pickImage(m), toc });
+      const r = renderBlock(b, bid++, { prefix, n: m, cover: coverImg, toc });
       if (typeof r.html === "object" && r.html) {
-        (target === "side" ? sideTokens : mainTokens).push(r.html.section);
+        mainHtml.push(r.html.section);
         if (r.html.entry) toc.push(r.html.entry);
       } else if (typeof r.html === "string" && r.html) {
-        (target === "side" ? sideTokens : mainTokens).push(r.html);
+        mainHtml.push(r.html);
       }
       if (r.toc && r.toc.length) toc.push(...r.toc);
     };
-    mainRaw.forEach((b) => emit(b, "main"));
-    sideRaw.forEach((b) => emit(b, "side"));
-    if (adsMain && !adPlaced) mainTokens.push(adsMain);
-
-    const resolve = (t) => (typeof t === "object" && t && t.toc ? (toc.length > 1 ? tocCard(toc) : "") : t);
-    const mainHtml = mainTokens.map(resolve).filter(Boolean);
-    const sideHtml = sideTokens.map(resolve).filter(Boolean);
-
-    const aside = `<aside class="ap-side" aria-label="اطلاعات جانبی عضویت">
-          ${sideHtml.join("\n          ")}
-        </aside>`;
+    const sourceBlocks = Array.isArray(m.blocks_main) && m.blocks_main.length ? m.blocks_main : m.blocks;
+    const raw = (Array.isArray(sourceBlocks) ? sourceBlocks : []).filter((b) => b && b.type);
+    const real = raw.filter((b) => b.type !== "ads");
+    if (real.length) raw.forEach(emit);
+    else membershipAutoBlocks(m).forEach(emit);
+    if (adsMain && !adPlaced) mainHtml.push(adsMain);
 
     const body = `
   <main class="ap" data-ap-layout="membership">
     <div class="ap-readbar" aria-hidden="true"><span data-ap-progress></span></div>
+    ${topCoverBlock}
     ${head}
-    ${detbar}
     <div class="ap-body">
-      ${toc.length > 1 ? `<nav class="ap-toc-rail" data-ap-toc aria-label="فهرست مطالب">
-        <span class="ap-toc-rail-label">مطالب این صفحه</span>
-        ${toc.map((t) => `<a href="#${t.id}" data-ap-toc-link class="ap-toc-chip">${esc(t.text)}</a>`).join("")}
-      </nav>` : ""}
-      <div class="container ap-grid">
+      <div class="container ap-grid is-single">
         <article class="ap-main">
           ${mainHtml.join("\n          ")}
-          <a class="ap-back" href="${prefix}${kind.base}.html" data-mem-list>${ico("arrow", "ap-back-i")} ${esc(kind.back)}</a>
+          <a class="ap-back" href="${prefix}${kind.base}.html">${ico("arrow", "ap-back-i")} ${esc(kind.back)}</a>
         </article>
-        ${aside}
       </div>
     </div>
     <div class="ap-mobilebar">
