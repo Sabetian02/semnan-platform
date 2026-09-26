@@ -1103,7 +1103,7 @@ collections:
                     required: false
                     fields:
                       - { label: فایل, name: src, widget: file }
-                      - label: برچسب زیرنویس, name: label, widget: string, required: false }
+                      - { label: برچسب زیرنویس, name: label, widget: string, required: false }
               - label: 📁 فایل‌ها
                 name: files
                 widget: object
@@ -1115,7 +1115,7 @@ collections:
                     summary: "{{fields.title}}"
                     fields:
                       - { label: عنوان, name: title, widget: string }
-                      - label: فایل, name: file, widget: file }
+                      - { label: فایل, name: file, widget: file }
                       - { label: توضیح, name: note, widget: string, required: false }
               - label: 📊 آمار
                 name: stats
