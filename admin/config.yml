@@ -943,7 +943,6 @@ collections:
     fields:
       - label: ⚙️ تنظیمات صفحه
         widget: group
-        name: page_setup
         collapsed: true
         fields:
           - { label: عنوان صفحه, name: title, widget: string, required: true, hint: "مثل «عضویت در کانون‌های فرهنگی»" }
@@ -959,7 +958,6 @@ collections:
           - { label: این صفحه منتشر شود, name: active, widget: boolean, default: true }
       - label: 🧩 مدیریت و جانمایی بلوک‌ها
         widget: group
-        name: page_blocks
         collapsed: false
         fields:
           - label: بلوک‌های صفحه
