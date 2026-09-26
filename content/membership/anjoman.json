@@ -16,6 +16,10 @@
       "markdown": "انجمن‌های علمی پل میان کلاس و پژوهش‌اند؛ جایی که دانش تئوری با تجربهٔ عملی پیوند می‌خورد و می‌توانی در جمع هم‌رشته‌ای‌هایت مهارت بسازی.\n\nنشست تخصصی، کارگاه، مسابقه و پروژهٔ علمی؛ هر کدام فرصتی برای یادگیری و ساختن رزومه‌ای واقعی است."
     },
     {
+      "type": "ads",
+      "position": "here"
+    },
+    {
       "type": "highlights",
       "heading": "مزایای عضویت",
       "items": [
@@ -109,10 +113,6 @@
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSeWcgIF-mC-l426-krF7IY0QoMJRUG825JCRXLUPnHh99dv5A/viewform?usp=publish-editor",
       "note": "فرم را با دقت کامل کن؛ اطلاعات تماس برای هماهنگی لازم است.",
       "height": 640
-    },
-    {
-      "type": "ads",
-      "position": "end"
     },
     {
       "type": "notice",
