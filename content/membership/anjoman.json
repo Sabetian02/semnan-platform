@@ -82,32 +82,6 @@
       ]
     },
     {
-      "type": "facts",
-      "heading": "اطلاعات عضویت",
-      "items": [
-        {
-          "label": "هزینه عضویت",
-          "value": "رایگان",
-          "icon": "money"
-        },
-        {
-          "label": "مخاطب",
-          "value": "دانشجویان و دانش‌آموختگان",
-          "icon": "users"
-        },
-        {
-          "label": "شکل برگزاری",
-          "value": "حضوری و آنلاین",
-          "icon": "monitor"
-        },
-        {
-          "label": "ثبت‌نام",
-          "value": "تا پایان ترم تحصیلی",
-          "icon": "clock"
-        }
-      ]
-    },
-    {
       "type": "form",
       "heading": "فرم عضویت",
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSeWcgIF-mC-l426-krF7IY0QoMJRUG825JCRXLUPnHh99dv5A/viewform?usp=publish-editor",
