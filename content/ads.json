@@ -1,18 +1,19 @@
 {
   "slot1": {
-    "image": "https://s3.eseminar.tv/c453019/upload/images/settings/webinar_banner1789580885pprhjjxzjdnmsijdd5t4.jpg",
+    "image": "https://rozup.ir/view/4358137/2.jpg",
     "link": "https://t.me/PlatformSem",
     "active": true
   },
   "slot2": {
-    "image": "https://s3.eseminar.tv/c453019/upload/images/settings/webinar_banner1789476195bszufb7ndmfgartotz9a.jpg",
+    "image": "https://rozup.ir/view/4358138/1.jpg",
     "link": "https://t.me/PlatformSem",
     "active": true
   },
   "reserve": {
     "label": "رزرو تبلیغات",
     "link": "https://t.me/PlatformSem",
-    "icon": "telegram"
+    "icon": "telegram",
+    "icon_svg": "https://rozup.ir/view/4358140/telegram-logo-4.png"
   },
   "show_home": true,
   "show_courses": true,
