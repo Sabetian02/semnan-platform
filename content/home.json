@@ -4,29 +4,7 @@
     "title_before": "دانشگاه فقط کلاس و امتحان نیست؛ ",
     "title_highlight": "تجربه‌اش کن!",
     "telegram_url": "https://t.me/PlatformSem",
-    "card_items": [
-      {
-        "icon": "🎤",
-        "tone": "navy",
-        "title": "ایونت و رویداد",
-        "subtitle": "مسابقات، کارگاه‌ها و جشن‌ها",
-        "link": "#news"
-      },
-      {
-        "icon": "🎓",
-        "tone": "navy",
-        "title": "کانون‌ها و انجمن‌ها",
-        "subtitle": "۴۶ تشکل فعال دانشجویی",
-        "link": "kanonha.html"
-      },
-      {
-        "icon": "📚",
-        "tone": "navy",
-        "title": "آموزش و مهارت",
-        "subtitle": "دوره‌های کاربردی ",
-        "link": "amoozesh.html"
-      }
-    ],
+    "card_items": [],
     "cta_tele_text": "عضو پلتفرم شو",
     "float1": {
       "icon": "🔔",
